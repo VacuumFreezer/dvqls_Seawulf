@@ -1,0 +1,74 @@
+run_root: run
+tag: cat_test
+
+# equations to solve
+problems:
+  # - name: eq1_k196
+  #   module: problems.static_ops_16agents_eq1_kappa196
+  # - name: eq2_k12
+  #   module: problems.static_ops_16agents_eq2_kappa12
+  # - name: eq3_k100
+  #   module: problems.static_ops_16agents_eq3_kappa100
+  - name: 7qubits
+    module: problems.static_ops_16agents_Ising
+
+# All possible 4 agent connecting graphs
+topologies:
+  - name: line
+  # - name: ring
+  # - name: star
+  # - name: tri_tail
+  # - name: diamond
+  # - name: complete
+
+# optimizer choice
+cases:
+  - name: catalyst_tracking
+    script: optimization/seawulf_cat_line_tracking.py
+  # - name: track_adamX_adamZ
+  #   script: optimization/met_line_tracking.py
+  # - name: track_adamX_only
+  #   script: optimization/met_line_tracking_AdamX.py
+  # - name: track_adamZ_only
+  #   script: optimization/met_line_tracking_Adamz.py
+  # - name: track_gd
+  #   script: optimization/met_line_tracking_GD.py
+  # - name: notrack_adamX_adamZ
+  #   script: optimization/met_grad_mixing_Adam.py
+
+lr_sets:
+  # - tag: lr0
+  #   lr_g: 0.01
+  #   lr_a: 0.01
+  # - tag: lr1
+  #   lr_g: 0.03
+  #   lr_a: 0.03
+  # - tag: lr2
+  #   lr_g: 0.005
+  #   lr_a: 0.005
+  # - tag: lr0
+  #   lr: 0.03
+  - tag: lr1
+    lr: 0.001
+  # - tag: lr2
+  #   lr: 0.003
+
+    
+decay_sets:
+- tag: d1
+  decay: 0.9999
+# - tag: d9999
+#   decay: 0.9999
+  # - tag: d999
+  #   decay: 0.999
+  # - tag: d995
+  #   decay: 0.995
+
+seeds: [2, 3, 54, 532, 7, 42, 564, 601, 1234, 4321]
+# system_ids: [0]     
+
+common:
+  epochs: 50000
+  # decay: 0.9999
+  log_every: 5
+  # lr: 0.001
