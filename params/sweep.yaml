@@ -24,7 +24,7 @@ topologies:
 # optimizer choice
 cases:
   - name: catalyst_tracking
-    script: optimization/seawulf_cat_line_tracking.py
+    script: optimization/seawulf_cat_line_tracking_nodispatch.py
   # - name: track_adamX_adamZ
   #   script: optimization/met_line_tracking.py
   # - name: track_adamX_only
@@ -49,7 +49,7 @@ lr_sets:
   # - tag: lr0
   #   lr: 0.03
   - tag: lr1
-    lr: 0.001
+    lr: 0.003
   # - tag: lr2
   #   lr: 0.003
 
@@ -68,7 +68,7 @@ seeds: [2, 3, 54, 532, 7, 42, 564, 601, 1234, 4321]
 # system_ids: [0]     
 
 common:
-  epochs: 50000
+  epochs: 30000
   # decay: 0.9999
   log_every: 5
   # lr: 0.001
