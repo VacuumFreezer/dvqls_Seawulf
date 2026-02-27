@@ -1,0 +1,6 @@
+{
+  "requested_qjit": true,
+  "backend": "qjit",
+  "catalyst_available": true,
+  "catalyst_error": null
+}

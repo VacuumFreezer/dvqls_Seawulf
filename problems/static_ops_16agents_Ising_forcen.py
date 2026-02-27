@@ -1,4 +1,28 @@
-from typing import List, Callable, Dict, Any, Tuple
+"""
+Dense Ising-inspired QLSP example (operator-returning factories)
+---------------------------------------------------------------
+
+A (on index+data) is built as a clean 4x4 block matrix (index basis |00>,|01>,|10>,|11>),
+where each block acts on N_DATA_QUBITS data wires.
+
+This corresponds to the Ising-inspired structure:
+A = (1/zeta) ( sum X + J sum ZZ + eta I )   on the full 9-qubit space,
+then written in 4x4 blocks w.r.t. the 2 index qubits.
+
+Here we provide:
+- RAW_GATES  : 4x4 grid of gate-factory lists (each factory returns an Operator)
+- RAW_COEFFS : 4x4 grid of coefficient lists (explicit, length matches RAW_GATES)
+- RAW_B_GATES: all entries are H^{\otimes N_DATA_QUBITS} (as in |b> = H^{\otimes n}|0>)
+
+NOTES:
+1) This is the "denser" Ising-inspired version: diagonal blocks include
+   I, Z0, all X_k, and all ZZ_k,k+1 on the data chain (O(n) terms).
+2) zeta is NOT applied here. If you want A=(1/zeta)(...), either:
+   - pass zeta into your LinearSystemData __init__ and scale coeffs there, OR
+   - pre-scale RAW_COEFFS by 1/zeta yourself.
+"""
+
+from typing import List, Callable, Dict
 import pennylane as qml
 from pennylane import numpy as np
 
@@ -9,11 +33,10 @@ N_DATA_QUBITS = 5
 DATA_WIRES = list(range(N_DATA_QUBITS))
 N_AGENTS = 4
 
-# Block-friendly params (you can change)
-J = 0.25     # controls +/- J * I shift among diagonal blocks (from Z0_idx Z1_idx)
-h = 0.25     # controls +/- h * Z0 (data boundary term, from Z1_idx coupled to data)
+# Ising-inspired params
+J = 0.1
 eta = 1.5
-zeta = 1.0  # 注意：你如果在 LinearSystemData.__init__ 里吸收 1/zeta，就别在这里除
+zeta = 1.0  # keep as 1.0 here; scale coeffs elsewhere if needed
 
 # =========================
 # Gate factories (return operator)
@@ -27,27 +50,22 @@ def X(k: int):
 def Z(k: int):
     return (lambda k=k: qml.PauliZ(wires=k))
 
+def ZZ(k: int):
+    # Z_k Z_{k+1}
+    return (lambda k=k: qml.prod(qml.PauliZ(wires=k), qml.PauliZ(wires=k+1)))
+
 # Convenience: boundary term uses Z on the first data qubit (wire 0 in data-space)
 Z0 = Z(0)
 
 # =========================
-# Block-friendly diagonal blocks as (gates, coeffs)
+# Build diagonal blocks as (gates, coeffs)
+# Dense version:
+#   D = (eta + s01*J)*I  + (s12*J)*Z0 + sum_{k} X_k + J * sum_{k} Z_k Z_{k+1}
 #
-# 物理含义（等价于 9-qubit 的简化模型，但这里直接写成 4x4 blocks）：
-#   A = (1/zeta) * [[D00, I, I, 0],
-#                   [I, D01, 0, I],
-#                   [I, 0, D10, I],
-#                   [0, I, I, D11]]
+# mapping for index basis |b0 b1>:
+#   s01 = eigenvalue of (Z0_idx * Z1_idx): +1 if b0=b1 else -1
+#   s12 = eigenvalue of Z1_idx          : +1 if b1=0 else -1
 #
-# 对角块：
-#   D = (eta + s01*J)*I  + (s12*h)*Z0  + sum_k X_k
-#
-# s01 来自 index 的 Z0_idx Z1_idx 在 |b0 b1> 上的本征值：
-#   +1 if b0=b1 else -1
-# s12 来自 index 的 Z1_idx 在 |b0 b1> 上的本征值：
-#   +1 if b1=0 else -1
-#
-# mapping:
 #   |00>: (s01=+1, s12=+1)
 #   |01>: (s01=-1, s12=-1)
 #   |10>: (s01=-1, s12=+1)
@@ -57,22 +75,27 @@ def make_D_block(s01: float, s12: float):
     gates: List[Callable[[], qml.operation.Operator]] = []
     coeffs: List[float] = []
 
-    # Identity with coefficient (eta + s01*J)
+    # Identity term: (eta + s01*J) * I
     gates.append(I)
     coeffs.append(eta + s01 * J)
 
-    # boundary term ±h Z0 (data)
+    # boundary term: (s12*J) * Z0
     gates.append(Z0)
-    coeffs.append(s12 * h)
+    coeffs.append(s12 * J)
 
-    # sum X_k over data qubits
+    # sum X_k, k=0..N_DATA_QUBITS-1
     for k in range(N_DATA_QUBITS):
         gates.append(X(k))
         coeffs.append(1.0)
 
+    # J * sum Z_k Z_{k+1}, k=0..N_DATA_QUBITS-2
+    for k in range(N_DATA_QUBITS - 1):
+        gates.append(ZZ(k))
+        coeffs.append(J)
+
     return gates, coeffs
 
-# 4 diagonal blocks
+# 4 diagonal blocks (order: 00,01,10,11)
 D00_g, D00_c = make_D_block(s01=+1.0, s12=+1.0)
 D01_g, D01_c = make_D_block(s01=-1.0, s12=-1.0)
 D10_g, D10_c = make_D_block(s01=-1.0, s12=+1.0)
@@ -104,7 +127,6 @@ def H_all():
     return qml.prod(*[qml.Hadamard(wires=w) for w in DATA_WIRES])
 
 RAW_B_GATES = [[H_all for _ in range(N_AGENTS)] for __ in range(N_AGENTS)]
-
 
 # ==========================================================
 # 5. System Container Class

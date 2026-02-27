@@ -47,9 +47,9 @@ def to_jax_flat(flat_list):
 
 # ==========================================
 
-def cal_sol_diff(global_params, true_sol, n_qubits):
+def recover_global_solution(global_params, n_qubits):
     """
-    Calculate true_sol vs recovered solution difference.
+    Reconstruct global x by averaging all system-wise recovered rows.
     """
     n_agents = GLOBAL_AGENTS_N
     dev = qml.device("lightning.qubit", wires=n_qubits)
@@ -70,9 +70,31 @@ def cal_sol_diff(global_params, true_sol, n_qubits):
         full_row_vec = np.concatenate(segs, axis=0)
         row_estimates.append(full_row_vec)
 
-    recover_sol = np.mean(np.stack(row_estimates), axis=0)
-    diff = true_sol - recover_sol
-    return np.linalg.norm(diff) / np.linalg.norm(true_sol)
+    return np.mean(np.stack(row_estimates), axis=0)
+
+
+def cal_sol_diff(global_params, true_sol, n_qubits, recover_sol=None):
+    """
+    Calculate true_sol vs recovered solution difference.
+    """
+    if recover_sol is None:
+        recover_sol = recover_global_solution(global_params, n_qubits)
+
+    true_sol_vec = np.asarray(true_sol).reshape(-1)
+    diff = true_sol_vec - recover_sol
+    return np.linalg.norm(diff) / np.linalg.norm(true_sol_vec)
+
+
+def cal_ax_minus_b_norm(global_params, A_global, global_b, n_qubits, recover_sol=None):
+    """
+    Calculate ||Ax - b||_2 from the recovered global solution x.
+    """
+    if recover_sol is None:
+        recover_sol = recover_global_solution(global_params, n_qubits)
+
+    b_vec = np.asarray(global_b).reshape(-1)
+    residual = A_global @ recover_sol - b_vec
+    return np.linalg.norm(residual)
 
 # ==========================================
 
@@ -306,7 +328,7 @@ def main():
     # single optimizer for all trainable params
     opt_adam = optax.adam(lr_schedule)
 
-    loss_history, diff_history = [], []
+    loss_history, diff_history, ax_minus_b_history = [], [], []
 
     # ==========================================    
     # Start optimization
@@ -363,8 +385,22 @@ def main():
 
         # metrics
         loss_history.append(float(current_cost))
-        sol_diff = cal_sol_diff(GLOBAL_PARAMS, true_sol=true_sol, n_qubits=n_qubits)
+        recover_sol = recover_global_solution(GLOBAL_PARAMS, n_qubits=n_qubits)
+        sol_diff = cal_sol_diff(
+            GLOBAL_PARAMS,
+            true_sol=true_sol,
+            n_qubits=n_qubits,
+            recover_sol=recover_sol,
+        )
+        ax_minus_b = cal_ax_minus_b_norm(
+            GLOBAL_PARAMS,
+            A_global=A_global,
+            global_b=global_b,
+            n_qubits=n_qubits,
+            recover_sol=recover_sol,
+        )
         diff_history.append(float(sol_diff))
+        ax_minus_b_history.append(float(ax_minus_b))
 
 
         if (ep % args.log_every) == 0 or ep == 1:
@@ -372,12 +408,16 @@ def main():
             "epoch": ep,
             "loss": float(current_cost),
             "sol_diff": float(sol_diff),
+            "ax_minus_b_norm": float(ax_minus_b),
             "lr_g": float(args.lr),
             "lr_a": float(args.lr),
             "wall_s": time.time() - t0,
             })
             
-            logger.info(f"[Epoch {ep:04d}] Total Loss = {current_cost:.5e} | Sol Diff = {sol_diff:.5e}")
+            logger.info(
+                f"[Epoch {ep:04d}] Total Loss = {current_cost:.5e} | "
+                f"Sol Diff = {sol_diff:.5e} | ||Ax-b|| = {ax_minus_b:.5e}"
+            )
 
     metrics.close()
 
@@ -412,6 +452,18 @@ def main():
     plt.savefig(paths.fig_diff, dpi=200, bbox_inches="tight")
     plt.close()
 
+    # ---- ||Ax-b|| figure ----
+    xs3 = np.arange(1, len(ax_minus_b_history) + 1)
+    plt.figure()
+    plt.plot(xs3, ax_minus_b_history)
+    plt.xlabel("Epoch")
+    plt.ylabel("||Ax-b||")
+    plt.yscale("log")
+    plt.grid(True)
+    plt.title(title)
+    plt.savefig(paths.run_dir / "ax_minus_b_norm.png", dpi=200, bbox_inches="tight")
+    plt.close()
+
     # ---- loss figure ----
     xs2 = np.arange(0, len(loss_history))
     plt.figure()
@@ -425,7 +477,12 @@ def main():
     plt.close()
 
     # ---- save artifacts ----
-    np.savez(paths.artifacts_npz, loss=np.array(loss_history), sol_diff=np.array(diff_history))
+    np.savez(
+        paths.artifacts_npz,
+        loss=np.array(loss_history),
+        sol_diff=np.array(diff_history),
+        ax_minus_b_norm=np.array(ax_minus_b_history),
+    )
 
     # ---- extra analysis / verification ----
     analysis_path = paths.run_dir / "analysis.txt"

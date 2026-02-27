@@ -9,8 +9,8 @@ problems:
   #   module: problems.static_ops_16agents_eq2_kappa12
   # - name: eq3_k100
   #   module: problems.static_ops_16agents_eq3_kappa100
-  - name: 7qubits
-    module: problems.static_ops_16agents_Ising
+  - name: 5qubits
+    module: problems.static_ops_16agents_Ising_forcen
 
 # All possible 4 agent connecting graphs
 topologies:
@@ -23,6 +23,8 @@ topologies:
 
 # optimizer choice
 cases:
+  # - name: centralized
+  #   script: optimization/seawulf_centralized_vqls.py
   - name: catalyst_tracking
     script: optimization/seawulf_cat_line_tracking_nodispatch.py
   # - name: track_adamX_adamZ
@@ -49,14 +51,14 @@ lr_sets:
   # - tag: lr0
   #   lr: 0.03
   - tag: lr1
-    lr: 0.003
+    lr: 0.001
   # - tag: lr2
   #   lr: 0.003
 
     
 decay_sets:
 - tag: d1
-  decay: 0.9999
+  decay: 1.0
 # - tag: d9999
 #   decay: 0.9999
   # - tag: d999
@@ -64,11 +66,12 @@ decay_sets:
   # - tag: d995
   #   decay: 0.995
 
-seeds: [2, 3, 54, 532, 7, 42, 564, 601, 1234, 4321]
+# seeds: [2, 3, 54, 532, 7, 42, 564, 601, 1234, 4321]
+seeds: [2, 3, 54, 532, 7, 42]
 # system_ids: [0]     
 
 common:
   epochs: 30000
   # decay: 0.9999
-  log_every: 5
+  log_every: 20
   # lr: 0.001

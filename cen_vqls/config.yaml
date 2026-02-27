@@ -1,0 +1,87 @@
+problem:
+  static_ops_path: problems/static_ops_16agents_Ising_forcen.py
+  consistency_atol: 1.0e-12
+  b_state_tolerance: 1.0e-10
+
+ansatz:
+  layers: 7
+  init_low: -3.141592653589793
+  init_high: 3.141592653589793
+  init_sigma: 1.0
+
+optimization:
+  steps: 30000
+  learning_rate: 0.001
+  beta1: 0.9
+  beta2: 0.999
+  eps: 1.0e-8
+  print_every: 20
+  optimize_metric: global_CG
+
+runtime:
+  seed: 2
+  device: lightning.qubit
+  interface: jax
+  diff_method: adjoint
+  use_qjit: true
+  fallback_to_jax_jit: false
+  qjit_autograph: false
+  jit_training_step: true
+  warmup_compile: true
+
+report:
+  out_dir: cen_vqls/reports
+  tag: centralized_vqls_ising_qjit
+
+taskgen:
+  # Choose the optimization script profile used by gen_tasks_cen_vqls_qjit.py.
+  optimization_script: single
+  # Folder name under run/<tag> for generated task files.
+  tag: my_cen_vqls_tasks
+
+  # Random/explicit seed settings used by gen_tasks_cen_vqls_qjit.py.
+  seed_scan:
+    mode: explicit            # random | explicit
+    num_seeds: 5
+    seed_min: 0
+    seed_max: 1000
+    rng_seed: null
+    seeds: [2, 3, 7, 42, 54, 532]               # used when mode=explicit
+
+  # Map from option key -> script path.
+  script_map:
+    qjit_vqls: cen_vqls/centralized_vqls_ising_qjit.py
+    single: cen_vqls/single_agent_qjit.py
+
+  # Per-script overrides merged onto the base config before task generation.
+  profile_overrides:
+    qjit_vqls:
+      optimization:
+        optimize_metric: global_CG
+      runtime:
+        interface: jax
+        device: lightning.qubit
+        diff_method: adjoint
+        use_qjit: true
+        fallback_to_jax_jit: false
+      report:
+        tag: centralized_vqls_ising_qjit
+    single:
+      ansatz:
+        init_sigma: 1.0
+      optimization:
+        steps: 30000
+        learning_rate: 0.001
+        print_every: 100
+        optimize_metric: global_residual_sq
+      runtime:
+        interface: jax
+        device: lightning.qubit
+        diff_method: adjoint
+        use_qjit: true
+        fallback_to_jax_jit: true
+        qjit_autograph: false
+        jit_training_step: true
+        warmup_compile: true
+      report:
+        tag: centralized_vqls_ising_residual
