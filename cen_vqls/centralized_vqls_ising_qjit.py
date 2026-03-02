@@ -58,8 +58,13 @@ PauliWord = Tuple[str, ...]
 
 DEFAULT_CONFIG = {
     "problem": {
-        "static_ops_path": "problems/static_ops_16agents_Ising.py",
+        "static_ops_path": "problems/static_ops_3net_Ising.py",
+        "system_key": "4x4",
+        "prefer_centralized_problem": True,
+        "centralized_problem_key": "centralized",
+        "consistency_system_key": "4x4",
         "consistency_atol": 1.0e-12,
+        "b_consistency_atol": 1.0e-12,
         "b_state_tolerance": 1.0e-10,
     },
     "ansatz": {
@@ -472,15 +477,35 @@ def main() -> None:
 
     data = load_centralized_data(cfg, repo_root=repo_root)
 
+    logger.info("[problem] source: %s", data.problem_source)
     logger.info("[consistency] formula/block max abs diff: %s", f"{data.matrix_max_abs_diff:.6e}")
     logger.info("[consistency] formula/block fro diff: %s", f"{data.matrix_fro_diff:.6e}")
     logger.info("[consistency] allclose: %s", data.matrix_allclose)
     logger.info("[matrix] cond(A): %s", f"{data.condition_number:.12e}")
     if not data.matrix_allclose:
         raise RuntimeError(
-            "Global matrix from the closed-form formula is not consistent with the block-partition matrix. "
-            "Please check static-ops parameters and wire ordering."
+            "Matrix from loaded terms is not consistent with the loaded centralized target matrix. "
+            "Please check static-ops centralized terms/matrix definition and wire ordering."
         )
+    logger.info("[reference] system key: %s", data.reference_system_key)
+    logger.info(
+        "[reference] A_target vs A_ref max abs diff: %s",
+        f"{data.reference_matrix_max_abs_diff:.6e}",
+    )
+    logger.info(
+        "[reference] A_target vs A_ref fro diff: %s",
+        f"{data.reference_matrix_fro_diff:.6e}",
+    )
+    logger.info("[reference] A_target vs A_ref allclose: %s", data.reference_matrix_allclose)
+    logger.info(
+        "[reference] b_target vs b_ref max abs diff: %s",
+        f"{data.reference_b_max_abs_diff:.6e}",
+    )
+    logger.info(
+        "[reference] b_target vs b_ref l2 diff: %s",
+        f"{data.reference_b_l2_diff:.6e}",
+    )
+    logger.info("[reference] b_target vs b_ref allclose: %s", data.reference_b_allclose)
 
     logger.info("[backend] requested_qjit: %s", backend_info.requested_qjit)
     logger.info("[backend] active: %s", backend_info.backend)

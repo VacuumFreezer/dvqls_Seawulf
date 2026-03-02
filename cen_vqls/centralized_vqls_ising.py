@@ -23,8 +23,13 @@ PauliWord = Tuple[str, ...]
 
 DEFAULT_CONFIG = {
     "problem": {
-        "static_ops_path": "problems/static_ops_16agents_Ising.py",
+        "static_ops_path": "problems/static_ops_3net_Ising.py",
+        "system_key": "4x4",
+        "prefer_centralized_problem": True,
+        "centralized_problem_key": "centralized",
+        "consistency_system_key": "4x4",
         "consistency_atol": 1.0e-12,
+        "b_consistency_atol": 1.0e-12,
         "b_state_tolerance": 1.0e-10,
     },
     "ansatz": {
@@ -177,6 +182,8 @@ class BUnitaryInfo:
 @dataclass
 class CentralizedIsingData:
     static_ops_path: Path
+    problem_source: str
+    reference_system_key: str
     n_agents: int
     n_index_qubits: int
     n_data_qubits: int
@@ -197,6 +204,12 @@ class CentralizedIsingData:
     b_normed: np.ndarray
     b_unnorm_norm: float
     b_unitary_info: BUnitaryInfo
+    reference_matrix_max_abs_diff: float
+    reference_matrix_fro_diff: float
+    reference_matrix_allclose: bool
+    reference_b_max_abs_diff: float
+    reference_b_l2_diff: float
+    reference_b_allclose: bool
 
 
 def load_static_system(static_ops_path: Path):
@@ -206,6 +219,85 @@ def load_static_system(static_ops_path: Path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def _resolve_system_from_module(module, system_key: str):
+    key = str(system_key)
+    if hasattr(module, "SYSTEMS"):
+        systems = getattr(module, "SYSTEMS")
+        if key not in systems:
+            raise RuntimeError(
+                f"Unknown system key `{key}` in {module.__name__}. "
+                f"Available: {sorted(systems.keys())}"
+            )
+        return systems[key]
+
+    if not hasattr(module, "SYSTEM"):
+        raise RuntimeError(f"{module.__name__} does not expose SYSTEM/SYSTEMS.")
+
+    if key not in ("", "default", "4x4"):
+        raise RuntimeError(
+            f"{module.__name__} only exposes default SYSTEM; cannot select system key `{key}`."
+        )
+    return module.SYSTEM
+
+
+def _resolve_data_wires_from_module(module, system_key: str, system, fallback_n_data_qubits: int):
+    key = str(system_key)
+    if hasattr(module, "DATA_WIRES_BY_SYSTEM"):
+        wires_map = getattr(module, "DATA_WIRES_BY_SYSTEM")
+        if key in wires_map:
+            return list(wires_map[key])
+
+    if hasattr(system, "data_wires"):
+        return list(system.data_wires)
+
+    if hasattr(module, "DATA_WIRES"):
+        return list(getattr(module, "DATA_WIRES"))
+
+    return list(range(int(fallback_n_data_qubits)))
+
+
+def _resolve_centralized_problem(module, centralized_problem_key: str):
+    key = str(centralized_problem_key)
+    if hasattr(module, "CENTRALIZED_PROBLEMS"):
+        mapping = getattr(module, "CENTRALIZED_PROBLEMS")
+        if key in mapping:
+            return mapping[key]
+        return None
+
+    if hasattr(module, "CENTRALIZED_PROBLEM") and key in ("centralized", "default", ""):
+        return getattr(module, "CENTRALIZED_PROBLEM")
+
+    return None
+
+
+def _normalize_pauli_word(word) -> PauliWord:
+    if isinstance(word, tuple):
+        chars = tuple(str(x) for x in word)
+    elif isinstance(word, list):
+        chars = tuple(str(x) for x in word)
+    elif isinstance(word, str):
+        chars = tuple(word)
+    else:
+        raise RuntimeError(f"Unsupported Pauli word format: {type(word)}")
+
+    for c in chars:
+        if c not in {"I", "X", "Y", "Z"}:
+            raise RuntimeError(f"Invalid Pauli label `{c}` in word `{word}`")
+    return chars
+
+
+def _normalize_terms(terms_obj) -> List[Tuple[float, PauliWord]]:
+    if not isinstance(terms_obj, (list, tuple)):
+        raise RuntimeError("`terms` must be a list/tuple of (coeff, pauli_word).")
+    out: List[Tuple[float, PauliWord]] = []
+    for item in terms_obj:
+        if not isinstance(item, (list, tuple)) or len(item) != 2:
+            raise RuntimeError(f"Invalid term entry: {item}")
+        coeff, word = item
+        out.append((float(coeff), _normalize_pauli_word(word)))
+    return out
 
 
 def build_formula_terms(n_total_qubits: int, eta: float, j: float, h: float, zeta: float) -> List[Tuple[float, PauliWord]]:
@@ -381,41 +473,130 @@ def load_centralized_data(cfg: dict, repo_root: Path) -> CentralizedIsingData:
     static_ops_path = static_ops_path.resolve()
 
     module = load_static_system(static_ops_path)
-    if not hasattr(module, "SYSTEM"):
-        raise RuntimeError(f"{static_ops_path} does not expose SYSTEM.")
+    atol = float(problem_cfg.get("consistency_atol", 1.0e-12))
+    b_atol = float(problem_cfg.get("b_consistency_atol", atol))
+    system_key = str(problem_cfg.get("system_key", "4x4"))
+    reference_system_key = str(problem_cfg.get("consistency_system_key", system_key))
+    prefer_centralized_problem = bool(problem_cfg.get("prefer_centralized_problem", False))
+    centralized_problem_key = str(problem_cfg.get("centralized_problem_key", "centralized"))
 
-    system = module.SYSTEM
-    n_agents = int(system.n)
-    n_index_qubits = int(round(np.log2(n_agents)))
-    if 2**n_index_qubits != n_agents:
-        raise RuntimeError(f"Expected number of agents to be power of 2, got {n_agents}.")
+    reference_system = _resolve_system_from_module(module, reference_system_key)
+    reference_n_agents = int(reference_system.n)
+    reference_n_index = int(round(np.log2(reference_n_agents)))
+    if 2**reference_n_index != reference_n_agents:
+        raise RuntimeError(
+            f"Expected reference system agent count to be power of 2, got {reference_n_agents}."
+        )
+    reference_n_data = int(
+        getattr(reference_system, "n_data_qubits", getattr(module, "N_DATA_QUBITS", 0))
+    )
+    reference_data_wires = _resolve_data_wires_from_module(
+        module,
+        reference_system_key,
+        reference_system,
+        fallback_n_data_qubits=reference_n_data,
+    )
+    reference_a = np.array(reference_system.get_global_matrix(), dtype=np.complex128)
+    reference_b = np.array(reference_system.get_global_b_vector(), dtype=np.complex128)
 
-    n_data_qubits = int(module.N_DATA_QUBITS)
-    n_total_qubits = n_index_qubits + n_data_qubits
-    global_dim = 2**n_total_qubits
+    problem_source = f"distributed_system[{system_key}]"
+    centralized_problem = None
+    if prefer_centralized_problem:
+        centralized_problem = _resolve_centralized_problem(module, centralized_problem_key)
+
+    if centralized_problem is not None:
+        if "a_matrix" not in centralized_problem or "b_vector" not in centralized_problem:
+            raise RuntimeError(
+                "Centralized problem must contain `a_matrix` and `b_vector`."
+            )
+        problem_source = f"module.CENTRALIZED_PROBLEMS[{centralized_problem_key}]"
+        a_block = np.array(centralized_problem["a_matrix"], dtype=np.complex128)
+        b_unnorm = np.array(centralized_problem["b_vector"], dtype=np.complex128)
+
+        if "terms" in centralized_problem and centralized_problem["terms"] is not None:
+            terms = _normalize_terms(centralized_problem["terms"])
+        else:
+            terms = build_terms_from_distributed_system(
+                system=reference_system,
+                data_wires=reference_data_wires,
+                atol=atol,
+            )
+
+        n_total_qubits = int(
+            centralized_problem.get(
+                "n_total_qubits", int(round(np.log2(a_block.shape[0])))
+            )
+        )
+        n_index_qubits = int(
+            centralized_problem.get("n_index_qubits", reference_n_index)
+        )
+        n_data_qubits = int(
+            centralized_problem.get("n_data_qubits", n_total_qubits - n_index_qubits)
+        )
+        n_agents = int(centralized_problem.get("n_agents", 2**n_index_qubits))
+    else:
+        system = _resolve_system_from_module(module, system_key)
+        n_agents = int(system.n)
+        n_index_qubits = int(round(np.log2(n_agents)))
+        if 2**n_index_qubits != n_agents:
+            raise RuntimeError(f"Expected number of agents to be power of 2, got {n_agents}.")
+        n_data_qubits = int(
+            getattr(system, "n_data_qubits", getattr(module, "N_DATA_QUBITS", 0))
+        )
+        n_total_qubits = n_index_qubits + n_data_qubits
+
+        data_wires = _resolve_data_wires_from_module(
+            module,
+            system_key,
+            system,
+            fallback_n_data_qubits=n_data_qubits,
+        )
+        a_block = np.array(system.get_global_matrix(), dtype=np.complex128)
+        b_unnorm = np.array(system.get_global_b_vector(), dtype=np.complex128)
+        terms = build_terms_from_distributed_system(
+            system=system,
+            data_wires=data_wires,
+            atol=atol,
+        )
+
+    global_dim = int(a_block.shape[0])
 
     j = float(getattr(module, "J", 0.0))
     h = float(getattr(module, "h", 0.0))
     eta = float(getattr(module, "eta", 0.0))
     zeta = float(getattr(module, "zeta", 1.0))
 
-    a_block = np.array(system.get_global_matrix(), dtype=np.complex128)
     condition_number = float(np.linalg.cond(a_block))
-    data_wires = list(getattr(module, "DATA_WIRES", list(range(n_data_qubits))))
-    terms = build_terms_from_distributed_system(
-        system=system,
-        data_wires=data_wires,
-        atol=float(problem_cfg["consistency_atol"]),
-    )
     a_formula = build_formula_matrix(n_total_qubits=n_total_qubits, terms=terms)
 
-    atol = float(problem_cfg["consistency_atol"])
     diff = a_formula - a_block
     matrix_max_abs_diff = float(np.max(np.abs(diff)))
     matrix_fro_diff = float(np.linalg.norm(diff))
     matrix_allclose = bool(np.allclose(a_formula, a_block, atol=atol, rtol=0.0))
 
-    b_unnorm = np.array(system.get_global_b_vector(), dtype=np.complex128)
+    if reference_a.shape != a_block.shape:
+        raise RuntimeError(
+            f"Reference/system A shape mismatch: target {a_block.shape} vs reference {reference_a.shape}"
+        )
+    if reference_b.shape != b_unnorm.shape:
+        raise RuntimeError(
+            f"Reference/system b shape mismatch: target {b_unnorm.shape} vs reference {reference_b.shape}"
+        )
+
+    ref_a_diff = a_block - reference_a
+    reference_matrix_max_abs_diff = float(np.max(np.abs(ref_a_diff)))
+    reference_matrix_fro_diff = float(np.linalg.norm(ref_a_diff))
+    reference_matrix_allclose = bool(
+        np.allclose(a_block, reference_a, atol=atol, rtol=0.0)
+    )
+
+    ref_b_diff = b_unnorm - reference_b
+    reference_b_max_abs_diff = float(np.max(np.abs(ref_b_diff)))
+    reference_b_l2_diff = float(np.linalg.norm(ref_b_diff))
+    reference_b_allclose = bool(
+        np.allclose(b_unnorm, reference_b, atol=b_atol, rtol=0.0)
+    )
+
     b_unnorm_norm = float(np.linalg.norm(b_unnorm))
     if b_unnorm_norm <= 0.0:
         raise RuntimeError("Unnormalized b has zero norm.")
@@ -429,6 +610,8 @@ def load_centralized_data(cfg: dict, repo_root: Path) -> CentralizedIsingData:
 
     return CentralizedIsingData(
         static_ops_path=static_ops_path,
+        problem_source=problem_source,
+        reference_system_key=reference_system_key,
         n_agents=n_agents,
         n_index_qubits=n_index_qubits,
         n_data_qubits=n_data_qubits,
@@ -449,6 +632,12 @@ def load_centralized_data(cfg: dict, repo_root: Path) -> CentralizedIsingData:
         b_normed=b_normed,
         b_unnorm_norm=b_unnorm_norm,
         b_unitary_info=b_unitary_info,
+        reference_matrix_max_abs_diff=reference_matrix_max_abs_diff,
+        reference_matrix_fro_diff=reference_matrix_fro_diff,
+        reference_matrix_allclose=reference_matrix_allclose,
+        reference_b_max_abs_diff=reference_b_max_abs_diff,
+        reference_b_l2_diff=reference_b_l2_diff,
+        reference_b_allclose=reference_b_allclose,
     )
 
 
@@ -719,6 +908,7 @@ def write_report(
     report_lines.append("")
     report_lines.append(f"- Timestamp: {datetime.now().isoformat(timespec='seconds')}")
     report_lines.append(f"- Static ops path: `{data.static_ops_path}`")
+    report_lines.append(f"- Loaded problem source: `{data.problem_source}`")
     report_lines.append(f"- Total qubits: {data.n_total_qubits}")
     report_lines.append(f"- Agents: {data.n_agents} (index qubits={data.n_index_qubits}, local qubits={data.n_data_qubits})")
     report_lines.append("")
@@ -728,6 +918,22 @@ def write_report(
     report_lines.append(f"- Formula vs block Frobenius diff: {data.matrix_fro_diff:.6e}")
     report_lines.append(f"- allclose(atol={cfg['problem']['consistency_atol']}, rtol=0): {data.matrix_allclose}")
     report_lines.append(f"- Condition number of A (2-norm): {data.condition_number:.12e}")
+    report_lines.append("")
+
+    report_lines.append("## Equation Match vs Distributed Reference")
+    report_lines.append(f"- Reference system key: `{data.reference_system_key}`")
+    report_lines.append(f"- A_target vs A_ref max abs diff: {data.reference_matrix_max_abs_diff:.6e}")
+    report_lines.append(f"- A_target vs A_ref Frobenius diff: {data.reference_matrix_fro_diff:.6e}")
+    report_lines.append(
+        f"- A_target vs A_ref allclose(atol={cfg['problem']['consistency_atol']}, rtol=0): "
+        f"{data.reference_matrix_allclose}"
+    )
+    report_lines.append(f"- b_target vs b_ref max abs diff: {data.reference_b_max_abs_diff:.6e}")
+    report_lines.append(f"- b_target vs b_ref L2 diff: {data.reference_b_l2_diff:.6e}")
+    report_lines.append(
+        f"- b_target vs b_ref allclose(atol={cfg['problem'].get('b_consistency_atol', cfg['problem']['consistency_atol'])}, "
+        f"rtol=0): {data.reference_b_allclose}"
+    )
     report_lines.append("")
 
     report_lines.append("## b-Vector and Unitary")
@@ -824,15 +1030,23 @@ def main() -> None:
 
     data = load_centralized_data(cfg, repo_root=repo_root)
 
+    print("[problem] source:", data.problem_source)
     print("[consistency] formula/block max abs diff:", f"{data.matrix_max_abs_diff:.6e}")
     print("[consistency] formula/block fro diff:", f"{data.matrix_fro_diff:.6e}")
     print("[consistency] allclose:", data.matrix_allclose)
     print("[matrix] cond(A):", f"{data.condition_number:.12e}")
     if not data.matrix_allclose:
         raise RuntimeError(
-            "Global matrix from the closed-form formula is not consistent with the block-partition matrix. "
-            "Please check static-ops parameters and wire ordering."
+            "Matrix from loaded terms is not consistent with the loaded centralized target matrix. "
+            "Please check static-ops centralized terms/matrix definition and wire ordering."
         )
+    print("[reference] system key:", data.reference_system_key)
+    print("[reference] A_target vs A_ref max abs diff:", f"{data.reference_matrix_max_abs_diff:.6e}")
+    print("[reference] A_target vs A_ref fro diff:", f"{data.reference_matrix_fro_diff:.6e}")
+    print("[reference] A_target vs A_ref allclose:", data.reference_matrix_allclose)
+    print("[reference] b_target vs b_ref max abs diff:", f"{data.reference_b_max_abs_diff:.6e}")
+    print("[reference] b_target vs b_ref l2 diff:", f"{data.reference_b_l2_diff:.6e}")
+    print("[reference] b_target vs b_ref allclose:", data.reference_b_allclose)
     print("[b] ||b_unnorm||:", f"{data.b_unnorm_norm:.12f}")
     print("[b] b unitary mode:", data.b_unitary_info.mode)
     print("[b] ||b_normed - |+>^n||:", f"{data.b_unitary_info.hadamard_match_error:.6e}")

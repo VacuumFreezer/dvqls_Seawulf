@@ -1,6 +1,11 @@
 problem:
-  static_ops_path: problems/static_ops_16agents_Ising_forcen.py
+  static_ops_path: problems/static_ops_3net_Ising.py
+  system_key: "4x4"
+  prefer_centralized_problem: true
+  centralized_problem_key: centralized
+  consistency_system_key: "4x4"
   consistency_atol: 1.0e-12
+  b_consistency_atol: 1.0e-12
   b_state_tolerance: 1.0e-10
 
 ansatz:

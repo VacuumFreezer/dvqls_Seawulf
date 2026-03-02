@@ -1,0 +1,69 @@
+run_root: run
+tag: 3networks_ising_global10q_k50
+
+# Shared random seeds for all algorithm families (override per algorithm if needed).
+seeds: [2, 3, 7, 42, 54, 532, 564, 601, 1234, 4321, 6026, 9312]
+
+common:
+  epochs: 30000
+  log_every: 30
+
+algorithms:
+  - name: dist_4x4
+    kind: distributed
+    script: optimization/seawulf_cat_line_tracking_nodispatch.py
+    static_ops: problems.static_ops_3net_Ising
+    problem_name: ising_q9_same_A_b
+    topologies: [line]
+    pass_topology: true
+    lr_sets:
+      - tag: lr1
+        lr: 0.001
+    decay_sets:
+      - tag: d1
+        decay: 1.0
+
+  - name: dist_2x2
+    kind: distributed
+    script: optimization/seawulf_cat_line_tracking_nodispatch_2x2.py
+    static_ops: problems.static_ops_3net_Ising
+    problem_name: ising_q9_same_A_b
+    topologies: [line]
+    pass_topology: false
+    lr_sets:
+      - tag: lr1
+        lr: 0.001
+    decay_sets:
+      - tag: d1
+        decay: 1.0
+
+  - name: centralized_qjit
+    kind: centralized_qjit
+    script: cen_vqls/centralized_vqls_ising_qjit.py
+    base_config: cen_vqls/config.yaml
+    report_tag: centralized_vqls_ising_qjit
+    config_overrides:
+      problem:
+        static_ops_path: problems/static_ops_3net_Ising.py
+        system_key: "4x4"
+        prefer_centralized_problem: true
+        centralized_problem_key: centralized
+        consistency_system_key: "4x4"
+        consistency_atol: 1.0e-12
+        b_consistency_atol: 1.0e-12
+      ansatz:
+        layers: 8
+      optimization:
+        steps: 30000
+        learning_rate: 0.001
+        print_every: 30
+        optimize_metric: global_CG
+      runtime:
+        interface: jax
+        device: lightning.qubit
+        diff_method: adjoint
+        use_qjit: true
+        fallback_to_jax_jit: false
+        qjit_autograph: false
+        jit_training_step: true
+        warmup_compile: true
