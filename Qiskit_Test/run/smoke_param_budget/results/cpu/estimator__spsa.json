@@ -1,0 +1,80 @@
+{
+  "configuration": {
+    "ansatz_mode": "fixed_param_budget",
+    "backend_options": {
+      "device": "CPU",
+      "method": "statevector"
+    },
+    "compute_target": "cpu",
+    "eval_mode": "estimator",
+    "eval_repeats": 1,
+    "eval_warmup": 1,
+    "grad_repeats": 1,
+    "grad_warmup": 1,
+    "gradient_method": "spsa",
+    "layers": 2,
+    "num_parameters": 12,
+    "num_qubits_total": 10,
+    "num_system_qubits": 9,
+    "requested_num_parameters": 12,
+    "sampler_shots": 1024,
+    "seed": 1234
+  },
+  "environment": {
+    "hostname": "milan1",
+    "python": "3.9.21",
+    "qiskit": "2.2.3",
+    "qiskit_aer": "0.17.2",
+    "qiskit_algorithms": "0.4.0",
+    "timestamp_utc": "2026-03-06T22:22:25.747320+00:00"
+  },
+  "metadata": {
+    "eval_result_metadata": {
+      "circuit_metadata": {},
+      "simulator_metadata": {
+        "max_gpu_memory_mb": 0,
+        "max_memory_mb": 515560,
+        "omp_enabled": true,
+        "parallel_experiments": 1,
+        "time_taken_execute": 0.000195698,
+        "time_taken_parameter_binding": 2.1089e-05
+      },
+      "target_precision": 0.0
+    }
+  },
+  "metrics": {
+    "gradient_l2_norm": 0.11610211208194633,
+    "gradient_shape": [
+      12
+    ],
+    "last_expectation": -0.15660216400930504,
+    "sampler_last_counts": {}
+  },
+  "samples": {
+    "eval_seconds": [
+      0.002882484346628189
+    ],
+    "grad_seconds": [
+      0.005582999438047409
+    ]
+  },
+  "status": "ok",
+  "timings": {
+    "eval_seconds": {
+      "count": 1,
+      "max": 0.002882484346628189,
+      "mean": 0.002882484346628189,
+      "median": 0.002882484346628189,
+      "min": 0.002882484346628189,
+      "std": 0.0
+    },
+    "grad_seconds": {
+      "count": 1,
+      "max": 0.005582999438047409,
+      "mean": 0.005582999438047409,
+      "median": 0.005582999438047409,
+      "min": 0.005582999438047409,
+      "std": 0.0
+    }
+  }
+}

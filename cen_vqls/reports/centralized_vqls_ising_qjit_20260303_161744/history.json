@@ -1,0 +1,21 @@
+[
+  {
+    "iteration": 1,
+    "time_iso": "2026-03-03T16:18:20.669",
+    "elapsed_s": 15.500757455825806,
+    "global_CG": 0.9999822266197934,
+    "l2_abs_raw": 20.627019954644254,
+    "l2_rel_raw": 1.8187497364841316,
+    "l2_abs_aligned": 20.5816717202588,
+    "l2_rel_aligned": 1.8147512389057165,
+    "phase_angle_rad": 3.141592653589793,
+    "ax_norm": 0.46505805836410025,
+    "scale_ratio": 17.20215327122989,
+    "residual_ax_minus_b_abs_raw": 11.337531858070648,
+    "residual_ax_minus_b_rel_raw": 1.4171914822588294,
+    "residual_ax_minus_b_abs_aligned": 11.289834868908736,
+    "residual_ax_minus_b_rel_aligned": 1.4112293586135904,
+    "residual_ax_minus_b_abs": 11.289834868908736,
+    "residual_ax_minus_b_rel": 1.4112293586135904
+  }
+]

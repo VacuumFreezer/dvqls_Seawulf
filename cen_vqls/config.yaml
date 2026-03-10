@@ -1,5 +1,5 @@
 problem:
-  static_ops_path: problems/static_ops_3net_Ising.py
+  static_ops_path: problems/static_ops_16agents_Ising_forcen.py
   system_key: "4x4"
   prefer_centralized_problem: true
   centralized_problem_key: centralized
@@ -9,13 +9,13 @@ problem:
   b_state_tolerance: 1.0e-10
 
 ansatz:
-  layers: 7
+  layers: 8
   init_low: -3.141592653589793
   init_high: 3.141592653589793
   init_sigma: 1.0
 
 optimization:
-  steps: 30000
+  steps: 10000
   learning_rate: 0.001
   beta1: 0.9
   beta2: 0.999
@@ -40,7 +40,7 @@ report:
 
 taskgen:
   # Choose the optimization script profile used by gen_tasks_cen_vqls_qjit.py.
-  optimization_script: single
+  optimization_script: tracking_vqls
   # Folder name under run/<tag> for generated task files.
   tag: my_cen_vqls_tasks
 
@@ -51,11 +51,12 @@ taskgen:
     seed_min: 0
     seed_max: 1000
     rng_seed: null
-    seeds: [2, 3, 7, 42, 54, 532]               # used when mode=explicit
+    seeds: [2, 3, 7, 42, 54, 532, 564, 601, 1234, 4321, 6026, 9312]               # used when mode=explicit
 
   # Map from option key -> script path.
   script_map:
     qjit_vqls: cen_vqls/centralized_vqls_ising_qjit.py
+    tracking_vqls: cen_vqls/centralized_vqls_ising_tracking.py
     single: cen_vqls/single_agent_qjit.py
 
   # Per-script overrides merged onto the base config before task generation.
@@ -71,13 +72,30 @@ taskgen:
         fallback_to_jax_jit: false
       report:
         tag: centralized_vqls_ising_qjit
+    tracking_vqls:
+      optimization:
+        optimize_metric: global_CG
+      runtime:
+        interface: jax
+        device: lightning.qubit
+        diff_method: adjoint
+        use_qjit: true
+        fallback_to_jax_jit: true
+        grad_mode: qjit
+        qnode_compile: none
+        qjit_autograph: false
+        jit_training_step: false
+        warmup_compile: true
+        log_local_cost: false
+      report:
+        tag: centralized_vqls_ising_tracking
     single:
       ansatz:
         init_sigma: 1.0
       optimization:
-        steps: 30000
+        steps: 20000
         learning_rate: 0.001
-        print_every: 100
+        print_every: 20
         optimize_metric: global_residual_sq
       runtime:
         interface: jax

@@ -1,0 +1,8 @@
+{
+  "requested_grad_mode": "qjit",
+  "resolved_grad_mode": "qjit",
+  "requested_qnode_compile": "none",
+  "resolved_qnode_compile": "none",
+  "catalyst_available": true,
+  "catalyst_error": null
+}

@@ -1,0 +1,8 @@
+=========================================
+JobID: 1740450  ArrayTask: 2
+Host: a100-01
+Start: Fri Mar  6 15:34:28 EST 2026
+Tasks file: Qiskit_Test/run/qiskit20_fullrun_20260306/tasks_gpu.txt
+CMD: python /gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/benchmark_hadamard_qiskit.py --compute-target gpu --eval-mode sampler_v2 --gradient-method reverse --num-qubits 20 --layers 2 --sampler-shots 1024 --seed 20310308 --eval-warmup 2 --eval-repeats 6 --grad-warmup 1 --grad-repeats 3 --json-out /gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/run/qiskit20_fullrun_20260306/results/gpu/sampler_v2__reverse.json
+=========================================
+End: Fri Mar  6 15:35:09 EST 2026

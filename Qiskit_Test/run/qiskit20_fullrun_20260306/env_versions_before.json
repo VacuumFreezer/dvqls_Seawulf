@@ -1,0 +1,12 @@
+{
+  "hostname": "milan1",
+  "label": "before",
+  "packages": {
+    "numpy": "2.0.2",
+    "qiskit": "2.2.3",
+    "qiskit_aer": "0.17.2",
+    "qiskit_algorithms": "0.4.0"
+  },
+  "python": "3.9.21",
+  "timestamp_utc": "2026-03-06T20:18:16.696405+00:00"
+}

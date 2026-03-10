@@ -35,8 +35,8 @@ N_AGENTS = 4
 
 # Ising-inspired params
 J = 0.1
-eta = 1.5
-zeta = 1.0  # keep as 1.0 here; scale coeffs elsewhere if needed
+eta = 10.43
+zeta = 20.45  # keep as 1.0 here; scale coeffs elsewhere if needed
 
 # =========================
 # Gate factories (return operator)

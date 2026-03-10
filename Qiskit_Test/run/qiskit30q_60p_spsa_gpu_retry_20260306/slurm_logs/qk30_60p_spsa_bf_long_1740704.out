@@ -1,0 +1,8 @@
+=========================================
+JobID: 1740704
+Node: a100-05
+Start: 2026-03-07T14:37:13-05:00
+=========================================
+OK target=gpu eval=estimator grad=spsa eval_mean=1.413926s grad_mean=2.865216s
+Wrote Qiskit_Test/run/qiskit30q_60p_spsa_gpu_retry_20260306/results/gpu/qiskit_gpu_30q_60p_estimator_spsa.json
+End: 2026-03-07T14:37:48-05:00

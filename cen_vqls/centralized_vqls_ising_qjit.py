@@ -334,7 +334,9 @@ class QJITHadamardCentralizedVQLS:
         return self._compile_fn(qnode)
 
     def _make_state_fn(self):
-        @qml.qnode(self.dev_state, interface="jax", diff_method=self.diff_method)
+        # State readout is metric-only; disable differentiation to avoid
+        # adjoint + qml.state incompatibility on lightning.qubit.
+        @qml.qnode(self.dev_state, interface="jax", diff_method=None)
         def qnode(weights: jnp.ndarray):
             _global_ansatz(weights, wires=range(self.n))
             return qml.state()

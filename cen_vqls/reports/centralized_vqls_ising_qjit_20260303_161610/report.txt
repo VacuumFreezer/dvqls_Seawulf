@@ -1,0 +1,26 @@
+[2026-03-03 16:16:14] [problem] source: distributed_system[4x4]
+[2026-03-03 16:16:14] [consistency] formula/block max abs diff: 1.110223e-16
+[2026-03-03 16:16:14] [consistency] formula/block fro diff: 2.830524e-16
+[2026-03-03 16:16:14] [consistency] allclose: True
+[2026-03-03 16:16:14] [matrix] cond(A): 2.247957191452e+00
+[2026-03-03 16:16:14] [reference] system key: 4x4
+[2026-03-03 16:16:14] [reference] A_target vs A_ref max abs diff: 0.000000e+00
+[2026-03-03 16:16:14] [reference] A_target vs A_ref fro diff: 0.000000e+00
+[2026-03-03 16:16:14] [reference] A_target vs A_ref allclose: True
+[2026-03-03 16:16:14] [reference] b_target vs b_ref max abs diff: 0.000000e+00
+[2026-03-03 16:16:14] [reference] b_target vs b_ref l2 diff: 0.000000e+00
+[2026-03-03 16:16:14] [reference] b_target vs b_ref allclose: True
+[2026-03-03 16:16:14] [compile] requested grad mode: jax
+[2026-03-03 16:16:14] [compile] resolved grad mode: jax
+[2026-03-03 16:16:14] [compile] requested qnode compile: none
+[2026-03-03 16:16:14] [compile] resolved qnode compile: none
+[2026-03-03 16:16:14] [compile] catalyst available: False
+[2026-03-03 16:16:14] [metrics] optimize_metric: global_CG
+[2026-03-03 16:16:14] [metrics] log_local_cost: False
+[2026-03-03 16:16:14] [metrics] include_local_in_reports: False
+[2026-03-03 16:16:14] [metrics] mu_terms_enabled: False
+[2026-03-03 16:16:14] [metrics] beta_word_count: 29
+[2026-03-03 16:16:14] [metrics] all_word_count: 29
+[2026-03-03 16:16:14] [metrics] mu_word_count_per_wire: disabled
+[2026-03-03 16:17:11] [iter 0001] global_CG=9.99982227e-01 CG=9.99982227e-01 CL=disabled ||Ax_est-b||(aligned)=1.12898349e+01 L2_rel(aligned)=1.81475124e+00 L2_rel(raw)=1.81874974e+00 backend=jax
+[2026-03-03 16:17:24] [done] report directory: /gpfs/home/tonshen/Seawulf_simulation/cen_vqls/reports/centralized_vqls_ising_qjit_20260303_161610

@@ -1,0 +1,8 @@
+=========================================
+JobID: 1740443  ArrayTask: 0
+Host: rn006
+Start: Fri Mar  6 15:32:58 EST 2026
+Tasks file: Qiskit_Test/run/qiskit20_fullrun_20260306/tasks_cpu.txt
+CMD: python /gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/benchmark_hadamard_qiskit.py --compute-target cpu --eval-mode estimator --gradient-method reverse --num-qubits 20 --layers 2 --sampler-shots 1024 --seed 20260306 --eval-warmup 2 --eval-repeats 6 --grad-warmup 1 --grad-repeats 3 --json-out /gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/run/qiskit20_fullrun_20260306/results/cpu/estimator__reverse.json
+=========================================
+End: Fri Mar  6 15:33:54 EST 2026

@@ -1,0 +1,85 @@
+{
+  "configuration": {
+    "backend_options": {
+      "device": "GPU",
+      "method": "statevector"
+    },
+    "compute_target": "gpu",
+    "eval_mode": "estimator",
+    "eval_repeats": 6,
+    "eval_warmup": 2,
+    "grad_repeats": 3,
+    "grad_warmup": 1,
+    "gradient_method": "reverse",
+    "layers": 2,
+    "num_parameters": 114,
+    "num_qubits_total": 20,
+    "num_system_qubits": 19,
+    "sampler_shots": 1024,
+    "seed": 20310306
+  },
+  "environment": {
+    "hostname": "a100-01",
+    "python": "3.9.21",
+    "qiskit": "2.2.3",
+    "qiskit_aer": "0.17.2",
+    "qiskit_algorithms": "0.4.0",
+    "timestamp_utc": "2026-03-06T20:33:38.998534+00:00"
+  },
+  "metadata": {
+    "eval_result_metadata": {
+      "circuit_metadata": {},
+      "simulator_metadata": {
+        "max_gpu_memory_mb": 81152,
+        "max_memory_mb": 257373,
+        "omp_enabled": true,
+        "parallel_experiments": 1,
+        "time_taken_execute": 0.00354752,
+        "time_taken_parameter_binding": 8.4561e-05
+      },
+      "target_precision": 0.0
+    }
+  },
+  "metrics": {
+    "gradient_l2_norm": 0.4413640056505357,
+    "gradient_shape": [
+      114
+    ],
+    "last_expectation": -0.7160135130141979,
+    "sampler_last_counts": {}
+  },
+  "samples": {
+    "eval_seconds": [
+      0.013030899921432137,
+      0.013023050967603922,
+      0.012995388126000762,
+      0.012976791011169553,
+      0.012910634046420455,
+      0.01322470000013709
+    ],
+    "grad_seconds": [
+      9.7248076479882,
+      9.756029730895534,
+      9.580915518803522
+    ]
+  },
+  "status": "ok",
+  "timings": {
+    "eval_seconds": {
+      "count": 6,
+      "max": 0.01322470000013709,
+      "mean": 0.013026910678793987,
+      "median": 0.013009219546802342,
+      "min": 0.012910634046420455,
+      "std": 9.676202312734166e-05
+    },
+    "grad_seconds": {
+      "count": 3,
+      "max": 9.756029730895534,
+      "mean": 9.687250965895752,
+      "median": 9.7248076479882,
+      "min": 9.580915518803522,
+      "std": 0.07626325063662254
+    }
+  }
+}

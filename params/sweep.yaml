@@ -26,7 +26,7 @@ cases:
   # - name: centralized
   #   script: optimization/seawulf_centralized_vqls.py
   - name: catalyst_tracking
-    script: optimization/seawulf_cat_line_tracking_nodispatch.py
+    script: optimization/seawulf_cat_line_tracking_nodispatch_2x2.py
   # - name: track_adamX_adamZ
   #   script: optimization/met_line_tracking.py
   # - name: track_adamX_only
@@ -67,11 +67,11 @@ decay_sets:
   #   decay: 0.995
 
 # seeds: [2, 3, 54, 532, 7, 42, 564, 601, 1234, 4321]
-seeds: [2, 3, 54, 532, 7, 42]
+seeds: [2,3]
 # system_ids: [0]     
 
 common:
-  epochs: 30000
+  epochs: 5000
   # decay: 0.9999
-  log_every: 20
+  log_every: 50
   # lr: 0.001

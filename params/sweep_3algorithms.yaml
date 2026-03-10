@@ -9,33 +9,33 @@ common:
   log_every: 30
 
 algorithms:
-  - name: dist_4x4
-    kind: distributed
-    script: optimization/seawulf_cat_line_tracking_nodispatch.py
-    static_ops: problems.static_ops_3net_Ising
-    problem_name: ising_q9_same_A_b
-    topologies: [line]
-    pass_topology: true
-    lr_sets:
-      - tag: lr1
-        lr: 0.001
-    decay_sets:
-      - tag: d1
-        decay: 1.0
+  # - name: dist_4x4
+  #   kind: distributed
+  #   script: optimization/seawulf_cat_line_tracking_nodispatch.py
+  #   static_ops: problems.static_ops_3net_Ising
+  #   problem_name: ising_q9_same_A_b
+  #   topologies: [line]
+  #   pass_topology: true
+  #   lr_sets:
+  #     - tag: lr1
+  #       lr: 0.001
+  #   decay_sets:
+  #     - tag: d1
+  #       decay: 1.0
 
-  - name: dist_2x2
-    kind: distributed
-    script: optimization/seawulf_cat_line_tracking_nodispatch_2x2.py
-    static_ops: problems.static_ops_3net_Ising
-    problem_name: ising_q9_same_A_b
-    topologies: [line]
-    pass_topology: false
-    lr_sets:
-      - tag: lr1
-        lr: 0.001
-    decay_sets:
-      - tag: d1
-        decay: 1.0
+  # - name: dist_2x2
+  #   kind: distributed
+  #   script: optimization/seawulf_cat_line_tracking_nodispatch_2x2.py
+  #   static_ops: problems.static_ops_3net_Ising
+  #   problem_name: ising_q9_same_A_b
+  #   topologies: [line]
+  #   pass_topology: false
+  #   lr_sets:
+  #     - tag: lr1
+  #       lr: 0.001
+  #   decay_sets:
+  #     - tag: d1
+  #       decay: 1.0
 
   - name: centralized_qjit
     kind: centralized_qjit
@@ -62,8 +62,11 @@ algorithms:
         interface: jax
         device: lightning.qubit
         diff_method: adjoint
-        use_qjit: true
-        fallback_to_jax_jit: false
+        use_qjit: false
+        fallback_to_jax_jit: true
+        qjit_stability_probe: true
+        qjit_probe_timeout_s: 300.0
+        force_safe_fallback_on_probe_failure: true
         qjit_autograph: false
         jit_training_step: true
         warmup_compile: true

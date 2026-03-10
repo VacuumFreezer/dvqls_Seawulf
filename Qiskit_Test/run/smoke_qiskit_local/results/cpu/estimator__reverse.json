@@ -1,0 +1,80 @@
+{
+  "configuration": {
+    "backend_options": {
+      "device": "CPU",
+      "method": "statevector"
+    },
+    "compute_target": "cpu",
+    "eval_mode": "estimator",
+    "eval_repeats": 2,
+    "eval_warmup": 1,
+    "grad_repeats": 2,
+    "grad_warmup": 1,
+    "gradient_method": "reverse",
+    "layers": 1,
+    "num_parameters": 15,
+    "num_qubits_total": 6,
+    "num_system_qubits": 5,
+    "sampler_shots": 1024,
+    "seed": 1234
+  },
+  "environment": {
+    "hostname": "milan1",
+    "python": "3.9.21",
+    "qiskit": "2.2.3",
+    "qiskit_aer": "0.17.2",
+    "qiskit_algorithms": "0.4.0",
+    "timestamp_utc": "2026-03-06T20:17:53.345251+00:00"
+  },
+  "metadata": {
+    "eval_result_metadata": {
+      "circuit_metadata": {},
+      "simulator_metadata": {
+        "max_gpu_memory_mb": 0,
+        "max_memory_mb": 515560,
+        "omp_enabled": true,
+        "parallel_experiments": 1,
+        "time_taken_execute": 8.9538e-05,
+        "time_taken_parameter_binding": 1.5619e-05
+      },
+      "target_precision": 0.0
+    }
+  },
+  "metrics": {
+    "gradient_l2_norm": 0.22249314234164244,
+    "gradient_shape": [
+      15
+    ],
+    "last_expectation": -0.7578068870823048,
+    "sampler_last_counts": {}
+  },
+  "samples": {
+    "eval_seconds": [
+      0.0032350048422813416,
+      0.0026071444153785706
+    ],
+    "grad_seconds": [
+      0.02106906659901142,
+      0.021563388407230377
+    ]
+  },
+  "status": "ok",
+  "timings": {
+    "eval_seconds": {
+      "count": 2,
+      "max": 0.0032350048422813416,
+      "mean": 0.002921074628829956,
+      "median": 0.002921074628829956,
+      "min": 0.0026071444153785706,
+      "std": 0.0003139302134513855
+    },
+    "grad_seconds": {
+      "count": 2,
+      "max": 0.021563388407230377,
+      "mean": 0.0213162275031209,
+      "median": 0.0213162275031209,
+      "min": 0.02106906659901142,
+      "std": 0.000247160904109478
+    }
+  }
+}

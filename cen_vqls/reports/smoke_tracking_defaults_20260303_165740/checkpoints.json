@@ -1,0 +1,26 @@
+[
+  {
+    "iteration": 1,
+    "time_iso": "2026-03-03T17:01:42.389",
+    "elapsed_s": 0.19911885261535645,
+    "global_CG": 0.9999999982295553,
+    "global_CL": NaN,
+    "global_CG_hat": 0.24788400200705316,
+    "global_CL_hat": NaN,
+    "beta": 0.24788400244591807,
+    "overlap_sq": 4.3886491551412796e-10,
+    "l2_abs_raw": 17.95469665189813,
+    "l2_rel_raw": 2.2411660305942145,
+    "l2_abs_aligned": 17.954439478402133,
+    "l2_rel_aligned": 2.241133929327656,
+    "phase_angle_rad": 3.141592653589793,
+    "ax_norm": 0.4978795059509057,
+    "scale_ratio": 16.068144810902687,
+    "residual_ax_minus_b_abs_raw": 11.313946517971607,
+    "residual_ax_minus_b_rel_raw": 1.4142433147464493,
+    "residual_ax_minus_b_abs_aligned": 11.313470474990101,
+    "residual_ax_minus_b_rel_aligned": 1.414183809373761,
+    "residual_ax_minus_b_abs": 11.313470474990101,
+    "residual_ax_minus_b_rel": 1.414183809373761
+  }
+]

@@ -1,0 +1,88 @@
+{
+  "configuration": {
+    "backend_options": {
+      "device": "CPU",
+      "method": "statevector"
+    },
+    "compute_target": "cpu",
+    "eval_mode": "sampler_v2",
+    "eval_repeats": 6,
+    "eval_warmup": 2,
+    "grad_repeats": 3,
+    "grad_warmup": 1,
+    "gradient_method": "reverse",
+    "layers": 2,
+    "num_parameters": 114,
+    "num_qubits_total": 20,
+    "num_system_qubits": 19,
+    "sampler_shots": 1024,
+    "seed": 20260308
+  },
+  "environment": {
+    "hostname": "rn006",
+    "python": "3.9.21",
+    "qiskit": "2.2.3",
+    "qiskit_aer": "0.17.2",
+    "qiskit_algorithms": "0.4.0",
+    "timestamp_utc": "2026-03-06T20:35:21.442376+00:00"
+  },
+  "metadata": {
+    "eval_result_metadata": {
+      "circuit_metadata": {},
+      "shots": 1024,
+      "simulator_metadata": {
+        "max_gpu_memory_mb": 0,
+        "max_memory_mb": 191883,
+        "omp_enabled": true,
+        "parallel_experiments": 1,
+        "time_taken_execute": 0.38975513,
+        "time_taken_parameter_binding": 9.2646e-05
+      }
+    }
+  },
+  "metrics": {
+    "gradient_l2_norm": 0.4923947047595304,
+    "gradient_shape": [
+      114
+    ],
+    "last_expectation": -0.681640625,
+    "sampler_last_counts": {
+      "0": 163,
+      "1": 861
+    }
+  },
+  "samples": {
+    "eval_seconds": [
+      0.4017078860197216,
+      0.400695250951685,
+      0.39818979997653514,
+      0.3982820169767365,
+      0.4019402130506933,
+      0.39783333893865347
+    ],
+    "grad_seconds": [
+      12.026086008059792,
+      12.145868354011327,
+      12.185828589019366
+    ]
+  },
+  "status": "ok",
+  "timings": {
+    "eval_seconds": {
+      "count": 6,
+      "max": 0.4019402130506933,
+      "mean": 0.39977475098567083,
+      "median": 0.39948863396421075,
+      "min": 0.39783333893865347,
+      "std": 0.0017215769157689668
+    },
+    "grad_seconds": {
+      "count": 3,
+      "max": 12.185828589019366,
+      "mean": 12.119260983696828,
+      "median": 12.145868354011327,
+      "min": 12.026086008059792,
+      "std": 0.06787433073553956
+    }
+  }
+}

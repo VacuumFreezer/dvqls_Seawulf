@@ -1,0 +1,89 @@
+{
+  "counts": {
+    "cpu_tasks": 4,
+    "gpu_tasks": 4,
+    "total_tasks": 8
+  },
+  "created_at": "2026-03-06T20:18:04.932630Z",
+  "eval_modes": [
+    "estimator",
+    "sampler_v2"
+  ],
+  "eval_repeats": 6,
+  "eval_warmup": 2,
+  "grad_repeats": 3,
+  "grad_warmup": 1,
+  "gradient_methods": [
+    "reverse",
+    "spsa"
+  ],
+  "layers": 2,
+  "num_qubits_total": 20,
+  "num_system_qubits": 19,
+  "python_bin": "python",
+  "rows": [
+    {
+      "eval_mode": "estimator",
+      "gradient_method": "reverse",
+      "json_out": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/run/qiskit20_fullrun_20260306/results/cpu/estimator__reverse.json",
+      "seed": 20260306,
+      "target": "cpu"
+    },
+    {
+      "eval_mode": "estimator",
+      "gradient_method": "spsa",
+      "json_out": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/run/qiskit20_fullrun_20260306/results/cpu/estimator__spsa.json",
+      "seed": 20260307,
+      "target": "cpu"
+    },
+    {
+      "eval_mode": "sampler_v2",
+      "gradient_method": "reverse",
+      "json_out": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/run/qiskit20_fullrun_20260306/results/cpu/sampler_v2__reverse.json",
+      "seed": 20260308,
+      "target": "cpu"
+    },
+    {
+      "eval_mode": "sampler_v2",
+      "gradient_method": "spsa",
+      "json_out": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/run/qiskit20_fullrun_20260306/results/cpu/sampler_v2__spsa.json",
+      "seed": 20260309,
+      "target": "cpu"
+    },
+    {
+      "eval_mode": "estimator",
+      "gradient_method": "reverse",
+      "json_out": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/run/qiskit20_fullrun_20260306/results/gpu/estimator__reverse.json",
+      "seed": 20310306,
+      "target": "gpu"
+    },
+    {
+      "eval_mode": "estimator",
+      "gradient_method": "spsa",
+      "json_out": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/run/qiskit20_fullrun_20260306/results/gpu/estimator__spsa.json",
+      "seed": 20310307,
+      "target": "gpu"
+    },
+    {
+      "eval_mode": "sampler_v2",
+      "gradient_method": "reverse",
+      "json_out": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/run/qiskit20_fullrun_20260306/results/gpu/sampler_v2__reverse.json",
+      "seed": 20310308,
+      "target": "gpu"
+    },
+    {
+      "eval_mode": "sampler_v2",
+      "gradient_method": "spsa",
+      "json_out": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/run/qiskit20_fullrun_20260306/results/gpu/sampler_v2__spsa.json",
+      "seed": 20310309,
+      "target": "gpu"
+    }
+  ],
+  "sampler_shots": 1024,
+  "suite_dir": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_Test/run/qiskit20_fullrun_20260306",
+  "tag": "qiskit20_fullrun_20260306",
+  "targets": [
+    "cpu",
+    "gpu"
+  ]
+}

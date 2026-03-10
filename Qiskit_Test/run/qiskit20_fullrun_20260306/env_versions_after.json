@@ -1,0 +1,15 @@
+{
+  "hostname": "milan1",
+  "label": "after",
+  "packages": {
+    "cuquantum-cu11": "24.8.0",
+    "numpy": "2.0.2",
+    "qiskit": "2.2.3",
+    "qiskit-aer-gpu": "MISSING: PackageNotFoundError: qiskit-aer-gpu",
+    "qiskit-aer-gpu-cu11": "0.17.2",
+    "qiskit_aer": "0.17.2",
+    "qiskit_algorithms": "0.4.0"
+  },
+  "python": "3.9.21",
+  "timestamp_utc": "2026-03-06T20:37:24.174883+00:00"
+}

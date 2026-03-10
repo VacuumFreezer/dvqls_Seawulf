@@ -1,0 +1,85 @@
+{
+  "configuration": {
+    "backend_options": {
+      "device": "CPU",
+      "method": "statevector"
+    },
+    "compute_target": "cpu",
+    "eval_mode": "estimator",
+    "eval_repeats": 6,
+    "eval_warmup": 2,
+    "grad_repeats": 3,
+    "grad_warmup": 1,
+    "gradient_method": "reverse",
+    "layers": 2,
+    "num_parameters": 114,
+    "num_qubits_total": 20,
+    "num_system_qubits": 19,
+    "sampler_shots": 1024,
+    "seed": 20260306
+  },
+  "environment": {
+    "hostname": "rn006",
+    "python": "3.9.21",
+    "qiskit": "2.2.3",
+    "qiskit_aer": "0.17.2",
+    "qiskit_algorithms": "0.4.0",
+    "timestamp_utc": "2026-03-06T20:33:54.553719+00:00"
+  },
+  "metadata": {
+    "eval_result_metadata": {
+      "circuit_metadata": {},
+      "simulator_metadata": {
+        "max_gpu_memory_mb": 0,
+        "max_memory_mb": 191883,
+        "omp_enabled": true,
+        "parallel_experiments": 1,
+        "time_taken_execute": 0.397197712,
+        "time_taken_parameter_binding": 9.306e-05
+      },
+      "target_precision": 0.0
+    }
+  },
+  "metrics": {
+    "gradient_l2_norm": 0.48183535132703315,
+    "gradient_shape": [
+      114
+    ],
+    "last_expectation": -0.6787636330015455,
+    "sampler_last_counts": {}
+  },
+  "samples": {
+    "eval_seconds": [
+      0.40445730299688876,
+      0.4028225219808519,
+      0.4024835820309818,
+      0.4017024450004101,
+      0.40232527593616396,
+      0.40586881001945585
+    ],
+    "grad_seconds": [
+      12.222313879989088,
+      12.218682911014184,
+      12.198343181982636
+    ]
+  },
+  "status": "ok",
+  "timings": {
+    "eval_seconds": {
+      "count": 6,
+      "max": 0.40586881001945585,
+      "mean": 0.40327665632745874,
+      "median": 0.40265305200591683,
+      "min": 0.4017024450004101,
+      "std": 0.001433623504540122
+    },
+    "grad_seconds": {
+      "count": 3,
+      "max": 12.222313879989088,
+      "mean": 12.213113324328637,
+      "median": 12.218682911014184,
+      "min": 12.198343181982636,
+      "std": 0.010548738079820957
+    }
+  }
+}

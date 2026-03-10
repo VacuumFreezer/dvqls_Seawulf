@@ -91,7 +91,7 @@ def main() -> None:
     ap.add_argument(
         "--optimization-script",
         default="",
-        help="Optional key override for taskgen.optimization_script (e.g., qjit_vqls or residual).",
+        help="Optional key override for taskgen.optimization_script (e.g., qjit_vqls, tracking_vqls, single).",
     )
     ap.add_argument(
         "--tag",

@@ -1,0 +1,8 @@
+{
+  "requested_grad_mode": "jax",
+  "resolved_grad_mode": "jax",
+  "requested_qnode_compile": "none",
+  "resolved_qnode_compile": "none",
+  "catalyst_available": false,
+  "catalyst_error": null
+}

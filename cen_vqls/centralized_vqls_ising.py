@@ -691,7 +691,9 @@ class HadamardCentralizedVQLS:
             qml.Hadamard(wires=self.control_wire)
             return qml.expval(qml.PauliZ(self.control_wire))
 
-        @qml.qnode(self.dev_state, interface=interface, diff_method=diff_method)
+        # State readout is only used for post-update diagnostics (no gradients).
+        # Keep diff_method disabled so adjoint mode does not fail on qml.state().
+        @qml.qnode(self.dev_state, interface=interface, diff_method=None)
         def state_qnode(weights: np.ndarray):
             _global_ansatz(weights, wires=range(self.n))
             return qml.state()

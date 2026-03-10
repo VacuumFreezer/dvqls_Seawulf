@@ -1,0 +1,27 @@
+[2026-03-03 16:45:33] [problem] source: distributed_system[4x4]
+[2026-03-03 16:45:33] [consistency] formula/block max abs diff: 1.110223e-16
+[2026-03-03 16:45:33] [consistency] formula/block fro diff: 2.195324e-15
+[2026-03-03 16:45:33] [consistency] allclose: True
+[2026-03-03 16:45:33] [matrix] cond(A): 5.019156051503e+01
+[2026-03-03 16:45:33] [reference] system key: 4x4
+[2026-03-03 16:45:33] [reference] A_target vs A_ref max abs diff: 0.000000e+00
+[2026-03-03 16:45:33] [reference] A_target vs A_ref fro diff: 0.000000e+00
+[2026-03-03 16:45:33] [reference] A_target vs A_ref allclose: True
+[2026-03-03 16:45:33] [reference] b_target vs b_ref max abs diff: 0.000000e+00
+[2026-03-03 16:45:33] [reference] b_target vs b_ref l2 diff: 0.000000e+00
+[2026-03-03 16:45:33] [reference] b_target vs b_ref allclose: True
+[2026-03-03 16:45:33] [compile] requested grad mode: jax_jit
+[2026-03-03 16:45:33] [compile] resolved grad mode: jax_jit
+[2026-03-03 16:45:33] [compile] requested qnode compile: none
+[2026-03-03 16:45:33] [compile] resolved qnode compile: none
+[2026-03-03 16:45:33] [compile] catalyst available: True
+[2026-03-03 16:45:34] [metrics] optimize_metric: global_CG
+[2026-03-03 16:45:34] [metrics] log_local_cost: False
+[2026-03-03 16:45:34] [metrics] include_local_in_reports: False
+[2026-03-03 16:45:34] [metrics] mu_terms_enabled: False
+[2026-03-03 16:45:34] [metrics] beta_word_count: 191
+[2026-03-03 16:45:34] [metrics] all_word_count: 191
+[2026-03-03 16:45:34] [metrics] mu_word_count_per_wire: disabled
+[2026-03-03 16:50:06] [iter 0001] global_CG=9.99999998e-01 CG=9.99999998e-01 CL=disabled ||Ax_est-b||(aligned)=1.13134705e+01 L2_rel(aligned)=2.24113393e+00 L2_rel(raw)=2.24116603e+00 backend=jax_jit
+[2026-03-03 16:52:23] [iter 0002] global_CG=9.99999998e-01 CG=9.99999998e-01 CL=disabled ||Ax_est-b||(aligned)=1.13134663e+01 L2_rel(aligned)=2.24115407e+00 L2_rel(raw)=2.24118681e+00 backend=jax_jit
+[2026-03-03 16:53:16] [done] report directory: /gpfs/home/tonshen/Seawulf_simulation/cen_vqls/reports/bench_jaxjit_20260303_164106

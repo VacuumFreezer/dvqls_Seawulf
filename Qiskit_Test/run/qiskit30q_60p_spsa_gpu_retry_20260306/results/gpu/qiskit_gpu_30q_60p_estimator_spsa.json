@@ -1,0 +1,91 @@
+{
+  "configuration": {
+    "ansatz_mode": "fixed_param_budget",
+    "backend_options": {
+      "device": "GPU",
+      "method": "statevector"
+    },
+    "compute_target": "gpu",
+    "eval_mode": "estimator",
+    "eval_repeats": 8,
+    "eval_warmup": 2,
+    "grad_repeats": 5,
+    "grad_warmup": 1,
+    "gradient_method": "spsa",
+    "layers": 2,
+    "num_parameters": 60,
+    "num_qubits_total": 30,
+    "num_system_qubits": 29,
+    "requested_num_parameters": 60,
+    "sampler_shots": 1024,
+    "seed": 1234
+  },
+  "environment": {
+    "hostname": "a100-05",
+    "python": "3.9.21",
+    "qiskit": "2.2.3",
+    "qiskit_aer": "0.17.2",
+    "qiskit_algorithms": "0.4.0",
+    "timestamp_utc": "2026-03-07T19:37:47.949113+00:00"
+  },
+  "metadata": {
+    "eval_result_metadata": {
+      "circuit_metadata": {},
+      "simulator_metadata": {
+        "max_gpu_memory_mb": 81152,
+        "max_memory_mb": 257373,
+        "omp_enabled": true,
+        "parallel_experiments": 1,
+        "time_taken_execute": 1.406406927,
+        "time_taken_parameter_binding": 7.6775e-05
+      },
+      "target_precision": 0.0
+    }
+  },
+  "metrics": {
+    "gradient_l2_norm": 1.9382171945702242,
+    "gradient_shape": [
+      60
+    ],
+    "last_expectation": -0.4035306943709742,
+    "sampler_last_counts": {}
+  },
+  "samples": {
+    "eval_seconds": [
+      1.4122065280098468,
+      1.4144086111336946,
+      1.4129228701349348,
+      1.4141338840126991,
+      1.4129677799064666,
+      1.4135280619375408,
+      1.412459152052179,
+      1.4187792339362204
+    ],
+    "grad_seconds": [
+      2.8190611568279564,
+      2.819529446074739,
+      3.047509714961052,
+      2.820585679030046,
+      2.8193953880108893
+    ]
+  },
+  "status": "ok",
+  "timings": {
+    "eval_seconds": {
+      "count": 8,
+      "max": 1.4187792339362204,
+      "mean": 1.4139257651404478,
+      "median": 1.4132479209220037,
+      "min": 1.4122065280098468,
+      "std": 0.00196917004312255
+    },
+    "grad_seconds": {
+      "count": 5,
+      "max": 3.047509714961052,
+      "mean": 2.8652162769809366,
+      "median": 2.819529446074739,
+      "min": 2.8190611568279564,
+      "std": 0.09114814677727369
+    }
+  }
+}

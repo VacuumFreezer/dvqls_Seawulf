@@ -1,0 +1,9 @@
+path,status,target,eval_mode,gradient_method,num_parameters,sampler_shots,eval_mean_s,grad_mean_s,expectation,grad_l2,backend_device_requested,sim_max_gpu_memory_mb,error_message
+results/cpu/estimator__reverse.json,ok,cpu,estimator,reverse,114,1024,0.40327665632745874,12.213113324328637,-0.6787636330015455,0.48183535132703315,CPU,0.0,
+results/cpu/estimator__spsa.json,ok,cpu,estimator,spsa,114,1024,0.405961282143835,0.8177581122921159,-0.6573035908434887,1.4912579481921941,CPU,0.0,
+results/cpu/sampler_v2__reverse.json,ok,cpu,sampler_v2,reverse,114,1024,0.39977475098567083,12.119260983696828,-0.681640625,0.4923947047595304,CPU,0.0,
+results/cpu/sampler_v2__spsa.json,ok,cpu,sampler_v2,spsa,114,1024,0.3988069883004452,0.8084425200164939,-0.724609375,3.501020785553398,CPU,0.0,
+results/gpu/estimator__reverse.json,ok,gpu,estimator,reverse,114,1024,0.013026910678793987,9.687250965895752,-0.7160135130141979,0.4413640056505357,GPU,81152.0,
+results/gpu/estimator__spsa.json,ok,gpu,estimator,spsa,114,1024,0.012997226634373268,0.02614911102379362,-0.6578922672710928,2.1740174904285947,GPU,81152.0,
+results/gpu/sampler_v2__reverse.json,ok,gpu,sampler_v2,reverse,114,1024,0.013654167375837764,9.917450297701484,-0.591796875,0.51816574417911,GPU,81152.0,
+results/gpu/sampler_v2__spsa.json,ok,gpu,sampler_v2,spsa,114,1024,0.014104046703626713,0.026440142731492717,-0.732421875,6.325844945619532,GPU,81152.0,
