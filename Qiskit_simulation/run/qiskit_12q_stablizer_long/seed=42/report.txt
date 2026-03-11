@@ -1,0 +1,22 @@
+[2026-03-11 04:01:06] System variant: cluster12_stabilizer_2x2_q2_index_qiskit
+[2026-03-11 04:01:06] static_ops module: Qiskit_simulation.static_ops_2x2_cluster12_stabilizer_qiskit
+[2026-03-11 04:01:06] local data qubits per agent: 11
+[2026-03-11 04:01:06] epochs=20000, log_every=50, lr=0.01, spsa_c=0.05
+[2026-03-11 04:01:06] Aer method=matrix_product_state, precision=single, max_bond_dim=8
+[2026-03-11 04:01:06] Metropolis weight matrix Wm =
+[[0.6666667  0.33333334]
+ [0.33333334 0.6666667 ]]
+[2026-03-11 04:01:06] Analytic spectrum: lambda_min=0.02000000, lambda_max=1.00000000, cond(A)=50.00000000
+[2026-03-11 04:01:07] [Init] Initial Loss = 8.018702e+00
+[2026-03-11 04:01:08] [Init] Residual = 1.145110e+00 | Variance(mean) = 3.929322e-01
+[2026-03-11 04:02:42] [Epoch 00050] Loss = 4.649318e+00 | Residual = 1.162001e+00 | Variance(mean) = 4.059125e-07
+[2026-03-11 04:04:15] [Epoch 00100] Loss = 2.488404e+00 | Residual = 1.143639e+00 | Variance(mean) = 7.333602e-07
+[2026-03-11 04:05:47] [Epoch 00150] Loss = 1.444437e+00 | Residual = 1.135343e+00 | Variance(mean) = 6.237125e-08
+[2026-03-11 04:07:19] [Epoch 00200] Loss = 9.604308e-01 | Residual = 1.131285e+00 | Variance(mean) = 3.536385e-07
+[2026-03-11 04:08:51] [Epoch 00250] Loss = 8.376842e-01 | Residual = 1.125404e+00 | Variance(mean) = 4.357787e-08
+[2026-03-11 04:10:23] [Epoch 00300] Loss = 7.658699e-01 | Residual = 1.119336e+00 | Variance(mean) = 3.156283e-08
+[2026-03-11 04:11:54] [Epoch 00350] Loss = 7.433421e-01 | Residual = 1.114289e+00 | Variance(mean) = 3.778603e-08
+[2026-03-11 04:13:26] [Epoch 00400] Loss = 7.227236e-01 | Residual = 1.106115e+00 | Variance(mean) = 4.719535e-08
+[2026-03-11 04:14:59] [Epoch 00450] Loss = 7.062877e-01 | Residual = 1.099101e+00 | Variance(mean) = 1.465514e-08
+[2026-03-11 04:16:30] [Epoch 00500] Loss = 6.913053e-01 | Residual = 1.092032e+00 | Variance(mean) = 1.160427e-08
+[2026-03-11 04:18:02] [Epoch 00550] Loss = 6.796710e-01 | Residual = 1.086770e+00 | Variance(mean) = 1.381768e-08

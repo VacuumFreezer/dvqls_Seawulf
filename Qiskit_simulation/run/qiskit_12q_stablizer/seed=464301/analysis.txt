@@ -1,0 +1,17 @@
+Qiskit/Aer MPS distributed 2x2 cluster30 run
+static_ops module: Qiskit_simulation.static_ops_2x2_cluster12_stabilizer_qiskit
+system name: cluster12_stabilizer_2x2_q2_index_qiskit
+epochs: 5000
+log_every: 50
+learning rate: 0.01
+spsa_c: 0.05
+precision: single
+max_bond_dim: 8
+num_threads: 1
+metropolis matrix:
+[[0.6666667  0.33333334]
+ [0.33333334 0.6666667 ]]
+block term counts: [[4, 2], [2, 4]]
+spectrum: {'lambda_min': 0.020000000000000018, 'lambda_max': 1.0, 'condition_number': 49.99999999999996, 'n_distinct_eigenvalues': 13, 'distinct_eigenvalues': [0.020000000000000018, 0.06000000000000005, 0.22499999999999998, 0.265, 0.30500000000000005, 0.47, 0.51, 0.55, 0.715, 0.755, 0.795, 0.96, 1.0], 'b_is_eigenvector': False}
+residual is computed from overlap formulas on the averaged column states x0=(v00+v10)/2 and x1=(v01+v11)/2,
+without building dense 2^30 vectors. variance is the mean of the two column-wise pair variances.

@@ -1,0 +1,67 @@
+[2026-03-10 05:16:26] System variant: cluster30_2x2_q2_index_qiskit
+[2026-03-10 05:16:26] static_ops module: Qiskit_simulation.static_ops_2x2_cluster30_qiskit
+[2026-03-10 05:16:26] local data qubits per agent: 29
+[2026-03-10 05:16:26] epochs=5000, log_every=50, lr=0.01, spsa_c=0.05
+[2026-03-10 05:16:26] Aer method=matrix_product_state, precision=single, max_bond_dim=8
+[2026-03-10 05:16:26] Metropolis weight matrix Wm =
+[[0.6666667  0.33333334]
+ [0.33333334 0.6666667 ]]
+[2026-03-10 05:16:26] Analytic spectrum: lambda_min=0.02000000, lambda_max=1.00000000, cond(A)=50.00000000
+[2026-03-10 05:16:32] [Init] Initial Loss = 1.623648e+01
+[2026-03-10 05:16:49] [Init] Residual = 1.163492e+00 | Variance(mean) = 6.123304e-01
+[2026-03-10 05:28:01] [Epoch 00050] Loss = 1.147997e+01 | Residual = 1.209189e+00 | Variance(mean) = 2.872448e-06
+[2026-03-10 05:39:01] [Epoch 00100] Loss = 8.345277e+00 | Residual = 1.220724e+00 | Variance(mean) = 2.519554e-06
+[2026-03-10 05:50:03] [Epoch 00150] Loss = 5.567828e+00 | Residual = 1.222536e+00 | Variance(mean) = 2.968169e-06
+[2026-03-10 06:01:05] [Epoch 00200] Loss = 3.593759e+00 | Residual = 1.224147e+00 | Variance(mean) = 4.192380e-06
+[2026-03-10 06:12:07] [Epoch 00250] Loss = 2.485732e+00 | Residual = 1.227440e+00 | Variance(mean) = 1.438469e-06
+[2026-03-10 06:23:08] [Epoch 00300] Loss = 1.806536e+00 | Residual = 1.219943e+00 | Variance(mean) = 2.505004e-07
+[2026-03-10 06:34:09] [Epoch 00350] Loss = 1.392908e+00 | Residual = 1.218440e+00 | Variance(mean) = 9.971274e-07
+[2026-03-10 06:45:11] [Epoch 00400] Loss = 1.145526e+00 | Residual = 1.209908e+00 | Variance(mean) = 4.244465e-07
+[2026-03-10 06:56:13] [Epoch 00450] Loss = 1.049366e+00 | Residual = 1.203378e+00 | Variance(mean) = 2.661734e-08
+[2026-03-10 07:07:15] [Epoch 00500] Loss = 9.711181e-01 | Residual = 1.198578e+00 | Variance(mean) = 2.613020e-07
+[2026-03-10 07:18:17] [Epoch 00550] Loss = 9.226792e-01 | Residual = 1.189509e+00 | Variance(mean) = 2.181048e-08
+[2026-03-10 07:29:19] [Epoch 00600] Loss = 8.939521e-01 | Residual = 1.181558e+00 | Variance(mean) = 6.948904e-08
+[2026-03-10 07:40:17] [Epoch 00650] Loss = 8.716159e-01 | Residual = 1.172300e+00 | Variance(mean) = 6.386429e-08
+[2026-03-10 07:51:15] [Epoch 00700] Loss = 8.500045e-01 | Residual = 1.162330e+00 | Variance(mean) = 5.902779e-09
+[2026-03-10 08:02:13] [Epoch 00750] Loss = 8.324365e-01 | Residual = 1.155466e+00 | Variance(mean) = 6.401025e-08
+[2026-03-10 08:13:10] [Epoch 00800] Loss = 8.076090e-01 | Residual = 1.145194e+00 | Variance(mean) = 1.008705e-07
+[2026-03-10 08:24:07] [Epoch 00850] Loss = 7.924547e-01 | Residual = 1.137904e+00 | Variance(mean) = 6.832656e-08
+[2026-03-10 08:35:05] [Epoch 00900] Loss = 7.763762e-01 | Residual = 1.130369e+00 | Variance(mean) = 9.666312e-08
+[2026-03-10 08:46:03] [Epoch 00950] Loss = 7.587686e-01 | Residual = 1.123378e+00 | Variance(mean) = 6.633665e-08
+[2026-03-10 08:57:00] [Epoch 01000] Loss = 7.420692e-01 | Residual = 1.115955e+00 | Variance(mean) = 2.922145e-08
+[2026-03-10 09:07:58] [Epoch 01050] Loss = 7.282672e-01 | Residual = 1.109613e+00 | Variance(mean) = 4.003770e-08
+[2026-03-10 09:18:58] [Epoch 01100] Loss = 7.166377e-01 | Residual = 1.104007e+00 | Variance(mean) = 7.123392e-08
+[2026-03-10 09:31:12] [Epoch 01150] Loss = 7.021982e-01 | Residual = 1.097565e+00 | Variance(mean) = 6.704702e-08
+[2026-03-10 09:43:29] [Epoch 01200] Loss = 6.874588e-01 | Residual = 1.090390e+00 | Variance(mean) = 8.122976e-08
+[2026-03-10 09:55:46] [Epoch 01250] Loss = 6.728779e-01 | Residual = 1.083837e+00 | Variance(mean) = 9.887070e-08
+[2026-03-10 10:08:03] [Epoch 01300] Loss = 6.587916e-01 | Residual = 1.077261e+00 | Variance(mean) = 5.635985e-08
+[2026-03-10 10:20:25] [Epoch 01350] Loss = 6.463443e-01 | Residual = 1.071586e+00 | Variance(mean) = 7.550429e-08
+[2026-03-10 10:32:45] [Epoch 01400] Loss = 6.337808e-01 | Residual = 1.065437e+00 | Variance(mean) = 3.056067e-08
+[2026-03-10 10:45:04] [Epoch 01450] Loss = 6.236949e-01 | Residual = 1.060561e+00 | Variance(mean) = 9.779002e-09
+[2026-03-10 10:56:38] [Epoch 01500] Loss = 6.108230e-01 | Residual = 1.054412e+00 | Variance(mean) = 3.858743e-08
+[2026-03-10 11:07:56] [Epoch 01550] Loss = 5.992531e-01 | Residual = 1.049035e+00 | Variance(mean) = 2.495930e-08
+[2026-03-10 11:19:17] [Epoch 01600] Loss = 5.916935e-01 | Residual = 1.045314e+00 | Variance(mean) = 1.589088e-08
+[2026-03-10 11:30:36] [Epoch 01650] Loss = 5.832233e-01 | Residual = 1.041180e+00 | Variance(mean) = 4.085447e-08
+[2026-03-10 11:41:51] [Epoch 01700] Loss = 5.773607e-01 | Residual = 1.038305e+00 | Variance(mean) = 6.094731e-08
+[2026-03-10 11:52:49] [Epoch 01750] Loss = 5.709185e-01 | Residual = 1.035233e+00 | Variance(mean) = 2.738685e-08
+[2026-03-10 12:03:44] [Epoch 01800] Loss = 5.623897e-01 | Residual = 1.031128e+00 | Variance(mean) = 2.367320e-08
+[2026-03-10 12:14:42] [Epoch 01850] Loss = 5.555728e-01 | Residual = 1.027726e+00 | Variance(mean) = 5.459464e-09
+[2026-03-10 12:25:38] [Epoch 01900] Loss = 5.497350e-01 | Residual = 1.024681e+00 | Variance(mean) = 7.851904e-09
+[2026-03-10 12:36:35] [Epoch 01950] Loss = 5.437516e-01 | Residual = 1.021511e+00 | Variance(mean) = 1.316244e-08
+[2026-03-10 12:47:31] [Epoch 02000] Loss = 5.401307e-01 | Residual = 1.019819e+00 | Variance(mean) = 8.656477e-09
+[2026-03-10 12:58:27] [Epoch 02050] Loss = 5.354080e-01 | Residual = 1.017819e+00 | Variance(mean) = 4.261098e-08
+[2026-03-10 13:09:24] [Epoch 02100] Loss = 5.322947e-01 | Residual = 1.015944e+00 | Variance(mean) = 1.738088e-08
+[2026-03-10 13:20:21] [Epoch 02150] Loss = 5.277954e-01 | Residual = 1.013875e+00 | Variance(mean) = 2.674344e-08
+[2026-03-10 13:31:17] [Epoch 02200] Loss = 5.246594e-01 | Residual = 1.012280e+00 | Variance(mean) = 6.792897e-09
+[2026-03-10 13:42:14] [Epoch 02250] Loss = 5.219161e-01 | Residual = 1.010941e+00 | Variance(mean) = 2.399253e-09
+[2026-03-10 13:53:10] [Epoch 02300] Loss = 5.191582e-01 | Residual = 1.009555e+00 | Variance(mean) = 4.971237e-09
+[2026-03-10 14:04:06] [Epoch 02350] Loss = 5.164266e-01 | Residual = 1.008210e+00 | Variance(mean) = 6.020931e-09
+[2026-03-10 14:15:03] [Epoch 02400] Loss = 5.148273e-01 | Residual = 1.007436e+00 | Variance(mean) = 1.838259e-08
+[2026-03-10 14:25:59] [Epoch 02450] Loss = 5.129445e-01 | Residual = 1.006470e+00 | Variance(mean) = 1.969630e-08
+[2026-03-10 14:36:55] [Epoch 02500] Loss = 5.107411e-01 | Residual = 1.005365e+00 | Variance(mean) = 7.253819e-09
+[2026-03-10 14:47:51] [Epoch 02550] Loss = 5.091289e-01 | Residual = 1.004609e+00 | Variance(mean) = 2.600233e-09
+[2026-03-10 14:58:47] [Epoch 02600] Loss = 5.081842e-01 | Residual = 1.004087e+00 | Variance(mean) = 1.761776e-09
+[2026-03-10 15:09:44] [Epoch 02650] Loss = 5.069131e-01 | Residual = 1.003480e+00 | Variance(mean) = 1.452923e-09
+[2026-03-10 15:20:40] [Epoch 02700] Loss = 5.058678e-01 | Residual = 1.002961e+00 | Variance(mean) = 3.005735e-09
+[2026-03-10 15:31:35] [Epoch 02750] Loss = 5.051476e-01 | Residual = 1.002579e+00 | Variance(mean) = 5.302097e-10
+[2026-03-10 15:42:33] [Epoch 02800] Loss = 5.043074e-01 | Residual = 1.002169e+00 | Variance(mean) = 4.218931e-10

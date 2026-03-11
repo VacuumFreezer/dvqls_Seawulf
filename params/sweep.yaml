@@ -9,9 +9,10 @@ problems:
   #   module: problems.static_ops_16agents_eq2_kappa12
   # - name: eq3_k100
   #   module: problems.static_ops_16agents_eq3_kappa100
-  - name: 5qubits
-    module: problems.static_ops_16agents_Ising_forcen
-
+  # - name: 5qubits
+  #   module: problems.static_ops_16agents_Ising_forcen
+  - name: 10qubits_cluster
+    module: problems.static_ops_2x2_cluster12_stabilizer
 # All possible 4 agent connecting graphs
 topologies:
   - name: line
@@ -26,7 +27,7 @@ cases:
   # - name: centralized
   #   script: optimization/seawulf_centralized_vqls.py
   - name: catalyst_tracking
-    script: optimization/seawulf_cat_line_tracking_nodispatch_2x2.py
+    script: optimization/seawulf_cat_line_tracking_nodispatch_2x2_cluster12_stabilizer.py
   # - name: track_adamX_adamZ
   #   script: optimization/met_line_tracking.py
   # - name: track_adamX_only
@@ -51,7 +52,7 @@ lr_sets:
   # - tag: lr0
   #   lr: 0.03
   - tag: lr1
-    lr: 0.001
+    lr: 0.005
   # - tag: lr2
   #   lr: 0.003
 
@@ -71,7 +72,7 @@ seeds: [2,3]
 # system_ids: [0]     
 
 common:
-  epochs: 5000
+  epochs: 3000
   # decay: 0.9999
-  log_every: 50
+  log_every: 20
   # lr: 0.001

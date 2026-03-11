@@ -1,0 +1,46 @@
+{
+  "created_at": "2026-03-11T07:02:24.366255Z",
+  "python_bin": "python",
+  "rows": [
+    {
+      "bond_tag": "mbd8",
+      "case_name": "line_tracking_qiskit",
+      "epochs": 5000,
+      "label": "seed=969736",
+      "log_every": 50,
+      "lr": 0.01,
+      "lr_tag": "lr0",
+      "max_bond_dim": 8,
+      "num_threads": 1,
+      "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_simulation/run/qiskit_12q_stablizer/seed=969736",
+      "problem_module": "Qiskit_simulation.static_ops_2x2_cluster12_stabilizer_qiskit",
+      "problem_name": "cluster12_stabilizer_qiskit",
+      "script": "Qiskit_simulation/seawulf_cat_line_tracking_nodispatch_2x2_cluster12_stabilizer_qiskit.py",
+      "seed": 969736,
+      "spsa_c": 0.05,
+      "spsa_tag": "spsa0"
+    },
+    {
+      "bond_tag": "mbd8",
+      "case_name": "line_tracking_qiskit",
+      "epochs": 5000,
+      "label": "seed=464301",
+      "log_every": 50,
+      "lr": 0.01,
+      "lr_tag": "lr0",
+      "max_bond_dim": 8,
+      "num_threads": 1,
+      "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_simulation/run/qiskit_12q_stablizer/seed=464301",
+      "problem_module": "Qiskit_simulation.static_ops_2x2_cluster12_stabilizer_qiskit",
+      "problem_name": "cluster12_stabilizer_qiskit",
+      "script": "Qiskit_simulation/seawulf_cat_line_tracking_nodispatch_2x2_cluster12_stabilizer_qiskit.py",
+      "seed": 464301,
+      "spsa_c": 0.05,
+      "spsa_tag": "spsa0"
+    }
+  ],
+  "run_dir": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_simulation/run/qiskit_12q_stablizer",
+  "tag": "qiskit_12q_stablizer",
+  "task_count": 2,
+  "tasks_file": "/gpfs/home/tonshen/Seawulf_simulation/Qiskit_simulation/run/qiskit_12q_stablizer/tasks.txt"
+}

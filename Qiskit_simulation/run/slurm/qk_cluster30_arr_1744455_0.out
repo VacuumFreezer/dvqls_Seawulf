@@ -1,0 +1,7 @@
+=========================================
+JobID: 1744455  ArrayTask: 0
+Host: dn010
+Start: Tue Mar 10 05:10:57 EDT 2026
+Tasks file: Qiskit_simulation/run/cluster30_qiskit_2x2_20260310/tasks.txt
+CMD: python Qiskit_simulation/seawulf_cat_line_tracking_nodispatch_2x2_cluster30_qiskit.py --static_ops Qiskit_simulation.static_ops_2x2_cluster30_qiskit --out Qiskit_simulation/run/cluster30_qiskit_2x2_20260310/main --epochs 5000 --log_every 50 --lr 0.01 --spsa_c 0.05 --max_bond_dim 8 --seed 0 --num_threads 1
+=========================================

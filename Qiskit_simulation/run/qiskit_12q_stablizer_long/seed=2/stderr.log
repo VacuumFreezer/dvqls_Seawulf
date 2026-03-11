@@ -1,0 +1,23 @@
+[2026-03-11 04:01:12] System variant: cluster12_stabilizer_2x2_q2_index_qiskit
+[2026-03-11 04:01:12] static_ops module: Qiskit_simulation.static_ops_2x2_cluster12_stabilizer_qiskit
+[2026-03-11 04:01:12] local data qubits per agent: 11
+[2026-03-11 04:01:12] epochs=20000, log_every=50, lr=0.01, spsa_c=0.05
+[2026-03-11 04:01:12] Aer method=matrix_product_state, precision=single, max_bond_dim=8
+[2026-03-11 04:01:12] Metropolis weight matrix Wm =
+[[0.6666667  0.33333334]
+ [0.33333334 0.6666667 ]]
+[2026-03-11 04:01:12] Analytic spectrum: lambda_min=0.02000000, lambda_max=1.00000000, cond(A)=50.00000000
+[2026-03-11 04:01:14] [Init] Initial Loss = 3.979990e+00
+[2026-03-11 04:01:15] [Init] Residual = 1.209056e+00 | Variance(mean) = 5.891686e-01
+[2026-03-11 04:02:46] [Epoch 00050] Loss = 2.072399e+00 | Residual = 1.203778e+00 | Variance(mean) = 8.702868e-07
+[2026-03-11 04:04:15] [Epoch 00100] Loss = 1.235311e+00 | Residual = 1.198131e+00 | Variance(mean) = 1.303322e-06
+[2026-03-11 04:05:44] [Epoch 00150] Loss = 9.690438e-01 | Residual = 1.186606e+00 | Variance(mean) = 3.354071e-07
+[2026-03-11 04:07:13] [Epoch 00200] Loss = 8.846529e-01 | Residual = 1.169079e+00 | Variance(mean) = 1.151815e-07
+[2026-03-11 04:08:42] [Epoch 00250] Loss = 8.292894e-01 | Residual = 1.147875e+00 | Variance(mean) = 1.728276e-07
+[2026-03-11 04:10:11] [Epoch 00300] Loss = 7.938603e-01 | Residual = 1.132219e+00 | Variance(mean) = 1.014890e-07
+[2026-03-11 04:11:40] [Epoch 00350] Loss = 7.595462e-01 | Residual = 1.116840e+00 | Variance(mean) = 7.437591e-08
+[2026-03-11 04:13:09] [Epoch 00400] Loss = 7.183854e-01 | Residual = 1.098326e+00 | Variance(mean) = 1.881747e-07
+[2026-03-11 04:14:37] [Epoch 00450] Loss = 6.781047e-01 | Residual = 1.080813e+00 | Variance(mean) = 2.540268e-08
+[2026-03-11 04:16:06] [Epoch 00500] Loss = 6.496966e-01 | Residual = 1.068672e+00 | Variance(mean) = 6.251030e-08
+[2026-03-11 04:17:35] [Epoch 00550] Loss = 6.239091e-01 | Residual = 1.057024e+00 | Variance(mean) = 9.301603e-09
+[2026-03-11 04:19:04] [Epoch 00600] Loss = 6.005824e-01 | Residual = 1.046130e+00 | Variance(mean) = 3.412497e-08

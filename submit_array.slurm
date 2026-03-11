@@ -16,6 +16,7 @@ module purge
 module load anaconda
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate pennylane
+export LD_LIBRARY_PATH="$CONDA_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 # incase numpy/mkl/pennylane-lightning occupying full nodes
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK

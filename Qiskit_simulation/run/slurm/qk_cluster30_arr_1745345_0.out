@@ -1,0 +1,8 @@
+=========================================
+JobID: 1745345  ArrayTask: 0
+Host: dn021
+Start: Tue Mar 10 13:07:52 EDT 2026
+Tasks file: Qiskit_simulation/run/cluster12_qiskit_2x2_retry1_20260310/tasks.txt
+CMD: python Qiskit_simulation/seawulf_cat_line_tracking_nodispatch_2x2_cluster12_qiskit.py --out Qiskit_simulation/run/cluster12_qiskit_2x2_retry1_20260310/main --epochs 5000 --log_every 50 --lr 0.01 --spsa_c 0.05 --max_bond_dim 8 --seed 0 --num_threads 1
+=========================================
+End: Tue Mar 10 15:34:03 EDT 2026
