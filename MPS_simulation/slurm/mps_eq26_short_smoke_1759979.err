@@ -1,0 +1,2 @@
+/gpfs/home/tonshen/.conda/envs/MPS/lib/python3.11/site-packages/cotengra/hyperoptimizers/hyper.py:55: UserWarning: Couldn't find `optuna`, `cmaes`, or `nevergrad` so will use completely random sampling in place of hyper-optimization. It is recommended to install one of these libraries for higher quality contraction paths.
+  warnings.warn(

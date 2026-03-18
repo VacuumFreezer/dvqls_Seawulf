@@ -1,0 +1,16 @@
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/quimb_dist_eq26_2x2_benchmark.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml --case q5 --out-json /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/benchmark.json --out-report /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/benchmark_report.md --out-config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/benchmark_config_used.yaml
+
+Benchmark summary:
+{
+  "current_cost": 1.1930905333978776,
+  "alpha_grad_l2": 1.0837647225794598,
+  "beta_grad_l2": 0.8740102448424834,
+  "alpha_step_l2": 0.6402223338422889,
+  "beta_step_l2": 0.640305714771501
+}
+
+Wrote JSON to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/benchmark.json
+Wrote report to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/benchmark_report.md
+Wrote config to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/benchmark_config_used.yaml
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/quimb_dist_eq26_2x2_optimize.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml --case q5 --out-json /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/optimize.json --out-figure /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/optimize_history.png --out-report /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/optimize_report.md --out-history /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/optimize_metrics.jsonl --out-checkpoint /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/optimize_checkpoint.json --out-config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5/optimize_config_used.yaml
+[iter=0] cost=1.193090533398 residual=1.390912107091 consensus=0.147620723812 rel_err=1.7703060953258178

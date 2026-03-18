@@ -1,0 +1,22 @@
+{
+  "case": "q5",
+  "config": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml",
+  "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q5",
+  "benchmark_enabled": true,
+  "optimize_enabled": true,
+  "artifacts": {
+    "benchmark": {
+      "json": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q5/benchmark.json",
+      "report": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q5/benchmark_report.md",
+      "config": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q5/benchmark_config_used.yaml"
+    },
+    "optimize": {
+      "json": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q5/optimize.json",
+      "figure": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q5/optimize_history.png",
+      "report": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q5/optimize_report.md",
+      "history": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q5/optimize_metrics.jsonl",
+      "checkpoint": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q5/optimize_checkpoint.json",
+      "config": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q5/optimize_config_used.yaml"
+    }
+  }
+}

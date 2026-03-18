@@ -1,0 +1,134 @@
+{
+  "timings": {
+    "spectrum_s": 0.9384202570072375,
+    "build_problem_s": 0.9384202570072375,
+    "forward_cost_s": 0.6772958279907471,
+    "reverse_mode_gradient_s": 113.42084276300739
+  },
+  "cost_value": 1.2150798201360553,
+  "gradient_summary": {
+    "alpha_finite": false,
+    "beta_finite": true,
+    "alpha_grad_l2": NaN,
+    "beta_grad_l2": 0.9823911888177876
+  },
+  "problem": {
+    "eta": 33.23807305236702,
+    "zeta": 63.310615337842044,
+    "block_formula": {
+      "A11": "(H_rest + J Z_1 + eta I) / zeta",
+      "A12": "I / zeta",
+      "A21": "I / zeta",
+      "A22": "(H_rest - J Z_1 + eta I) / zeta",
+      "b_ij": "(1 / (2 sqrt(2))) |+^{29}>"
+    },
+    "block_summaries": {
+      "A11": {
+        "num_tensors": 29,
+        "max_bond": 7,
+        "bond_sizes": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ]
+      },
+      "A12": {
+        "num_tensors": 29,
+        "max_bond": 1,
+        "bond_sizes": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "A22": {
+        "num_tensors": 29,
+        "max_bond": 7,
+        "bond_sizes": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ]
+      }
+    }
+  },
+  "artifacts": {
+    "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_direct_mpo_smoke_30q.json",
+    "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_direct_mpo_smoke_30q_report.md"
+  }
+}

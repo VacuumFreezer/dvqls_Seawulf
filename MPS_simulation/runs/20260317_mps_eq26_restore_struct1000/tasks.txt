@@ -1,0 +1,3 @@
+python MPS_simulation/run_mps_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml --case q5 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q5
+python MPS_simulation/run_mps_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml --case q10 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q10
+python MPS_simulation/run_mps_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml --case q30 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000/case=q30

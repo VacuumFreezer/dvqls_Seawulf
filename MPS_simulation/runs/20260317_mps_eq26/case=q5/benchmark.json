@@ -1,0 +1,211 @@
+{
+  "config": {
+    "global_qubits": 6,
+    "local_qubits": 5,
+    "j_coupling": 0.1,
+    "kappa": 20.0,
+    "row_self_loop_weight": 1.0,
+    "layers": 4,
+    "gate_max_bond": 32,
+    "gate_cutoff": 1e-10,
+    "apply_max_bond": 64,
+    "apply_cutoff": 1e-10,
+    "learning_rate": 0.05,
+    "adam_beta1": 0.9,
+    "adam_beta2": 0.999,
+    "adam_epsilon": 1e-08,
+    "forward_repeats": 3,
+    "gradient_repeats": 1,
+    "iteration_repeats": 1,
+    "init_mode": "random_uniform",
+    "init_seed": 1234,
+    "init_start": -3.141592653589793,
+    "init_stop": 3.141592653589793,
+    "x_scale_init": 1.0,
+    "z_scale_init": 1.0,
+    "exact_validation_max_global_qubits": 12,
+    "spectrum_bond_dims": [
+      16,
+      32,
+      64
+    ],
+    "spectrum_cutoff": 1e-10,
+    "spectrum_tol": 1e-09,
+    "spectrum_max_sweeps": 20,
+    "preview_elements": 200,
+    "out_json": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q5/benchmark.json",
+    "out_report": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q5/benchmark_report.md",
+    "out_config": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q5/benchmark_config_used.yaml"
+  },
+  "problem": {
+    "global_qubits": 6,
+    "local_qubits": 5,
+    "lambda_min": -6.012504691390757,
+    "lambda_max": 6.012504691390769,
+    "eta": 6.6453999220634685,
+    "zeta": 12.657904613454239,
+    "scaled_lambda_min": 0.049999999999999975,
+    "scaled_lambda_max": 1.0,
+    "row_laplacian": [
+      [
+        0.5,
+        -0.5
+      ],
+      [
+        -0.5,
+        0.5
+      ]
+    ],
+    "column_mix": [
+      [
+        0.5,
+        0.5
+      ],
+      [
+        0.5,
+        0.5
+      ]
+    ],
+    "param_dim_per_agent_alpha": 41,
+    "param_dim_per_agent_beta": 41,
+    "total_trainable_parameters": 328,
+    "block_descriptions": {
+      "A11": "Analytic upper-left local block of the scaled Eq. (26) operator.",
+      "A12": "Analytic upper-right local block, equal to I / zeta.",
+      "A21": "Analytic lower-left local block, equal to I / zeta.",
+      "A22": "Analytic lower-right local block of the scaled Eq. (26) operator."
+    },
+    "spectrum_method": "sparse_eigsh",
+    "dense_reference_available": true
+  },
+  "timings": {
+    "forward_cost": {
+      "value": 2.9949831738990067,
+      "repeats": 3,
+      "warmup": 1,
+      "mean_s": 0.1222294478987654,
+      "std_s": 0.0003010513404693286,
+      "min_s": 0.12196081783622503,
+      "max_s": 0.12264981586486101
+    },
+    "reverse_mode_gradient": {
+      "value": 2.994983173899005,
+      "alpha_grad_l2": 1.1957493289373382,
+      "beta_grad_l2": 2.443173992362269,
+      "repeats": 1,
+      "warmup": 1,
+      "mean_s": 10.876389821060002,
+      "std_s": 0.0,
+      "min_s": 10.876389821060002,
+      "max_s": 10.876389821060002
+    },
+    "one_iteration": {
+      "repeats": 1,
+      "warmup": 1,
+      "mean_s": 17.16541802091524,
+      "std_s": 0.0,
+      "min_s": 17.16541802091524,
+      "max_s": 17.16541802091524
+    }
+  },
+  "iteration_summary": {
+    "current_cost": 2.994983173899005,
+    "alpha_grad_l2": 1.1957493289373382,
+    "beta_grad_l2": 2.4431739923622686,
+    "alpha_step_l2": 0.6402069392757103,
+    "beta_step_l2": 0.6403068689449344
+  },
+  "initial_parameters": {
+    "alpha_00": [
+      1.0,
+      2.9951929700537034,
+      -0.7527523974621873,
+      2.6593345173047815,
+      -1.4973306609701598,
+      -1.136646704597481,
+      -2.3996035537070615,
+      -1.6225302320526227,
+      -1.1401849524271195,
+      2.915895894671767,
+      -1.4850320771277503,
+      -0.37066946712692284,
+      0.6903386554514275,
+      2.2846999879859684,
+      2.2855568523847385,
+      1.0988116985390732,
+      1.0045201540936146,
+      1.4813093061132818,
+      -1.7419901416981562,
+      -2.060468930264478,
+      2.3273859127018097,
+      -2.7637303224978127,
+      1.1541514546610685,
+      1.0759202058960193,
+      0.6975465477494405,
+      -2.7637387736791568,
+      3.001912880153383,
+      -0.38357824185183453,
+      0.2048005603199119,
+      -3.121911911056897,
+      -1.562834868189287,
+      2.2524618491763704,
+      -0.4693643021853866,
+      1.481694438503907,
+      2.651775738857321,
+      -2.177285996526052,
+      3.092955958040153,
+      -1.9959682745613905,
+      2.765310921122979,
+      -2.5956903172544363,
+      -0.19973796797372545
+    ],
+    "beta_00": [
+      1.0,
+      2.0671001072139363,
+      -1.3756892043730253,
+      2.3190703600666662,
+      2.9934136197012613,
+      2.1470502317308675,
+      -0.32123664325924217,
+      -0.8136195314684231,
+      -0.108891138719728,
+      -2.5623989128395945,
+      -1.7173006985270234,
+      0.22975244149469498,
+      1.4654376838058498,
+      -0.32100298046275233,
+      -1.222074706345659,
+      2.8108432864088835,
+      1.5772921122177825,
+      -0.17562470624380744,
+      -0.2684435655914461,
+      1.5477860659015459,
+      2.233043290602491,
+      -1.297467975874045,
+      1.4659582340616497,
+      1.9404405327453365,
+      2.4321391887164587,
+      -2.985560985426717,
+      0.07885050534973681,
+      0.7086533298069453,
+      -1.3801082398310478,
+      -0.3007652322699048,
+      0.19616788775236582,
+      3.070181509515076,
+      -3.10403071076303,
+      -1.8768610551495246,
+      -1.5275944242476014,
+      -1.0006296873336789,
+      -2.808571501272355,
+      -1.0901672373389508,
+      -1.895271280658569,
+      2.0685182814845593,
+      0.8615606023102034
+    ]
+  },
+  "artifacts": {
+    "json": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q5/benchmark.json",
+    "report": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q5/benchmark_report.md",
+    "config": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q5/benchmark_config_used.yaml"
+  }
+}

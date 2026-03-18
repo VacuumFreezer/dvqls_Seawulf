@@ -1,0 +1,109 @@
+{
+  "config": {
+    "global_qubits": 11,
+    "local_qubits": 10,
+    "j_coupling": 0.1,
+    "kappa": 20.0,
+    "row_self_loop_weight": 1.0,
+    "layers": 4,
+    "gate_max_bond": 32,
+    "gate_cutoff": 1e-10,
+    "apply_max_bond": 64,
+    "apply_cutoff": 1e-10,
+    "learning_rate": 0.02,
+    "adam_beta1": 0.9,
+    "adam_beta2": 0.999,
+    "adam_epsilon": 1e-08,
+    "iterations": 5,
+    "report_every": 1,
+    "init_start": 0.01,
+    "init_stop": 0.2,
+    "x_scale_init": 0.75,
+    "z_scale_init": 0.1,
+    "out_json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/pilots/quimb_dist_eq26_2x2_optimize_iter5_fixedblocks.json",
+    "out_figure": null,
+    "out_report": null
+  },
+  "problem": {
+    "lambda_min": -11.025012523488789,
+    "lambda_max": 11.025012523488783,
+    "eta": 12.18554015754024,
+    "zeta": 23.21055268102902,
+    "row_laplacian": [
+      [
+        0.5,
+        -0.5
+      ],
+      [
+        -0.5,
+        0.5
+      ]
+    ]
+  },
+  "optimization": {
+    "optimizer": "distributed_adam_gradient_tracking",
+    "iterations": 5,
+    "elapsed_s": 205.44940666299954
+  },
+  "history": [
+    {
+      "global_cost": 39.39499342567544,
+      "residual_norm_l2": 6.121013553117157,
+      "consensus_error_l2": 0.27379412438043466,
+      "row_variance_mse": 3.660313600842235e-05,
+      "relative_solution_error_l2": 6.283265675109582,
+      "iteration": 0,
+      "elapsed_s": 0.0
+    },
+    {
+      "global_cost": 36.43226574232987,
+      "residual_norm_l2": 6.102205319058724,
+      "consensus_error_l2": 0.14205336677705419,
+      "row_variance_mse": 9.853104986668114e-06,
+      "relative_solution_error_l2": 6.263938757731936,
+      "iteration": 1,
+      "elapsed_s": 37.73141719899286
+    },
+    {
+      "global_cost": 35.7401456335867,
+      "residual_norm_l2": 5.918893961995424,
+      "consensus_error_l2": 0.056050042479488325,
+      "row_variance_mse": 1.5339879208752189e-06,
+      "relative_solution_error_l2": 6.092768983675764,
+      "iteration": 2,
+      "elapsed_s": 78.98711514999741
+    },
+    {
+      "global_cost": 33.34703156664733,
+      "residual_norm_l2": 5.727438552156163,
+      "consensus_error_l2": 0.02557562830972364,
+      "row_variance_mse": 3.1939099777203985e-07,
+      "relative_solution_error_l2": 5.921599552343371,
+      "iteration": 3,
+      "elapsed_s": 119.33538483099983
+    },
+    {
+      "global_cost": 31.085583263481773,
+      "residual_norm_l2": 5.546065051200011,
+      "consensus_error_l2": 0.02517045286234607,
+      "row_variance_mse": 3.0935141469510996e-07,
+      "relative_solution_error_l2": 5.764795108357724,
+      "iteration": 4,
+      "elapsed_s": 154.37370746299712
+    },
+    {
+      "global_cost": 29.011319514524935,
+      "residual_norm_l2": 5.379156440517504,
+      "consensus_error_l2": 0.04314713704486387,
+      "row_variance_mse": 9.090212085782545e-07,
+      "relative_solution_error_l2": 5.621861518517677,
+      "iteration": 5,
+      "elapsed_s": 205.44934515499335
+    }
+  ],
+  "artifacts": {
+    "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/pilots/quimb_dist_eq26_2x2_optimize_iter5_fixedblocks.json",
+    "figure": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/pilots/quimb_dist_eq26_2x2_optimize_iter5_fixedblocks_history.png",
+    "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/pilots/quimb_dist_eq26_2x2_optimize_iter5_fixedblocks_report.md"
+  }
+}

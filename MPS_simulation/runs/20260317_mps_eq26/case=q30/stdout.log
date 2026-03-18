@@ -1,0 +1,16 @@
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/quimb_dist_eq26_2x2_benchmark.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml --case q30 --out-json /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/benchmark.json --out-report /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/benchmark_report.md --out-config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/benchmark_config_used.yaml
+
+Benchmark summary:
+{
+  "current_cost": 3.0771437182939474,
+  "alpha_grad_l2": NaN,
+  "beta_grad_l2": NaN,
+  "alpha_step_l2": NaN,
+  "beta_step_l2": NaN
+}
+
+Wrote JSON to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/benchmark.json
+Wrote report to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/benchmark_report.md
+Wrote config to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/benchmark_config_used.yaml
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/quimb_dist_eq26_2x2_optimize.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml --case q30 --out-json /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/optimize.json --out-figure /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/optimize_history.png --out-report /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/optimize_report.md --out-history /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/optimize_metrics.jsonl --out-checkpoint /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/optimize_checkpoint.json --out-config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30/optimize_config_used.yaml
+[iter=0] cost=3.077143718294 residual=1.134053143235 consensus=1.999994097499 rel_err=n/a

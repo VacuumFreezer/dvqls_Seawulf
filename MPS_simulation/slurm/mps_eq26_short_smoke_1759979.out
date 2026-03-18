@@ -1,0 +1,19 @@
+[iter=0] cost=2.994983173899 residual=1.161404276362 consensus=2.007963513142 rel_err=1.4452175696318654
+[iter=1] cost=3.173647382687 residual=1.411368244493 consensus=0.144711556465 rel_err=1.8090745175767362 elapsed=18.93s
+
+Final summary:
+{
+  "global_cost": 3.173647382687394,
+  "residual_norm_l2": 1.4113682444931002,
+  "consensus_error_l2": 0.14471155646528033,
+  "row_variance_mse": 0.0003272099152281878,
+  "relative_solution_error_l2": 1.8090745175767362,
+  "iteration": 1,
+  "elapsed_s": 18.927830385044217
+}
+
+Wrote JSON to MPS_simulation/runs/20260317_mps_eq26_short_smoke/opt_q5.json
+Wrote figure to MPS_simulation/runs/20260317_mps_eq26_short_smoke/opt_q5.png
+Wrote report to MPS_simulation/runs/20260317_mps_eq26_short_smoke/opt_q5.md
+Wrote live history to MPS_simulation/runs/20260317_mps_eq26_short_smoke/opt_q5_metrics.jsonl
+Wrote checkpoint to MPS_simulation/runs/20260317_mps_eq26_short_smoke/opt_q5_checkpoint.json

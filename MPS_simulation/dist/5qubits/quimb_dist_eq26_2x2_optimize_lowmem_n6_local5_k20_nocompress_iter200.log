@@ -1,0 +1,6 @@
+An NVIDIA GPU may be present on this machine, but a CUDA-enabled jaxlib is not installed. Falling back to cpu.
+Initial cost: 0.577232009955
+[iter    5] cost=0.383962400985 alpha_grad=0.614376 beta_grad=0.738393 elapsed=90.09s
+[iter   10] cost=0.230010591300 alpha_grad=0.280785 beta_grad=0.369181 elapsed=151.58s
+[iter   15] cost=0.176742759946 alpha_grad=0.154538 beta_grad=0.217639 elapsed=220.43s
+[iter   20] cost=0.136901823442 alpha_grad=0.117699 beta_grad=0.173096 elapsed=443.05s

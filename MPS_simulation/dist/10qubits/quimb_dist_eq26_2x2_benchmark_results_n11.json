@@ -1,0 +1,89 @@
+{
+  "config": {
+    "global_qubits": 11,
+    "local_qubits": 10,
+    "j_coupling": 0.1,
+    "kappa": 20.0,
+    "row_self_loop_weight": 1.0,
+    "layers": 4,
+    "gate_max_bond": 32,
+    "gate_cutoff": 1e-10,
+    "apply_max_bond": 64,
+    "apply_cutoff": 1e-10,
+    "learning_rate": 0.05,
+    "adam_beta1": 0.9,
+    "adam_beta2": 0.999,
+    "adam_epsilon": 1e-08,
+    "forward_repeats": 3,
+    "gradient_repeats": 2,
+    "iteration_repeats": 2,
+    "init_start": 0.01,
+    "init_stop": 0.2,
+    "x_scale_init": 0.75,
+    "z_scale_init": 0.1,
+    "out_json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/quimb_dist_eq26_2x2_benchmark_results_n11.json",
+    "out_report": null
+  },
+  "problem": {
+    "global_qubits": 11,
+    "local_qubits": 10,
+    "lambda_min": -11.025012523488755,
+    "lambda_max": 11.025012523488781,
+    "eta": 12.185540157540204,
+    "zeta": 23.210552681028986,
+    "row_laplacian": [
+      [
+        0.5,
+        -0.5
+      ],
+      [
+        -0.5,
+        0.5
+      ]
+    ],
+    "param_dim_per_agent_alpha": 81,
+    "param_dim_per_agent_beta": 81,
+    "total_trainable_parameters": 648,
+    "block_descriptions": {
+      "A11": "Exact upper-left 1024x1024 block of the 11-qubit simulator matrix.",
+      "A12": "Exact upper-right 1024x1024 block of the 11-qubit simulator matrix.",
+      "A21": "Exact lower-left 1024x1024 block of the 11-qubit simulator matrix.",
+      "A22": "Exact lower-right 1024x1024 block of the 11-qubit simulator matrix."
+    }
+  },
+  "timings": {
+    "forward_cost": {
+      "value": 39.394993425675345,
+      "mean_s": 0.17394689633268476,
+      "min_s": 0.1725132770006894,
+      "max_s": 0.17538679899735143,
+      "std_s": 0.001436771302792207
+    },
+    "reverse_mode_gradient": {
+      "value": 39.39499342567517,
+      "alpha_grad_l2": 75.5984230299828,
+      "beta_grad_l2": 8.312273971147068,
+      "mean_s": 16.518730680501903,
+      "min_s": 16.079279964003945,
+      "max_s": 16.958181396999862,
+      "std_s": 0.6214771632659871
+    },
+    "one_iteration": {
+      "mean_s": 26.813515360499878,
+      "min_s": 26.113963385003444,
+      "max_s": 27.51306733599631,
+      "std_s": 0.9893158913319472
+    }
+  },
+  "iteration_summary": {
+    "current_cost": 39.39499342567517,
+    "alpha_grad_l2": 75.59842302998281,
+    "beta_grad_l2": 8.312273971147063,
+    "alpha_step_l2": 0.8994873022406635,
+    "beta_step_l2": 0.8999576815379348
+  },
+  "artifacts": {
+    "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/quimb_dist_eq26_2x2_benchmark_results_n11.json",
+    "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/quimb_dist_eq26_2x2_benchmark_results_n11_report.md"
+  }
+}

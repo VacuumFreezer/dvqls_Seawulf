@@ -1,0 +1,8 @@
+=========================================
+JobID: 1760121  ArrayTask: 0
+Host: dn048
+Start: Tue Mar 17 23:51:17 EDT 2026
+Tasks file: MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/tasks.txt
+CMD: python MPS_simulation/run_mps_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml --case q5 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q5
+=========================================
+End: Wed Mar 18 04:34:01 EDT 2026

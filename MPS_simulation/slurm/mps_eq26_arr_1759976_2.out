@@ -1,0 +1,7 @@
+=========================================
+JobID: 1759976  ArrayTask: 2
+Host: dn007
+Start: Tue Mar 17 21:14:58 EDT 2026
+Tasks file: MPS_simulation/runs/20260317_mps_eq26/tasks.txt
+CMD: python MPS_simulation/run_mps_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml --case q30 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26/case=q30
+=========================================

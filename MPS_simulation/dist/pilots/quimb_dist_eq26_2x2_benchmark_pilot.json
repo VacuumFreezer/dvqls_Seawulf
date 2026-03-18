@@ -1,0 +1,78 @@
+{
+  "config": {
+    "global_qubits": 11,
+    "local_qubits": 10,
+    "j_coupling": 0.1,
+    "kappa": 20.0,
+    "layers": 4,
+    "gate_max_bond": 32,
+    "gate_cutoff": 1e-10,
+    "apply_max_bond": 64,
+    "apply_cutoff": 1e-10,
+    "learning_rate": 0.05,
+    "adam_beta1": 0.9,
+    "adam_beta2": 0.999,
+    "adam_epsilon": 1e-08,
+    "forward_repeats": 1,
+    "gradient_repeats": 1,
+    "iteration_repeats": 1,
+    "init_start": 0.01,
+    "init_stop": 0.2,
+    "x_scale_init": 0.75,
+    "z_scale_init": 0.1,
+    "out_json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/pilots/quimb_dist_eq26_2x2_benchmark_pilot.json",
+    "out_report": null
+  },
+  "problem": {
+    "global_qubits": 11,
+    "local_qubits": 10,
+    "lambda_min": -11.025012523488773,
+    "lambda_max": 11.02501252348879,
+    "eta": 12.185540157540222,
+    "zeta": 23.210552681029014,
+    "param_dim_per_agent_alpha": 81,
+    "param_dim_per_agent_beta": 81,
+    "total_trainable_parameters": 648,
+    "block_descriptions": {
+      "A11": "(H_10 + J Z_0 + eta I) / zeta",
+      "A12": "I / zeta",
+      "A21": "I / zeta",
+      "A22": "(H_10 - J Z_0 + eta I) / zeta"
+    }
+  },
+  "timings": {
+    "forward_cost": {
+      "value": 0.8701586217312764,
+      "mean_s": 1.008581377000155,
+      "min_s": 1.008581377000155,
+      "max_s": 1.008581377000155,
+      "std_s": 0.0
+    },
+    "reverse_mode_gradient": {
+      "value": 0.8701586217312764,
+      "alpha_grad_l2": 1.084691969305535,
+      "beta_grad_l2": 2.1242639151283416,
+      "mean_s": 15.539310766000199,
+      "min_s": 15.539310766000199,
+      "max_s": 15.539310766000199,
+      "std_s": 0.0
+    },
+    "one_iteration": {
+      "mean_s": 34.83905303700158,
+      "min_s": 34.83905303700158,
+      "max_s": 34.83905303700158,
+      "std_s": 0.0
+    }
+  },
+  "iteration_summary": {
+    "current_cost": 0.8701586217312764,
+    "alpha_grad_l2": 1.0846919693055346,
+    "beta_grad_l2": 2.1242639151283402,
+    "alpha_step_l2": 0.8995795774760924,
+    "beta_step_l2": 0.8998566854618308
+  },
+  "artifacts": {
+    "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/pilots/quimb_dist_eq26_2x2_benchmark_pilot.json",
+    "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/pilots/quimb_dist_eq26_2x2_benchmark_pilot_report.md"
+  }
+}

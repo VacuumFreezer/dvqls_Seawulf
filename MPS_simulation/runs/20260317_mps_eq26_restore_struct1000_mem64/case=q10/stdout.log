@@ -1,0 +1,16 @@
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/quimb_dist_eq26_2x2_benchmark.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml --case q10 --out-json /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/benchmark.json --out-report /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/benchmark_report.md --out-config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/benchmark_config_used.yaml
+
+Benchmark summary:
+{
+  "current_cost": 1.0839397302697105,
+  "alpha_grad_l2": 0.8585253949788103,
+  "beta_grad_l2": 0.5517155048919037,
+  "alpha_step_l2": 0.8966209477148354,
+  "beta_step_l2": 0.8997783067639107
+}
+
+Wrote JSON to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/benchmark.json
+Wrote report to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/benchmark_report.md
+Wrote config to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/benchmark_config_used.yaml
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/quimb_dist_eq26_2x2_optimize.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/param.yaml --case q10 --out-json /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/optimize.json --out-figure /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/optimize_history.png --out-report /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/optimize_report.md --out-history /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/optimize_metrics.jsonl --out-checkpoint /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/optimize_checkpoint.json --out-config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/runs/20260317_mps_eq26_restore_struct1000_mem64/case=q10/optimize_config_used.yaml
+[iter=0] cost=1.083939730270 residual=1.290161416942 consensus=0.196727364689 rel_err=1.7249956914311062

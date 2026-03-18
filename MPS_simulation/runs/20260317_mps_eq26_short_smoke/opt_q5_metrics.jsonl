@@ -1,0 +1,2 @@
+{"global_cost": 2.9949831738990094, "residual_norm_l2": 1.1614042763620989, "consensus_error_l2": 2.0079635131419824, "row_variance_mse": 0.06299871047046081, "relative_solution_error_l2": 1.4452175696318654, "iteration": 0, "elapsed_s": 0.0}
+{"global_cost": 3.173647382687394, "residual_norm_l2": 1.4113682444931002, "consensus_error_l2": 0.14471155646528033, "row_variance_mse": 0.0003272099152281878, "relative_solution_error_l2": 1.8090745175767362, "iteration": 1, "elapsed_s": 18.927830385044217}

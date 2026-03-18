@@ -1,0 +1,59 @@
+{
+  "storage_estimates": {
+    "global_qubits": 30,
+    "local_qubits": 29,
+    "global_dim": 1073741824,
+    "local_dim": 536870912,
+    "dense_global_matrix_bytes": 18446744073709551616,
+    "dense_local_block_bytes": 4611686018427387904,
+    "dense_global_vector_bytes": 17179869184,
+    "dense_local_vector_bytes": 8589934592,
+    "sparse_nnz_lower_bound": 33285996544,
+    "csr_float64_lower_bound_bytes": 408021893128
+  },
+  "circuit_smoke_test": {
+    "local_qubits": 29,
+    "build_time_s": 0.6023402220016578,
+    "state_norm": 0.9999999994125588,
+    "max_bond": 4,
+    "bond_sizes": [
+      2,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      2
+    ],
+    "num_tensors": 29
+  },
+  "system": {
+    "total_ram_bytes": 8166174720,
+    "total_ram_human": "7.605 GiB"
+  },
+  "artifacts": {
+    "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_feasibility_30q.json",
+    "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_feasibility_30q_report.md"
+  }
+}

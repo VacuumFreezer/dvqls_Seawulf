@@ -1,0 +1,60 @@
+shared:
+  j_coupling: 0.1
+  kappa: 20.0
+  row_self_loop_weight: 1.0
+  layers: 4
+  gate_max_bond: 32
+  gate_cutoff: 1.0e-10
+  apply_max_bond: 64
+  apply_cutoff: 1.0e-10
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 1.0e-8
+  init_mode: structured_linspace
+  init_seed: 1234
+  init_start: -3.141592653589793
+  init_stop: 3.141592653589793
+  x_scale_init: 1.0
+  z_scale_init: 1.0
+  exact_validation_max_global_qubits: 12
+  spectrum_bond_dims: [16, 32, 64]
+  spectrum_cutoff: 1.0e-10
+  spectrum_tol: 1.0e-9
+  spectrum_max_sweeps: 20
+  preview_elements: 200
+
+benchmark:
+  learning_rate: 0.05
+  forward_repeats: 3
+  gradient_repeats: 1
+  iteration_repeats: 1
+
+optimize:
+  learning_rate: 0.02
+  iterations: 1000
+  report_every: 20
+
+cases:
+  q5:
+    local_qubits: 5
+    global_qubits: 6
+  q10:
+    local_qubits: 10
+    global_qubits: 11
+  q30:
+    local_qubits: 30
+    global_qubits: 31
+
+jobs:
+  run_root: MPS_simulation/runs
+  tag: mps_eq26_2x2
+  cases: [q5, q10, q30]
+  run_benchmark: true
+  run_optimize: true
+  submit:
+    partition: long-40core-shared
+    nodes: 1
+    ntasks: 1
+    cpus_per_task: 1
+    mem: 64G
+    time: "24:00:00"

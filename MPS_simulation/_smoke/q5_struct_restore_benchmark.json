@@ -1,0 +1,211 @@
+{
+  "config": {
+    "global_qubits": 6,
+    "local_qubits": 5,
+    "j_coupling": 0.1,
+    "kappa": 20.0,
+    "row_self_loop_weight": 1.0,
+    "layers": 4,
+    "gate_max_bond": 32,
+    "gate_cutoff": 1e-10,
+    "apply_max_bond": 64,
+    "apply_cutoff": 1e-10,
+    "learning_rate": 0.05,
+    "adam_beta1": 0.9,
+    "adam_beta2": 0.999,
+    "adam_epsilon": 1e-08,
+    "forward_repeats": 1,
+    "gradient_repeats": 1,
+    "iteration_repeats": 1,
+    "init_mode": "structured_linspace",
+    "init_seed": 1234,
+    "init_start": -3.141592653589793,
+    "init_stop": 3.141592653589793,
+    "x_scale_init": 1.0,
+    "z_scale_init": 1.0,
+    "exact_validation_max_global_qubits": 12,
+    "spectrum_bond_dims": [
+      16,
+      32,
+      64
+    ],
+    "spectrum_cutoff": 1e-10,
+    "spectrum_tol": 1e-09,
+    "spectrum_max_sweeps": 20,
+    "preview_elements": 200,
+    "out_json": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/_smoke/q5_struct_restore_benchmark.json",
+    "out_report": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/_smoke/q5_struct_restore_benchmark.md",
+    "out_config": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/_smoke/q5_struct_restore_benchmark.yaml"
+  },
+  "problem": {
+    "global_qubits": 6,
+    "local_qubits": 5,
+    "lambda_min": -6.012504691390778,
+    "lambda_max": 6.0125046913907605,
+    "eta": 6.645399922063491,
+    "zeta": 12.657904613454251,
+    "scaled_lambda_min": 0.049999999999999996,
+    "scaled_lambda_max": 1.0,
+    "row_laplacian": [
+      [
+        0.5,
+        -0.5
+      ],
+      [
+        -0.5,
+        0.5
+      ]
+    ],
+    "column_mix": [
+      [
+        0.5,
+        0.5
+      ],
+      [
+        0.5,
+        0.5
+      ]
+    ],
+    "param_dim_per_agent_alpha": 41,
+    "param_dim_per_agent_beta": 41,
+    "total_trainable_parameters": 328,
+    "block_descriptions": {
+      "A11": "Exact upper-left local block of the globally scaled simulator matrix.",
+      "A12": "Exact upper-right local block of the globally scaled simulator matrix.",
+      "A21": "Exact lower-left local block of the globally scaled simulator matrix.",
+      "A22": "Exact lower-right local block of the globally scaled simulator matrix."
+    },
+    "spectrum_method": "sparse_eigsh",
+    "dense_reference_available": true
+  },
+  "timings": {
+    "forward_cost": {
+      "value": 1.193090533397878,
+      "repeats": 1,
+      "warmup": 1,
+      "mean_s": 0.11427818797528744,
+      "std_s": 0.0,
+      "min_s": 0.11427818797528744,
+      "max_s": 0.11427818797528744
+    },
+    "reverse_mode_gradient": {
+      "value": 1.193090533397879,
+      "alpha_grad_l2": 1.0837647225794622,
+      "beta_grad_l2": 0.8740102448424842,
+      "repeats": 1,
+      "warmup": 1,
+      "mean_s": 9.673429576680064,
+      "std_s": 0.0,
+      "min_s": 9.673429576680064,
+      "max_s": 9.673429576680064
+    },
+    "one_iteration": {
+      "repeats": 1,
+      "warmup": 1,
+      "mean_s": 15.152236174792051,
+      "std_s": 0.0,
+      "min_s": 15.152236174792051,
+      "max_s": 15.152236174792051
+    }
+  },
+  "iteration_summary": {
+    "current_cost": 1.193090533397879,
+    "alpha_grad_l2": 1.0837647225794622,
+    "beta_grad_l2": 0.8740102448424841,
+    "alpha_step_l2": 0.6402223338422889,
+    "beta_step_l2": 0.6403057147715009
+  },
+  "initial_parameters": {
+    "alpha_00": [
+      1.0,
+      -3.141592653589793,
+      -2.9804853380210856,
+      -2.8193780224523786,
+      -2.658270706883671,
+      -2.497163391314964,
+      -2.3360560757462565,
+      -2.174948760177549,
+      -2.0138414446088415,
+      -1.8527341290401345,
+      -1.6916268134714272,
+      -1.53051949790272,
+      -1.3694121823340124,
+      -1.2083048667653051,
+      -1.0471975511965979,
+      -0.8860902356278904,
+      -0.7249829200591833,
+      -0.5638756044904758,
+      -0.4027682889217683,
+      -0.24166097335306125,
+      -0.08055365778435375,
+      0.0805536577843533,
+      0.2416609733530608,
+      0.4027682889217683,
+      0.5638756044904754,
+      0.7249829200591829,
+      0.8860902356278899,
+      1.0471975511965974,
+      1.208304866765305,
+      1.3694121823340124,
+      1.53051949790272,
+      1.6916268134714265,
+      1.852734129040134,
+      2.0138414446088415,
+      2.174948760177549,
+      2.3360560757462565,
+      2.497163391314963,
+      2.6582707068836706,
+      2.819378022452378,
+      2.9804853380210856,
+      -3.141592653589793
+    ],
+    "beta_00": [
+      1.02,
+      -3.141592653589793,
+      2.9804853380210856,
+      2.819378022452378,
+      2.6582707068836706,
+      2.497163391314963,
+      2.3360560757462565,
+      2.174948760177549,
+      2.0138414446088415,
+      1.852734129040134,
+      1.6916268134714265,
+      1.53051949790272,
+      1.3694121823340124,
+      1.208304866765305,
+      1.0471975511965974,
+      0.8860902356278899,
+      0.7249829200591829,
+      0.5638756044904754,
+      0.4027682889217683,
+      0.2416609733530608,
+      0.0805536577843533,
+      -0.08055365778435375,
+      -0.24166097335306125,
+      -0.4027682889217683,
+      -0.5638756044904758,
+      -0.7249829200591833,
+      -0.8860902356278904,
+      -1.0471975511965979,
+      -1.2083048667653051,
+      -1.3694121823340124,
+      -1.53051949790272,
+      -1.6916268134714272,
+      -1.8527341290401345,
+      -2.0138414446088415,
+      -2.174948760177549,
+      -2.3360560757462565,
+      -2.497163391314964,
+      -2.658270706883671,
+      -2.8193780224523786,
+      -2.9804853380210856,
+      -3.141592653589793
+    ]
+  },
+  "artifacts": {
+    "json": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/_smoke/q5_struct_restore_benchmark.json",
+    "report": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/_smoke/q5_struct_restore_benchmark.md",
+    "config": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/_smoke/q5_struct_restore_benchmark.yaml"
+  }
+}

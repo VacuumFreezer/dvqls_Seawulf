@@ -1,0 +1,278 @@
+{
+  "learning_rates": [
+    0.002,
+    0.005,
+    0.01
+  ],
+  "c_values": [
+    0.01,
+    0.02,
+    0.05
+  ],
+  "ranking": [
+    {
+      "config": {
+        "learning_rate": 0.01
+      },
+      "optimization": {
+        "optimizer": "distributed_adam_gradient_tracking_spsa_angles_analytic_scales",
+        "iterations": 1000,
+        "elapsed_s": 503.99122882100346,
+        "spsa_seed": 1234,
+        "spsa_c": 0.05
+      },
+      "final_metrics": {
+        "global_cost": 0.49037324533240123,
+        "residual_norm_l2": 0.9891785827511481,
+        "consensus_error_l2": 0.000865209631593715,
+        "row_variance_mse": 1.1696682915664563e-08,
+        "relative_solution_error_l2": 0.9947400660254679,
+        "iteration": 1000,
+        "elapsed_s": 503.99118853699474
+      },
+      "artifacts": {
+        "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p05_iter1000.json",
+        "figure": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p05_iter1000_history.png",
+        "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p05_iter1000_report.md"
+      }
+    },
+    {
+      "config": {
+        "learning_rate": 0.002
+      },
+      "optimization": {
+        "optimizer": "distributed_adam_gradient_tracking_spsa_angles_analytic_scales",
+        "iterations": 1000,
+        "elapsed_s": 538.6411239750014,
+        "spsa_seed": 1234,
+        "spsa_c": 0.05
+      },
+      "final_metrics": {
+        "global_cost": 0.49241835786352145,
+        "residual_norm_l2": 0.9907144349910948,
+        "consensus_error_l2": 2.1297547385475983e-05,
+        "row_variance_mse": 7.087273822446793e-12,
+        "relative_solution_error_l2": 0.9929534186782448,
+        "iteration": 1000,
+        "elapsed_s": 538.6410869520041
+      },
+      "artifacts": {
+        "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p002_c0p05_iter1000.json",
+        "figure": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p002_c0p05_iter1000_history.png",
+        "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p002_c0p05_iter1000_report.md"
+      }
+    },
+    {
+      "config": {
+        "learning_rate": 0.002
+      },
+      "optimization": {
+        "optimizer": "distributed_adam_gradient_tracking_spsa_angles_analytic_scales",
+        "iterations": 1000,
+        "elapsed_s": 541.7193234709994,
+        "spsa_seed": 1234,
+        "spsa_c": 0.02
+      },
+      "final_metrics": {
+        "global_cost": 0.4933897388258991,
+        "residual_norm_l2": 0.9918184578291995,
+        "consensus_error_l2": 2.156147477647519e-05,
+        "row_variance_mse": 7.264018664633998e-12,
+        "relative_solution_error_l2": 0.9945867094264855,
+        "iteration": 1000,
+        "elapsed_s": 541.7192752260016
+      },
+      "artifacts": {
+        "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p002_c0p02_iter1000.json",
+        "figure": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p002_c0p02_iter1000_history.png",
+        "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p002_c0p02_iter1000_report.md"
+      }
+    },
+    {
+      "config": {
+        "learning_rate": 0.002
+      },
+      "optimization": {
+        "optimizer": "distributed_adam_gradient_tracking_spsa_angles_analytic_scales",
+        "iterations": 1000,
+        "elapsed_s": 532.2187569520029,
+        "spsa_seed": 1234,
+        "spsa_c": 0.01
+      },
+      "final_metrics": {
+        "global_cost": 0.49364794768468934,
+        "residual_norm_l2": 0.992111838954742,
+        "consensus_error_l2": 2.1816138726138767e-05,
+        "row_variance_mse": 7.436623576845807e-12,
+        "relative_solution_error_l2": 0.9949571660252238,
+        "iteration": 1000,
+        "elapsed_s": 532.218709601002
+      },
+      "artifacts": {
+        "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p002_c0p01_iter1000.json",
+        "figure": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p002_c0p01_iter1000_history.png",
+        "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p002_c0p01_iter1000_report.md"
+      }
+    },
+    {
+      "config": {
+        "learning_rate": 0.01
+      },
+      "optimization": {
+        "optimizer": "distributed_adam_gradient_tracking_spsa_angles_analytic_scales",
+        "iterations": 1000,
+        "elapsed_s": 502.3193137989874,
+        "spsa_seed": 1234,
+        "spsa_c": 0.02
+      },
+      "final_metrics": {
+        "global_cost": 0.4963347123930801,
+        "residual_norm_l2": 0.9947790459238615,
+        "consensus_error_l2": 0.0009246489531426101,
+        "row_variance_mse": 1.3358995102308199e-08,
+        "relative_solution_error_l2": 0.9982230403329435,
+        "iteration": 1000,
+        "elapsed_s": 502.3192727429996
+      },
+      "artifacts": {
+        "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p02_iter1000.json",
+        "figure": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p02_iter1000_history.png",
+        "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p02_iter1000_report.md"
+      }
+    },
+    {
+      "config": {
+        "learning_rate": 0.005
+      },
+      "optimization": {
+        "optimizer": "distributed_adam_gradient_tracking_spsa_angles_analytic_scales",
+        "iterations": 1000,
+        "elapsed_s": 510.2909527699958,
+        "spsa_seed": 1234,
+        "spsa_c": 0.05
+      },
+      "final_metrics": {
+        "global_cost": 0.49754607355849606,
+        "residual_norm_l2": 0.9968743780178136,
+        "consensus_error_l2": 0.00013899537886650766,
+        "row_variance_mse": 3.018705522850626e-10,
+        "relative_solution_error_l2": 0.9998394664777183,
+        "iteration": 1000,
+        "elapsed_s": 510.29091503299423
+      },
+      "artifacts": {
+        "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p005_c0p05_iter1000.json",
+        "figure": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p005_c0p05_iter1000_history.png",
+        "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p005_c0p05_iter1000_report.md"
+      }
+    },
+    {
+      "config": {
+        "learning_rate": 0.01
+      },
+      "optimization": {
+        "optimizer": "distributed_adam_gradient_tracking_spsa_angles_analytic_scales",
+        "iterations": 1000,
+        "elapsed_s": 506.59998378799355,
+        "spsa_seed": 1234,
+        "spsa_c": 0.01
+      },
+      "final_metrics": {
+        "global_cost": 0.5003234997510057,
+        "residual_norm_l2": 0.9980480311997051,
+        "consensus_error_l2": 0.0011215304365355897,
+        "row_variance_mse": 1.9653601876182974e-08,
+        "relative_solution_error_l2": 1.0012329911867974,
+        "iteration": 1000,
+        "elapsed_s": 506.59994568400725
+      },
+      "artifacts": {
+        "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p01_iter1000.json",
+        "figure": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p01_iter1000_history.png",
+        "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p01_iter1000_report.md"
+      }
+    },
+    {
+      "config": {
+        "learning_rate": 0.005
+      },
+      "optimization": {
+        "optimizer": "distributed_adam_gradient_tracking_spsa_angles_analytic_scales",
+        "iterations": 1000,
+        "elapsed_s": 511.94420475000516,
+        "spsa_seed": 1234,
+        "spsa_c": 0.01
+      },
+      "final_metrics": {
+        "global_cost": 0.5015132455679757,
+        "residual_norm_l2": 1.0012042761040383,
+        "consensus_error_l2": 0.0009196759409370372,
+        "row_variance_mse": 1.3215684942787885e-08,
+        "relative_solution_error_l2": 1.00122763664721,
+        "iteration": 1000,
+        "elapsed_s": 511.9441567640024
+      },
+      "artifacts": {
+        "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p005_c0p01_iter1000.json",
+        "figure": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p005_c0p01_iter1000_history.png",
+        "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p005_c0p01_iter1000_report.md"
+      }
+    },
+    {
+      "config": {
+        "learning_rate": 0.005
+      },
+      "optimization": {
+        "optimizer": "distributed_adam_gradient_tracking_spsa_angles_analytic_scales",
+        "iterations": 1000,
+        "elapsed_s": 509.98914492700715,
+        "spsa_seed": 1234,
+        "spsa_c": 0.02
+      },
+      "final_metrics": {
+        "global_cost": 0.5057442332024651,
+        "residual_norm_l2": 1.0048044825414222,
+        "consensus_error_l2": 9.971138055582601e-05,
+        "row_variance_mse": 1.5534936581794938e-10,
+        "relative_solution_error_l2": 1.008027733128606,
+        "iteration": 1000,
+        "elapsed_s": 509.9891112049954
+      },
+      "artifacts": {
+        "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p005_c0p02_iter1000.json",
+        "figure": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p005_c0p02_iter1000_history.png",
+        "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p005_c0p02_iter1000_report.md"
+      }
+    }
+  ],
+  "best": {
+    "config": {
+      "learning_rate": 0.01
+    },
+    "optimization": {
+      "optimizer": "distributed_adam_gradient_tracking_spsa_angles_analytic_scales",
+      "iterations": 1000,
+      "elapsed_s": 503.99122882100346,
+      "spsa_seed": 1234,
+      "spsa_c": 0.05
+    },
+    "final_metrics": {
+      "global_cost": 0.49037324533240123,
+      "residual_norm_l2": 0.9891785827511481,
+      "consensus_error_l2": 0.000865209631593715,
+      "row_variance_mse": 1.1696682915664563e-08,
+      "relative_solution_error_l2": 0.9947400660254679,
+      "iteration": 1000,
+      "elapsed_s": 503.99118853699474
+    },
+    "artifacts": {
+      "json": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p05_iter1000.json",
+      "figure": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p05_iter1000_history.png",
+      "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_lr0p01_c0p05_iter1000_report.md"
+    }
+  },
+  "artifacts": {
+    "report": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_scan_summary.md",
+    "heatmap": "/home/patchouli/projects/Distributed_vqls/MPS_simulation/dist/5qubits/spsa_scan_iter1000/spsa_scan_residual_heatmap.png"
+  }
+}
