@@ -29,6 +29,7 @@ try:
     from .centralized_vqls_ising import (
         CentralizedIsingData,
         _apply_controlled_pauli_word,
+        _apply_controlled_b_dagger_from_spec,
         _global_ansatz,
         _multiply_pauli_words,
         _to_float,
@@ -42,6 +43,7 @@ except ImportError:
     from centralized_vqls_ising import (
         CentralizedIsingData,
         _apply_controlled_pauli_word,
+        _apply_controlled_b_dagger_from_spec,
         _global_ansatz,
         _multiply_pauli_words,
         _to_float,
@@ -246,7 +248,12 @@ class QJITHadamardCentralizedVQLS:
         self.dev_state = qml.device(device_name, wires=self.n)
 
         self.b_mode = data.b_unitary_info.mode
-        self.b_unitary_dag = np.conjugate(data.b_unitary_info.unitary.T)
+        self.b_prep_spec = data.b_unitary_info.prep_spec
+        self.b_unitary_dag = (
+            None
+            if data.b_unitary_info.unitary is None
+            else np.conjugate(data.b_unitary_info.unitary.T)
+        )
 
         self._build_linear_combinations()
         self._build_compiled_functions()
@@ -264,6 +271,17 @@ class QJITHadamardCentralizedVQLS:
             for wire in self.system_wires:
                 qml.ctrl(qml.Hadamard, control=self.control_wire)(wires=wire)
             return
+
+        if self.b_prep_spec is not None:
+            _apply_controlled_b_dagger_from_spec(
+                self.b_prep_spec,
+                self.control_wire,
+                wire_offset=1,
+            )
+            return
+
+        if self.b_unitary_dag is None:
+            raise RuntimeError(f"Missing b-unitary implementation for mode `{self.b_mode}`.")
 
         def _b_dag():
             qml.QubitUnitary(self.b_unitary_dag, wires=self.system_wires)

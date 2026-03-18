@@ -1,0 +1,30 @@
+run_root: Qiskit_simulation/run
+tag: qiskit_perturbed_cluster12_exact_scalar_grad
+python_bin: python
+
+problems:
+  - name: perturbed_cluster12_qiskit
+    module: Qiskit_simulation.static_ops_2x2_perturbed_cluster12_qiskit
+
+cases:
+  - name: line_tracking_qiskit_exact_scalar_grad
+    script: Qiskit_simulation/seawulf_cat_line_tracking_nodispatch_2x2_perturbed_cluster12_qiskit_exact_scalar_grad.py
+
+lr_sets:
+  - tag: lr0p001
+    lr: 0.001
+
+spsa_c_sets:
+  - tag: spsa0
+    spsa_c: 0.05
+
+max_bond_dim_sets:
+  - tag: mbd8
+    max_bond_dim: 8
+
+seeds: [186782, 240531, 390184, 572911]
+
+common:
+  epochs: 20000
+  log_every: 50
+  num_threads: 1

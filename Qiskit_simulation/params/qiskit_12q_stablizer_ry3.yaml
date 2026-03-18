@@ -1,0 +1,31 @@
+run_root: Qiskit_simulation/run
+tag: qiskit_12q_stablizer_ry3
+python_bin: python
+
+problems:
+  - name: cluster12_stabilizer_qiskit
+    module: Qiskit_simulation.static_ops_2x2_cluster12_stabilizer_qiskit
+
+cases:
+  - name: line_tracking_qiskit
+    script: Qiskit_simulation/seawulf_cat_line_tracking_nodispatch_2x2_cluster12_stabilizer_qiskit.py
+
+lr_sets:
+  - tag: lr0
+    lr: 0.01
+
+spsa_c_sets:
+  - tag: spsa0
+    spsa_c: 0.05
+
+max_bond_dim_sets:
+  - tag: mbd8
+    max_bond_dim: 8
+
+seeds: [2, 42]
+
+common:
+  epochs: 20000
+  log_every: 50
+  num_threads: 1
+  extra_args: "--layers 3 --repeat_cz_each_layer"

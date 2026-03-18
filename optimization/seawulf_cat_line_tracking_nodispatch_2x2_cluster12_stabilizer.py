@@ -45,6 +45,16 @@ from common.params_io import flatten_params, rebuild_global_params, update_globa
 from common.reporting import JsonlWriter, make_run_dir, setup_logger
 
 import objective.builder_cluster_nodispatch as ib
+from objective.circuits_cluster_nodispatch import (
+    ANSATZ_BRICKWALL_RY_CZ,
+    ANSATZ_CLUSTER_LOCAL_RY,
+    ANSATZ_CLUSTER_RZ_LOCAL_RY,
+    ANSATZ_CLUSTER_RZ,
+    VALID_ANSATZ_KINDS,
+    apply_selected_ansatz,
+    describe_ansatz,
+    normalize_ansatz_kind,
+)
 
 
 TOPOLOGY_LINE_2 = {0: [1], 1: [0]}
@@ -81,21 +91,68 @@ def to_jax_flat(flat_list):
     return [jnp.asarray(x) for x in flat_list]
 
 
-def _cluster_scaffold_ansatz(weights, n_qubits: int):
-    for wire in range(n_qubits):
-        qml.Hadamard(wires=wire)
-    for left in range(1, n_qubits - 1):
-        qml.CZ(wires=[left, left + 1])
-    for layer in range(int(weights.shape[0])):
-        for wire in range(n_qubits):
-            qml.RZ(weights[layer, wire], wires=wire)
+def _parse_local_ry_support_arg(raw_value) -> tuple[int, ...]:
+    if raw_value is None:
+        return ()
+    text = str(raw_value).strip()
+    if not text:
+        return ()
+    return tuple(int(part.strip()) for part in text.split(",") if part.strip())
+
+
+def resolve_local_ry_support(ops_module, raw_value) -> tuple[int, ...]:
+    cli_value = _parse_local_ry_support_arg(raw_value)
+    if cli_value:
+        return cli_value
+
+    if hasattr(ops_module, "LOCAL_RY_SUPPORT_WIRES"):
+        return tuple(int(x) for x in getattr(ops_module, "LOCAL_RY_SUPPORT_WIRES"))
+
+    metadata = getattr(getattr(ops_module, "SYSTEM", None), "metadata", {})
+    if "local_ry_support_wires" in metadata:
+        return tuple(int(x) for x in metadata["local_ry_support_wires"])
+
+    return ()
+
+
+def resolve_scaffold_edges(ops_module, n_qubits: int) -> tuple[tuple[int, int], ...]:
+    if hasattr(ops_module, "CLUSTER_SCAFFOLD_EDGES_LOCAL"):
+        return tuple((int(a), int(b)) for a, b in getattr(ops_module, "CLUSTER_SCAFFOLD_EDGES_LOCAL"))
+
+    metadata = getattr(getattr(ops_module, "SYSTEM", None), "metadata", {})
+    if "cluster_scaffold_edges_local" in metadata:
+        return tuple((int(a), int(b)) for a, b in metadata["cluster_scaffold_edges_local"])
+
+    return tuple((left, left + 1) for left in range(1, int(n_qubits) - 1))
+
+
+def _cluster_scaffold_ansatz(
+    weights,
+    n_qubits: int,
+    *,
+    ansatz_kind: str = ANSATZ_CLUSTER_RZ,
+    repeat_cz_each_layer: bool = False,
+    local_ry_support=(),
+    scaffold_edges=None,
+):
+    apply_selected_ansatz(
+        weights,
+        n_qubits,
+        ansatz_kind=ansatz_kind,
+        repeat_cz_each_layer=repeat_cz_each_layer,
+        local_ry_support=local_ry_support,
+        scaffold_edges=scaffold_edges,
+    )
 
 
 def initialize_cluster_params_jax(system, n_qubits: int, layers: int, seed: int = 0):
     n_agents = int(system.n)
     key = jax.random.PRNGKey(seed)
     global_params = {"alpha": [], "beta": [], "sigma": [], "lambda": [], "b_norm": []}
-    sigma_target = 1.0 / np.sqrt(2.0)
+    metadata = getattr(system, "metadata", {})
+    sigma_target = float(metadata.get("init_sigma_target", 1.0 / np.sqrt(2.0)))
+    init_angle_fill = float(metadata.get("init_angle_fill", 0.0))
+    agent_init_overrides = metadata.get("agent_init_overrides", {})
 
     for sys_id in range(n_agents):
         if hasattr(system, "get_local_b_norms"):
@@ -109,10 +166,16 @@ def initialize_cluster_params_jax(system, n_qubits: int, layers: int, seed: int 
         row_bnorms = []
 
         for agent_id in range(n_agents):
-            base = np.zeros((layers, n_qubits), dtype=np.float64)
-            if agent_id == 1:
-                base[0, 0] = np.pi
-                base[0, 1] = np.pi
+            base = np.full((layers, n_qubits), init_angle_fill, dtype=np.float64)
+            if not agent_init_overrides:
+                if agent_id == 1:
+                    base[0, 0] = np.pi
+                    if n_qubits > 1:
+                        base[0, 1] = np.pi
+            else:
+                overrides = agent_init_overrides.get(str(agent_id), agent_init_overrides.get(agent_id, {}))
+                for wire, value in dict(overrides).items():
+                    base[0, int(wire)] = float(value)
 
             key, sub_a = jax.random.split(key)
             key, sub_b = jax.random.split(key)
@@ -144,13 +207,28 @@ def initialize_cluster_params_jax(system, n_qubits: int, layers: int, seed: int 
     return global_params, key
 
 
-def recover_global_solution(global_params, n_qubits):
+def recover_global_solution(
+    global_params,
+    n_qubits,
+    *,
+    ansatz_kind: str = ANSATZ_CLUSTER_RZ,
+    repeat_cz_each_layer: bool = False,
+    local_ry_support=(),
+    scaffold_edges=None,
+):
     n_agents = GLOBAL_AGENTS_N
     dev = qml.device("lightning.qubit", wires=n_qubits)
 
     @qml.qnode(dev, interface="jax")
     def get_local_state_segment(weights):
-        _cluster_scaffold_ansatz(weights, n_qubits)
+        _cluster_scaffold_ansatz(
+            weights,
+            n_qubits,
+            ansatz_kind=ansatz_kind,
+            repeat_cz_each_layer=repeat_cz_each_layer,
+            local_ry_support=local_ry_support,
+            scaffold_edges=scaffold_edges,
+        )
         return qml.state()
 
     row_estimates = []
@@ -245,6 +323,18 @@ def _fmt_metric(x):
     return f"{float(x):.5e}"
 
 
+def _format_array_for_report(arr, *, precision: int = 6) -> str:
+    arr_np = np.real_if_close(np.asarray(arr))
+    return np.array2string(
+        arr_np,
+        precision=precision,
+        suppress_small=False,
+        separator=" ",
+        max_line_width=120,
+        threshold=np.inf,
+    )
+
+
 def _summarize_exception(exc: Exception, *, max_lines: int = 2, max_chars: int = 400) -> str:
     lines = [line.strip() for line in str(exc).splitlines() if line.strip()]
     if not lines:
@@ -298,23 +388,34 @@ def _global_param_summary(global_params):
 
 def _write_analysis(
     path: Path,
+    ops_module,
     system,
     data_wires,
     mem_info,
     ops_module_name: str,
     global_params,
     *,
+    ansatz_kind: str,
+    repeat_cz_each_layer: bool,
+    local_ry_support,
+    scaffold_edges,
     dense_metrics_active: bool,
     A_global,
     global_b,
     true_sol,
 ):
     with open(path, "w", encoding="utf-8") as f:
-        f.write("12-qubit cluster-stabilizer 2x2 distributed run\n")
+        metadata = getattr(system, "metadata", {})
+        n_total_qubits = metadata.get("n_total_qubits", len(data_wires) + 1)
+        f.write(f"{n_total_qubits}-qubit cluster-stabilizer 2x2 distributed run\n")
         f.write(f"static_ops module: {ops_module_name}\n")
         f.write(f"system name: {getattr(system, 'name', 'unknown')}\n")
         f.write(f"n agents: {system.n}\n")
         f.write(f"local data qubits: {len(data_wires)}\n")
+        f.write(f"ansatz: {ansatz_kind} ({describe_ansatz(ansatz_kind)})\n")
+        f.write(f"repeat_cz_each_layer: {bool(repeat_cz_each_layer)}\n")
+        f.write(f"local_ry_support: {tuple(int(x) for x in local_ry_support)}\n")
+        f.write(f"scaffold_edges: {tuple((int(a), int(b)) for a, b in scaffold_edges)}\n")
         f.write(f"dense validation available: {getattr(system, 'supports_dense_validation', True)}\n")
         f.write(f"statevector per Hadamard test: {mem_info['statevector_human']}\n")
         f.write(f"conservative peak per Hadamard test: {mem_info['peak_human_conservative']}\n")
@@ -325,8 +426,6 @@ def _write_analysis(
                 f"entry(sys={item['sys_id']}, agent={item['agent_id']}): "
                 f"L={item['L']}, degree={item['degree']}, qnodes={item['qnode_evals']}\n"
             )
-
-        metadata = getattr(system, "metadata", {})
         if metadata:
             f.write(f"metadata: {metadata}\n")
 
@@ -334,7 +433,14 @@ def _write_analysis(
         f.write(f"final parameter summary: {summary}\n")
 
         if dense_metrics_active and A_global is not None and global_b is not None and true_sol is not None:
-            recover_sol = recover_global_solution(global_params, n_qubits=len(data_wires))
+            recover_sol = recover_global_solution(
+                global_params,
+                n_qubits=len(data_wires),
+                ansatz_kind=ansatz_kind,
+                repeat_cz_each_layer=repeat_cz_each_layer,
+                local_ry_support=local_ry_support,
+                scaffold_edges=scaffold_edges,
+            )
             sol_diff = cal_sol_diff(
                 global_params,
                 true_sol=true_sol,
@@ -359,25 +465,64 @@ def _write_analysis(
 
             @qml.qnode(dev, interface="jax")
             def get_state(weights):
-                _cluster_scaffold_ansatz(weights, len(data_wires))
+                _cluster_scaffold_ansatz(
+                    weights,
+                    len(data_wires),
+                    ansatz_kind=ansatz_kind,
+                    repeat_cz_each_layer=repeat_cz_each_layer,
+                    local_ry_support=local_ry_support,
+                    scaffold_edges=scaffold_edges,
+                )
                 return qml.state()
+
+            f.write("\n" + "=" * 60 + "\n")
+            f.write(f"      SOLUTION RECOVERY & VERIFICATION (N={n_agents})\n")
+            f.write("=" * 60 + "\n")
 
             for sys_id in range(n_agents):
                 true_b_sum = system.get_b_vectors(sys_id)[0]
                 row_recovered_Ax = np.zeros(dim, dtype=complex)
+                f.write(f"\n>>> SYSTEM {sys_id} (Row {sys_id}) <<<\n")
                 for agent_id in range(n_agents):
                     alpha = global_params["alpha"][sys_id][agent_id]
+                    beta = global_params["beta"][sys_id][agent_id]
                     sigma = float(np.asarray(global_params["sigma"][sys_id][agent_id]))
                     state_x = np.array(get_state(alpha))
                     r0, r1 = sys_id * dim, (sys_id + 1) * dim
                     c0, c1 = agent_id * dim, (agent_id + 1) * dim
                     row_recovered_Ax += sigma * (A_global[r0:r1, c0:c1] @ state_x)
+                    f.write(f"  [Agent {agent_id}]\n")
+                    f.write(f"alpha: {_format_array_for_report(alpha)}\n")
+                    f.write(f"beta: {_format_array_for_report(beta)}\n")
+                    f.write(f"    |x>: {_format_array_for_report(sigma * state_x)}\n")
                 row_residual = float(np.linalg.norm(row_recovered_Ax - true_b_sum))
-                f.write(f"row {sys_id} recovered ||sum_j A_ij x_j - b_i||: {row_residual:.8e}\n")
+                rel_err = row_residual / float(np.linalg.norm(true_b_sum))
+                f.write("-" * 40 + "\n")
+                f.write(f"  Recovered b_total (Sum sigma Ax): {_format_array_for_report(np.round(row_recovered_Ax, 4), precision=4)}\n")
+                f.write(f"  True b_total               : {_format_array_for_report(np.round(true_b_sum, 4), precision=4)}\n")
+                f.write(f"  > L2 Difference: {row_residual:.5e}\n")
+                f.write(f"  > Relative Err : {rel_err:.2%}\n")
+
+            f.write("\n" + "=" * 60 + "\n")
+            f.write("      GLOBAL RECOVERY\n")
+            f.write("=" * 60 + "\n")
+            f.write(f"final recovered x: {_format_array_for_report(recover_sol)}\n")
+            f.write(f"true solution x : {_format_array_for_report(np.asarray(true_sol).reshape(-1))}\n")
+            f.write(f"true b          : {_format_array_for_report(np.asarray(global_b).reshape(-1))}\n")
         else:
             f.write(
                 "dense post-analysis was skipped because dense validation is disabled for this run or unavailable "
                 "for this system.\n"
+            )
+
+        if hasattr(ops_module, "write_structured_analysis"):
+            ops_module.write_structured_analysis(
+                out=f,
+                global_params=global_params,
+                ansatz_kind=ansatz_kind,
+                repeat_cz_each_layer=repeat_cz_each_layer,
+                local_ry_support=tuple(int(x) for x in local_ry_support),
+                scaffold_edges=tuple((int(a), int(b)) for a, b in scaffold_edges),
             )
 
 
@@ -398,7 +543,7 @@ def _write_final_params_json(path: Path, global_params):
         json.dump(json_ready, f)
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--static_ops", required=True, help="e.g. problems.static_ops_2x2_cluster12_stabilizer")
     ap.add_argument("--out", required=True)
@@ -409,6 +554,15 @@ def main():
     ap.add_argument("--lr", type=float, default=0.01)
     ap.add_argument("--decay", type=float, default=0.9999)
     ap.add_argument("--log_every", type=int, default=10)
+    ap.add_argument("--ansatz", type=str, default=ANSATZ_CLUSTER_RZ, choices=VALID_ANSATZ_KINDS)
+    ap.add_argument("--layers", type=int, default=1)
+    ap.add_argument("--repeat_cz_each_layer", action="store_true")
+    ap.add_argument(
+        "--local_ry_support",
+        type=str,
+        default="",
+        help="Comma-separated local wire ids for the extra local RY correction ansatz.",
+    )
     ap.add_argument(
         "--enable_dense_metrics",
         action="store_true",
@@ -419,10 +573,20 @@ def main():
         action="store_true",
         help="Force-disable sol_diff and ||Ax-b|| even when the system supports dense validation.",
     )
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
+    args.ansatz = normalize_ansatz_kind(args.ansatz)
+    if args.layers < 1:
+        raise ValueError("--layers must be at least 1.")
 
     ops = load_static_ops(args.static_ops)
     SYSTEM, DATA_WIRES = load_problem_system_and_wires(ops)
+    local_ry_support = resolve_local_ry_support(ops, args.local_ry_support)
+    scaffold_edges = resolve_scaffold_edges(ops, len(DATA_WIRES))
+    if args.ansatz in (ANSATZ_CLUSTER_RZ_LOCAL_RY, ANSATZ_CLUSTER_LOCAL_RY) and not local_ry_support:
+        raise ValueError(
+            f"Ansatz `{args.ansatz}` requires support wires. "
+            "Provide --local_ry_support or define LOCAL_RY_SUPPORT_WIRES in the static_ops module."
+        )
 
     global GLOBAL_AGENTS_N
     GLOBAL_AGENTS_N = int(SYSTEM.n)
@@ -436,7 +600,7 @@ def main():
     metrics = JsonlWriter(paths.metrics_jsonl)
 
     n_qubits = len(DATA_WIRES)
-    layers = 1
+    layers = int(args.layers)
 
     spectrum = None
     if hasattr(ops, "SPECTRUM_INFO"):
@@ -447,7 +611,11 @@ def main():
     logger.info(f"System variant: {getattr(SYSTEM, 'name', '2x2')}")
     logger.info(f"static_ops module: {args.static_ops}")
     logger.info(f"local data qubits per agent: {n_qubits}")
-    logger.info("ansatz: fixed local cluster scaffold + 1 trainable RZ layer")
+    logger.info(f"ansatz: {args.ansatz} ({describe_ansatz(args.ansatz)})")
+    logger.info(f"layers: {layers}")
+    logger.info(f"repeat_cz_each_layer: {bool(args.repeat_cz_each_layer)}")
+    logger.info(f"local_ry_support: {tuple(int(x) for x in local_ry_support)}")
+    logger.info(f"scaffold_edges: {tuple((int(a), int(b)) for a, b in scaffold_edges)}")
     logger.info(f"term counts by block: {[[len(cell) for cell in row] for row in SYSTEM.gates_grid]}")
     if not CATALYST_AVAILABLE:
         logger.info(
@@ -517,13 +685,20 @@ def main():
     Wm = build_metropolis_matrix(TOPOLOGY_LINE_2, n=SYSTEM.n, make_undirected=True)
     logger.info("Metropolis weight matrix Wm =\n" + str(Wm))
 
+    logger.info("Starting prebuild_local_evals() for distributed Hadamard-test bundles.")
+    t_prebuild = time.time()
     ib.prebuild_local_evals(
         SYSTEM,
         TOPOLOGY_LINE_2,
         n_input_qubit=n_qubits,
+        ansatz_kind=args.ansatz,
+        repeat_cz_each_layer=args.repeat_cz_each_layer,
+        local_ry_support=local_ry_support,
+        scaffold_edges=scaffold_edges,
         diff_method="adjoint",
         interface="jax",
     )
+    logger.info(f"Finished prebuild_local_evals() in {time.time() - t_prebuild:.2f} s.")
 
     def total_loss_fn(args_flat):
         current_params = rebuild_global_params(args_flat, SYSTEM.n, GLOBAL_PARAMS["b_norm"])
@@ -571,7 +746,10 @@ def main():
         def compute_loss(args_flat):
             return compute_loss_plain(args_flat)
 
+    logger.info("Starting initial forward loss evaluation.")
+    t_init_loss = time.time()
     current_loss = compute_loss(to_jax_flat(flatten_params(GLOBAL_PARAMS)))
+    logger.info(f"Finished initial forward loss evaluation in {time.time() - t_init_loss:.2f} s.")
     logger.info(f"[Init] Initial Loss = {float(current_loss):.5e}")
 
     lr_schedule = optax.exponential_decay(
@@ -588,7 +766,10 @@ def main():
     ax_minus_b_history = []
 
     flat_params_init = to_jax_flat(flatten_params(GLOBAL_PARAMS, keys=None))
+    logger.info("Starting initial gradient evaluation.")
+    t_init_grad = time.time()
     grads_flat_init = compute_grad(flat_params_init)
+    logger.info(f"Finished initial gradient evaluation in {time.time() - t_init_grad:.2f} s.")
     grad_grid_init = rebuild_global_params(grads_flat_init, SYSTEM.n, GLOBAL_PARAMS["b_norm"])
 
     tracker_grid = init_tracker_from_grad(grad_grid_init)
@@ -627,7 +808,14 @@ def main():
             sol_diff = None
             ax_minus_b = None
             if dense_metrics_active:
-                recover_sol = recover_global_solution(GLOBAL_PARAMS, n_qubits=n_qubits)
+                recover_sol = recover_global_solution(
+                    GLOBAL_PARAMS,
+                    n_qubits=n_qubits,
+                    ansatz_kind=args.ansatz,
+                    repeat_cz_each_layer=args.repeat_cz_each_layer,
+                    local_ry_support=local_ry_support,
+                    scaffold_edges=scaffold_edges,
+                )
                 sol_diff = float(
                     cal_sol_diff(
                         GLOBAL_PARAMS,
@@ -725,11 +913,16 @@ def main():
     analysis_path = paths.run_dir / "analysis.txt"
     _write_analysis(
         analysis_path,
+        ops,
         SYSTEM,
         DATA_WIRES,
         mem_info,
         args.static_ops,
         GLOBAL_PARAMS,
+        ansatz_kind=args.ansatz,
+        repeat_cz_each_layer=args.repeat_cz_each_layer,
+        local_ry_support=local_ry_support,
+        scaffold_edges=scaffold_edges,
         dense_metrics_active=dense_metrics_active,
         A_global=A_global,
         global_b=global_b,

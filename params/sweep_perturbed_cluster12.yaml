@@ -1,0 +1,27 @@
+run_root: run
+tag: perturbed_cluster12
+
+problems:
+  - name: perturbed_cluster_state_12q
+    module: problems.static_ops_2x2_perturbed_cluster12
+
+topologies:
+  - name: line
+
+cases:
+  - name: catalyst_tracking_perturbed_cluster12
+    script: optimization/seawulf_cat_line_tracking_nodispatch_2x2_perturbed_cluster12.py
+
+lr_sets:
+  - tag: lr1
+    lr: 0.001
+
+decay_sets:
+  - tag: d1
+    decay: 1.0
+
+seeds: [186782, 240531, 390184, 572911]
+
+common:
+  epochs: 20000
+  log_every: 50

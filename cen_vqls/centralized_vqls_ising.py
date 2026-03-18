@@ -174,9 +174,10 @@ def _global_ansatz(weights: np.ndarray, wires: Tuple[int, ...] | range | List[in
 @dataclass
 class BUnitaryInfo:
     mode: str
-    unitary: np.ndarray
+    unitary: np.ndarray | None
     state_prep_error: float
     hadamard_match_error: float
+    prep_spec: dict | None = None
 
 
 @dataclass
@@ -462,7 +463,127 @@ def build_b_unitary_from_distributed(b_normed: np.ndarray, n_total_qubits: int, 
     prepared = u[:, 0]
     prepared_aligned = _align_global_phase(prepared, b_normed)
     prep_error = float(np.linalg.norm(prepared_aligned - b_normed))
-    return BUnitaryInfo(mode=mode, unitary=u, state_prep_error=prep_error, hadamard_match_error=hadamard_match_error)
+    return BUnitaryInfo(
+        mode=mode,
+        unitary=u,
+        state_prep_error=prep_error,
+        hadamard_match_error=hadamard_match_error,
+        prep_spec=None,
+    )
+
+
+def _normalize_b_prep_spec(spec: dict, n_total_qubits: int) -> dict:
+    if not isinstance(spec, dict):
+        raise RuntimeError("`b_prep_spec` must be a mapping.")
+
+    mode = str(spec.get("mode", "")).strip()
+    if mode != "index_superposition_cluster_pauli_z":
+        raise RuntimeError(f"Unsupported b_prep_spec mode `{mode}`.")
+
+    index_wire = int(spec.get("index_wire", 0))
+    data_wires = tuple(int(w) for w in spec.get("data_wires", ()))
+    cluster_edges = tuple((int(a), int(b)) for a, b in spec.get("cluster_edges", ()))
+    conditional_z_wires = tuple(int(w) for w in spec.get("conditional_z_wires", ()))
+
+    used_wires = {index_wire, *data_wires}
+    if len(used_wires) != 1 + len(data_wires):
+        raise RuntimeError("b_prep_spec wires must be unique.")
+    if min(used_wires) < 0 or max(used_wires) >= int(n_total_qubits):
+        raise RuntimeError(
+            f"b_prep_spec wires must lie in [0, {int(n_total_qubits) - 1}]."
+        )
+
+    data_wire_set = set(data_wires)
+    for left, right in cluster_edges:
+        if left not in data_wire_set or right not in data_wire_set:
+            raise RuntimeError("cluster_edges must only reference data_wires.")
+        if left == right:
+            raise RuntimeError("cluster_edges cannot contain self-loops.")
+    for wire in conditional_z_wires:
+        if wire not in data_wire_set:
+            raise RuntimeError("conditional_z_wires must be a subset of data_wires.")
+
+    return {
+        "mode": mode,
+        "index_wire": index_wire,
+        "data_wires": data_wires,
+        "cluster_edges": cluster_edges,
+        "conditional_z_wires": conditional_z_wires,
+    }
+
+
+def _apply_b_prep_from_spec(spec: dict) -> None:
+    mode = str(spec["mode"])
+    if mode != "index_superposition_cluster_pauli_z":
+        raise RuntimeError(f"Unsupported b_prep_spec mode `{mode}`.")
+
+    index_wire = int(spec["index_wire"])
+    data_wires = tuple(int(w) for w in spec["data_wires"])
+    cluster_edges = tuple((int(a), int(b)) for a, b in spec["cluster_edges"])
+    conditional_z_wires = tuple(int(w) for w in spec["conditional_z_wires"])
+
+    qml.Hadamard(wires=index_wire)
+    for wire in data_wires:
+        qml.Hadamard(wires=wire)
+    for left, right in cluster_edges:
+        qml.CZ(wires=[left, right])
+    for wire in conditional_z_wires:
+        qml.CZ(wires=[index_wire, wire])
+
+
+def _apply_controlled_b_dagger_from_spec(
+    spec: dict,
+    control_wire: int,
+    *,
+    wire_offset: int = 0,
+) -> None:
+    mode = str(spec["mode"])
+    if mode != "index_superposition_cluster_pauli_z":
+        raise RuntimeError(f"Unsupported b_prep_spec mode `{mode}`.")
+
+    index_wire = int(spec["index_wire"]) + int(wire_offset)
+    data_wires = tuple(int(w) + int(wire_offset) for w in spec["data_wires"])
+    cluster_edges = tuple(
+        (int(a) + int(wire_offset), int(b) + int(wire_offset))
+        for a, b in spec["cluster_edges"]
+    )
+    conditional_z_wires = tuple(int(w) + int(wire_offset) for w in spec["conditional_z_wires"])
+
+    for wire in reversed(conditional_z_wires):
+        qml.CCZ(wires=[control_wire, index_wire, wire])
+    for left, right in reversed(cluster_edges):
+        qml.CCZ(wires=[control_wire, left, right])
+    for wire in reversed(data_wires):
+        qml.CH(wires=[control_wire, wire])
+    qml.CH(wires=[control_wire, index_wire])
+
+
+def build_b_prep_info_from_spec(
+    b_normed: np.ndarray,
+    n_total_qubits: int,
+    spec: dict,
+) -> BUnitaryInfo:
+    normalized_spec = _normalize_b_prep_spec(spec, n_total_qubits=int(n_total_qubits))
+    hadamard_target = np.ones(2**n_total_qubits, dtype=np.complex128) / np.sqrt(2**n_total_qubits)
+    hadamard_match_error = float(np.linalg.norm(b_normed - hadamard_target))
+
+    dev = qml.device("default.qubit", wires=int(n_total_qubits))
+
+    @qml.qnode(dev, interface=None, diff_method=None)
+    def prep_state():
+        _apply_b_prep_from_spec(normalized_spec)
+        return qml.state()
+
+    prepared = np.array(prep_state(), dtype=np.complex128)
+    prepared_aligned = _align_global_phase(prepared, b_normed)
+    prep_error = float(np.linalg.norm(prepared_aligned - b_normed))
+    return BUnitaryInfo(
+        mode=str(normalized_spec["mode"]),
+        unitary=None,
+        state_prep_error=prep_error,
+        hadamard_match_error=hadamard_match_error,
+        prep_spec=normalized_spec,
+    )
 
 
 def load_centralized_data(cfg: dict, repo_root: Path) -> CentralizedIsingData:
@@ -501,6 +622,7 @@ def load_centralized_data(cfg: dict, repo_root: Path) -> CentralizedIsingData:
 
     problem_source = f"distributed_system[{system_key}]"
     centralized_problem = None
+    b_prep_spec = None
     if prefer_centralized_problem:
         centralized_problem = _resolve_centralized_problem(module, centralized_problem_key)
 
@@ -534,6 +656,7 @@ def load_centralized_data(cfg: dict, repo_root: Path) -> CentralizedIsingData:
             centralized_problem.get("n_data_qubits", n_total_qubits - n_index_qubits)
         )
         n_agents = int(centralized_problem.get("n_agents", 2**n_index_qubits))
+        b_prep_spec = centralized_problem.get("b_prep_spec")
     else:
         system = _resolve_system_from_module(module, system_key)
         n_agents = int(system.n)
@@ -558,6 +681,8 @@ def load_centralized_data(cfg: dict, repo_root: Path) -> CentralizedIsingData:
             data_wires=data_wires,
             atol=atol,
         )
+        if hasattr(system, "metadata") and isinstance(system.metadata, dict):
+            b_prep_spec = system.metadata.get("centralized_b_prep_spec")
 
     global_dim = int(a_block.shape[0])
 
@@ -602,11 +727,18 @@ def load_centralized_data(cfg: dict, repo_root: Path) -> CentralizedIsingData:
         raise RuntimeError("Unnormalized b has zero norm.")
     b_normed = b_unnorm / b_unnorm_norm
 
-    b_unitary_info = build_b_unitary_from_distributed(
-        b_normed=b_normed,
-        n_total_qubits=n_total_qubits,
-        tol=float(problem_cfg["b_state_tolerance"]),
-    )
+    if b_prep_spec is not None:
+        b_unitary_info = build_b_prep_info_from_spec(
+            b_normed=b_normed,
+            n_total_qubits=n_total_qubits,
+            spec=b_prep_spec,
+        )
+    else:
+        b_unitary_info = build_b_unitary_from_distributed(
+            b_normed=b_normed,
+            n_total_qubits=n_total_qubits,
+            tol=float(problem_cfg["b_state_tolerance"]),
+        )
 
     return CentralizedIsingData(
         static_ops_path=static_ops_path,
@@ -660,7 +792,12 @@ class HadamardCentralizedVQLS:
         self.dev_state = qml.device(device_name, wires=self.n)
 
         self.b_mode = data.b_unitary_info.mode
-        self.b_unitary_dag = np.conjugate(data.b_unitary_info.unitary.T)
+        self.b_prep_spec = data.b_unitary_info.prep_spec
+        self.b_unitary_dag = (
+            None
+            if data.b_unitary_info.unitary is None
+            else np.conjugate(data.b_unitary_info.unitary.T)
+        )
 
         self._build_linear_combinations()
 
@@ -708,6 +845,17 @@ class HadamardCentralizedVQLS:
             for wire in self.system_wires:
                 qml.ctrl(qml.Hadamard, control=self.control_wire)(wires=wire)
             return
+
+        if self.b_prep_spec is not None:
+            _apply_controlled_b_dagger_from_spec(
+                self.b_prep_spec,
+                self.control_wire,
+                wire_offset=1,
+            )
+            return
+
+        if self.b_unitary_dag is None:
+            raise RuntimeError(f"Missing b-unitary implementation for mode `{self.b_mode}`.")
 
         def _b_dag():
             qml.QubitUnitary(self.b_unitary_dag, wires=self.system_wires)

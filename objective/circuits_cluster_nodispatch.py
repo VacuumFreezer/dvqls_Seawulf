@@ -11,6 +11,137 @@ from pennylane import numpy as pnp
 
 _DEV = {}
 
+ANSATZ_CLUSTER_RZ = "cluster_rz"
+ANSATZ_CLUSTER_RY = "cluster_ry"
+ANSATZ_BRICKWALL_RY_CZ = "brickwall_ry_cz"
+ANSATZ_NO_HADAMARD_RY = "no_hadamard_ry"
+ANSATZ_CLUSTER_RZ_LOCAL_RY = "cluster_rz_local_ry"
+ANSATZ_CLUSTER_LOCAL_RY = "cluster_local_ry"
+VALID_ANSATZ_KINDS = (
+    ANSATZ_CLUSTER_RZ,
+    ANSATZ_CLUSTER_RY,
+    ANSATZ_BRICKWALL_RY_CZ,
+    ANSATZ_NO_HADAMARD_RY,
+    ANSATZ_CLUSTER_RZ_LOCAL_RY,
+    ANSATZ_CLUSTER_LOCAL_RY,
+)
+
+
+def normalize_ansatz_kind(ansatz_kind: str) -> str:
+    kind = str(ansatz_kind).strip().lower()
+    if kind not in VALID_ANSATZ_KINDS:
+        raise ValueError(f"Unsupported ansatz {ansatz_kind!r}. Expected one of {VALID_ANSATZ_KINDS}.")
+    return kind
+
+
+def describe_ansatz(ansatz_kind: str) -> str:
+    kind = normalize_ansatz_kind(ansatz_kind)
+    if kind == ANSATZ_CLUSTER_RZ:
+        return "Hadamard scaffold + open-chain CZ + trainable RZ"
+    if kind == ANSATZ_CLUSTER_RY:
+        return "Hadamard scaffold + open-chain CZ + trainable RY"
+    if kind == ANSATZ_BRICKWALL_RY_CZ:
+        return "Trainable RY layer followed by open-chain CZ"
+    if kind == ANSATZ_CLUSTER_RZ_LOCAL_RY:
+        return "Hadamard scaffold + open-chain CZ + trainable RZ with local RY correction"
+    if kind == ANSATZ_CLUSTER_LOCAL_RY:
+        return "Hadamard scaffold + open-chain CZ + local trainable RY support"
+    return "Open-chain CZ only + trainable RY"
+
+
+def _apply_open_chain_cz(n_input_qubit: int):
+    for left in range(1, n_input_qubit - 1):
+        qml.CZ(wires=[left, left + 1])
+
+
+def _normalize_scaffold_edges(scaffold_edges, n_input_qubit: int) -> tuple[tuple[int, int], ...]:
+    if scaffold_edges is None:
+        return tuple((left, left + 1) for left in range(1, n_input_qubit - 1))
+
+    edges = []
+    for pair in scaffold_edges:
+        if len(pair) != 2:
+            raise ValueError(f"Invalid scaffold edge {pair!r}; expected a pair of local wire indices.")
+        left, right = int(pair[0]), int(pair[1])
+        if left < 0 or right < 0 or left >= int(n_input_qubit) or right >= int(n_input_qubit):
+            raise ValueError(
+                f"Scaffold edge {(left, right)} is out of range for n_input_qubit={int(n_input_qubit)}."
+            )
+        if left == right:
+            raise ValueError(f"Scaffold edge {(left, right)} must connect two distinct wires.")
+        edges.append((left, right))
+    return tuple(edges)
+
+
+def _apply_scaffold_edges(scaffold_edges):
+    for left, right in scaffold_edges:
+        qml.CZ(wires=[left, right])
+
+
+def _normalize_local_wire_subset(local_ry_support, n_input_qubit: int) -> tuple[int, ...]:
+    if local_ry_support is None:
+        return ()
+
+    subset = []
+    for wire in local_ry_support:
+        idx = int(wire)
+        if idx < 0 or idx >= int(n_input_qubit):
+            raise ValueError(
+                f"Local RY support wire {idx} is out of range for n_input_qubit={int(n_input_qubit)}."
+            )
+        subset.append(idx)
+    return tuple(sorted(set(subset)))
+
+
+def apply_selected_ansatz(
+    weights,
+    n_input_qubit: int,
+    *,
+    ansatz_kind: str = ANSATZ_CLUSTER_RZ,
+    repeat_cz_each_layer: bool = False,
+    local_ry_support=None,
+    scaffold_edges=None,
+):
+    kind = normalize_ansatz_kind(ansatz_kind)
+    local_ry_support = _normalize_local_wire_subset(local_ry_support, n_input_qubit)
+    scaffold_edges = _normalize_scaffold_edges(scaffold_edges, n_input_qubit)
+
+    if kind in (ANSATZ_CLUSTER_RZ_LOCAL_RY, ANSATZ_CLUSTER_LOCAL_RY) and not local_ry_support:
+        raise ValueError(
+            f"Ansatz `{kind}` requires a non-empty local_ry_support wire set."
+        )
+
+    if kind == ANSATZ_BRICKWALL_RY_CZ:
+        for layer in range(int(weights.shape[0])):
+            for wire in range(n_input_qubit):
+                qml.RY(weights[layer, wire], wires=wire)
+            _apply_scaffold_edges(scaffold_edges)
+        return
+
+    if kind != ANSATZ_NO_HADAMARD_RY:
+        for w in range(n_input_qubit):
+            qml.Hadamard(wires=w)
+
+    if not repeat_cz_each_layer:
+        _apply_scaffold_edges(scaffold_edges)
+
+    for layer in range(int(weights.shape[0])):
+        if repeat_cz_each_layer:
+            _apply_scaffold_edges(scaffold_edges)
+        if kind == ANSATZ_CLUSTER_LOCAL_RY:
+            for wire in local_ry_support:
+                qml.RY(weights[layer, wire], wires=wire)
+            continue
+
+        for wire in range(n_input_qubit):
+            if kind in (ANSATZ_CLUSTER_RZ, ANSATZ_CLUSTER_RZ_LOCAL_RY):
+                qml.RZ(weights[layer, wire], wires=wire)
+            else:
+                qml.RY(weights[layer, wire], wires=wire)
+        if kind == ANSATZ_CLUSTER_RZ_LOCAL_RY:
+            for wire in local_ry_support:
+                qml.RY(weights[layer, wire], wires=wire)
+
 
 def dev_cpu(nwires: int):
     if nwires not in _DEV:
@@ -24,10 +155,18 @@ class HadamardTest:
         n_input_qubit: int,
         U_op: Callable[[], None] = None,
         A_gates: Sequence[Callable[[], None]] = (),
+        ansatz_kind: str = ANSATZ_CLUSTER_RZ,
+        repeat_cz_each_layer: bool = False,
+        local_ry_support=None,
+        scaffold_edges=None,
     ):
         self.n_input_qubit = n_input_qubit
         self.U_op = U_op
         self.A_gates = tuple(A_gates)
+        self.ansatz_kind = normalize_ansatz_kind(ansatz_kind)
+        self.repeat_cz_each_layer = bool(repeat_cz_each_layer)
+        self.local_ry_support = _normalize_local_wire_subset(local_ry_support, n_input_qubit)
+        self.scaffold_edges = _normalize_scaffold_edges(scaffold_edges, n_input_qubit)
 
     def bind_runtime(self, dev, interface="jax", diff_method="adjoint", use_jit=True):
         self.dev = dev
@@ -42,22 +181,34 @@ class HadamardTest:
         return fn
 
     def _cluster_scaffold(self):
-        for w in range(self.n_input_qubit):
-            qml.Hadamard(wires=w)
-        for left in range(1, self.n_input_qubit - 1):
-            qml.CZ(wires=[left, left + 1])
+        apply_selected_ansatz(
+            jnp.zeros((0, self.n_input_qubit), dtype=jnp.float64),
+            self.n_input_qubit,
+            ansatz_kind=self.ansatz_kind,
+            repeat_cz_each_layer=self.repeat_cz_each_layer,
+            local_ry_support=self.local_ry_support,
+            scaffold_edges=self.scaffold_edges,
+        )
 
     def W_var_block(self, betas):
-        self._cluster_scaffold()
-        for layer in range(int(betas.shape[0])):
-            for wire in range(self.n_input_qubit):
-                qml.RZ(betas[layer, wire], wires=wire)
+        apply_selected_ansatz(
+            betas,
+            self.n_input_qubit,
+            ansatz_kind=self.ansatz_kind,
+            repeat_cz_each_layer=self.repeat_cz_each_layer,
+            local_ry_support=self.local_ry_support,
+            scaffold_edges=self.scaffold_edges,
+        )
 
     def V_var_block(self, alphas):
-        self._cluster_scaffold()
-        for layer in range(int(alphas.shape[0])):
-            for wire in range(self.n_input_qubit):
-                qml.RZ(alphas[layer, wire], wires=wire)
+        apply_selected_ansatz(
+            alphas,
+            self.n_input_qubit,
+            ansatz_kind=self.ansatz_kind,
+            repeat_cz_each_layer=self.repeat_cz_each_layer,
+            local_ry_support=self.local_ry_support,
+            scaffold_edges=self.scaffold_edges,
+        )
 
 
 class OmegaTerm(HadamardTest):
@@ -241,16 +392,60 @@ def make_term_bundle(
     U_op,
     A_gates,
     *,
+    ansatz_kind=ANSATZ_CLUSTER_RZ,
+    repeat_cz_each_layer=False,
+    local_ry_support=None,
+    scaffold_edges=None,
     dev=None,
     interface="jax",
     diff_method="adjoint",
     use_jit=True,
 ):
-    omega = OmegaTerm(n_input_qubit=n_input_qubit, U_op=U_op, A_gates=A_gates)
-    delta = DeltaTerm(n_input_qubit=n_input_qubit, U_op=U_op, A_gates=A_gates)
-    zeta = ZetaTerm(n_input_qubit=n_input_qubit, U_op=U_op, A_gates=A_gates)
-    tau = TauTerm(n_input_qubit=n_input_qubit, U_op=U_op, A_gates=A_gates)
-    beta = BetaTerm(n_input_qubit=n_input_qubit, U_op=U_op, A_gates=A_gates)
+    omega = OmegaTerm(
+        n_input_qubit=n_input_qubit,
+        U_op=U_op,
+        A_gates=A_gates,
+        ansatz_kind=ansatz_kind,
+        repeat_cz_each_layer=repeat_cz_each_layer,
+        local_ry_support=local_ry_support,
+        scaffold_edges=scaffold_edges,
+    )
+    delta = DeltaTerm(
+        n_input_qubit=n_input_qubit,
+        U_op=U_op,
+        A_gates=A_gates,
+        ansatz_kind=ansatz_kind,
+        repeat_cz_each_layer=repeat_cz_each_layer,
+        local_ry_support=local_ry_support,
+        scaffold_edges=scaffold_edges,
+    )
+    zeta = ZetaTerm(
+        n_input_qubit=n_input_qubit,
+        U_op=U_op,
+        A_gates=A_gates,
+        ansatz_kind=ansatz_kind,
+        repeat_cz_each_layer=repeat_cz_each_layer,
+        local_ry_support=local_ry_support,
+        scaffold_edges=scaffold_edges,
+    )
+    tau = TauTerm(
+        n_input_qubit=n_input_qubit,
+        U_op=U_op,
+        A_gates=A_gates,
+        ansatz_kind=ansatz_kind,
+        repeat_cz_each_layer=repeat_cz_each_layer,
+        local_ry_support=local_ry_support,
+        scaffold_edges=scaffold_edges,
+    )
+    beta = BetaTerm(
+        n_input_qubit=n_input_qubit,
+        U_op=U_op,
+        A_gates=A_gates,
+        ansatz_kind=ansatz_kind,
+        repeat_cz_each_layer=repeat_cz_each_layer,
+        local_ry_support=local_ry_support,
+        scaffold_edges=scaffold_edges,
+    )
 
     if dev is not None:
         omega.bind_runtime(dev, interface=interface, diff_method=diff_method, use_jit=use_jit)

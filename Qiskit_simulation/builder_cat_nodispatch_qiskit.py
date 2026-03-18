@@ -51,6 +51,10 @@ class DistributedCostBuilderQiskit:
         system: LinearSystemDataQiskit,
         row_topology: Mapping[int, Sequence[int]],
         *,
+        ansatz_layers: int = 1,
+        repeat_cz_each_layer: bool = False,
+        ansatz_kind: str | None = None,
+        scaffold_edges: Sequence[Tuple[int, int]] | None = None,
         max_bond_dim: int = 8,
         num_threads: int = 1,
         precision: str = "single",
@@ -60,6 +64,18 @@ class DistributedCostBuilderQiskit:
         self.system = system
         self.row_topology = {int(k): tuple(int(x) for x in v) for k, v in row_topology.items()}
         self.n_input_qubit = int(system.n_data_qubits)
+        self.ansatz_layers = int(ansatz_layers)
+        self.repeat_cz_each_layer = bool(repeat_cz_each_layer)
+        metadata = getattr(system, "metadata", {}) or {}
+        self.ansatz_kind = str(
+            ansatz_kind
+            or metadata.get("recommended_ansatz_qiskit")
+            or metadata.get("recommended_ansatz")
+            or "cluster_h_cz_ry"
+        )
+        if scaffold_edges is None:
+            scaffold_edges = metadata.get("cluster_scaffold_edges_local")
+        self.scaffold_edges = None if scaffold_edges is None else tuple((int(a), int(b)) for a, b in scaffold_edges)
         self.num_threads = int(num_threads)
         self.max_bond_dim = int(max_bond_dim)
         self.precision = str(precision)
@@ -120,6 +136,10 @@ class DistributedCostBuilderQiskit:
         if key not in self._word_overlap_cache:
             tmpl = build_overlap_template(
                 n_data_qubits=self.n_input_qubit,
+                layers=self.ansatz_layers,
+                repeat_cz_each_layer=self.repeat_cz_each_layer,
+                ansatz_kind=self.ansatz_kind,
+                scaffold_edges=self.scaffold_edges,
                 left_kind="ansatz",
                 right_kind="ansatz",
                 pauli_word=word,
@@ -135,6 +155,10 @@ class DistributedCostBuilderQiskit:
         if key not in self._bprep_overlap_cache:
             tmpl = build_overlap_template(
                 n_data_qubits=self.n_input_qubit,
+                layers=self.ansatz_layers,
+                repeat_cz_each_layer=self.repeat_cz_each_layer,
+                ansatz_kind=self.ansatz_kind,
+                scaffold_edges=self.scaffold_edges,
                 left_kind="bprep",
                 right_kind="ansatz",
                 pauli_word=word,
@@ -160,6 +184,10 @@ class DistributedCostBuilderQiskit:
             tmpl = build_expectation_template(
                 n_data_qubits=self.n_input_qubit,
                 observables=observables,
+                layers=self.ansatz_layers,
+                repeat_cz_each_layer=self.repeat_cz_each_layer,
+                ansatz_kind=self.ansatz_kind,
+                scaffold_edges=self.scaffold_edges,
                 theta_name="theta",
                 template_name=str(name),
             )
@@ -178,6 +206,10 @@ class DistributedCostBuilderQiskit:
                     U_spec=b_spec,
                     A_words=words,
                     coeffs=coeffs,
+                    layers=self.ansatz_layers,
+                    repeat_cz_each_layer=self.repeat_cz_each_layer,
+                    ansatz_kind=self.ansatz_kind,
+                    scaffold_edges=self.scaffold_edges,
                 )
                 term_bundle.omega = self._transpile_template(term_bundle.omega)
                 term_bundle.delta = self._transpile_template(term_bundle.delta)
@@ -235,12 +267,14 @@ class DistributedCostBuilderQiskit:
             "b_norm": np.float32(params["b_norm"][sys_id, agent_id]),
         }
 
-    def evaluate_total_loss(self, params: Mapping[str, np.ndarray]) -> float:
+    def _evaluate_local_term_cache(self, params: Mapping[str, np.ndarray]) -> List[Dict[str, object]]:
         pubs = []
         layouts = []
+        locals_cache = []
 
         for entry_idx, entry in enumerate(self.entries):
             local = self._build_agent_view(entry, params)
+            locals_cache.append(local)
             alpha = local["alpha"]
             beta_vec = local["beta_vec"]
 
@@ -310,10 +344,9 @@ class DistributedCostBuilderQiskit:
         result = self.estimator.run(pubs).result()
         pub_values: List[np.ndarray] = [np.asarray(pub_res.data.evs, dtype=np.float64).reshape(-1) for pub_res in result]
 
-        total = 0.0
-        for layout in layouts:
+        records: List[Dict[str, object]] = []
+        for layout, local in zip(layouts, locals_cache):
             entry = self.entries[layout["entry_idx"]]
-            local = self._build_agent_view(entry, params)
             beta_vec = local["beta_vec"]
             lam_vec = np.asarray(local["lam_vec"], dtype=np.float64)
             c_vec = np.asarray(entry.c_vec, dtype=np.float64)
@@ -339,16 +372,84 @@ class DistributedCostBuilderQiskit:
                 omega_mat[i, j] = float(pub_values[idx][0])
                 omega_mat[j, i] = omega_mat[i, j]
 
-            t = c_vec * lam_vec
-            s_norm_sq = (sigma * sigma) * beta_re
-            s_norm_sq += float(np.sum(t * t))
-            s_norm_sq += 2.0 * sigma * float(np.sum(t * zeta_vec))
-            s_norm_sq += float(np.sum((t[:, None] * t[None, :]) * omega_mat))
+            records.append(
+                {
+                    "entry": entry,
+                    "lam_vec": lam_vec,
+                    "c_vec": c_vec,
+                    "sigma": sigma,
+                    "b_norm": b_norm,
+                    "tau_re": tau_re,
+                    "beta_re": beta_re,
+                    "zeta_vec": zeta_vec,
+                    "delta_re_vec": delta_re_vec,
+                    "omega_mat": omega_mat,
+                }
+            )
 
-            overlap = sigma * tau_re + float(np.sum(t * delta_re_vec))
-            total += s_norm_sq + (b_norm * b_norm) - 2.0 * overlap * b_norm
+        return records
+
+    @staticmethod
+    def _loss_from_record(record: Mapping[str, object]) -> tuple[float, np.ndarray]:
+        lam_vec = np.asarray(record["lam_vec"], dtype=np.float64)
+        c_vec = np.asarray(record["c_vec"], dtype=np.float64)
+        sigma = float(record["sigma"])
+        b_norm = float(record["b_norm"])
+        beta_re = float(record["beta_re"])
+        tau_re = float(record["tau_re"])
+        zeta_vec = np.asarray(record["zeta_vec"], dtype=np.float64)
+        delta_re_vec = np.asarray(record["delta_re_vec"], dtype=np.float64)
+        omega_mat = np.asarray(record["omega_mat"], dtype=np.float64)
+
+        t = c_vec * lam_vec
+        s_norm_sq = (sigma * sigma) * beta_re
+        s_norm_sq += float(np.sum(t * t))
+        s_norm_sq += 2.0 * sigma * float(np.sum(t * zeta_vec))
+        s_norm_sq += float(np.sum((t[:, None] * t[None, :]) * omega_mat))
+
+        overlap = sigma * tau_re + float(np.sum(t * delta_re_vec))
+        return float(s_norm_sq + (b_norm * b_norm) - 2.0 * overlap * b_norm), t
+
+    def evaluate_total_loss(self, params: Mapping[str, np.ndarray]) -> float:
+        total = 0.0
+        for record in self._evaluate_local_term_cache(params):
+            local_loss, _ = self._loss_from_record(record)
+            total += local_loss
 
         return float(total)
+
+    def evaluate_total_loss_and_exact_sigma_lambda_grads(
+        self, params: Mapping[str, np.ndarray]
+    ) -> tuple[float, np.ndarray, np.ndarray]:
+        total = 0.0
+        sigma_grad = np.zeros_like(params["sigma"], dtype=np.float64)
+        lambda_grad = np.zeros_like(params["lambda"], dtype=np.float64)
+
+        for record in self._evaluate_local_term_cache(params):
+            entry = record["entry"]
+            local_loss, t = self._loss_from_record(record)
+            total += local_loss
+
+            sigma = float(record["sigma"])
+            b_norm = float(record["b_norm"])
+            beta_re = float(record["beta_re"])
+            tau_re = float(record["tau_re"])
+            zeta_vec = np.asarray(record["zeta_vec"], dtype=np.float64)
+            delta_re_vec = np.asarray(record["delta_re_vec"], dtype=np.float64)
+            omega_mat = np.asarray(record["omega_mat"], dtype=np.float64)
+            c_vec = np.asarray(record["c_vec"], dtype=np.float64)
+
+            sigma_grad[entry.sys_id, entry.agent_id] += (
+                2.0 * sigma * beta_re + 2.0 * float(np.dot(t, zeta_vec)) - 2.0 * b_norm * tau_re
+            )
+
+            dt = 2.0 * t + 2.0 * sigma * zeta_vec + 2.0 * (omega_mat @ t) - 2.0 * b_norm * delta_re_vec
+            dlam_vec = c_vec * dt
+            lambda_grad[entry.sys_id, entry.agent_id] += float(dlam_vec[0])
+            for offset, nbr in enumerate(entry.neighbors, start=1):
+                lambda_grad[entry.sys_id, nbr] += float(dlam_vec[offset])
+
+        return float(total), sigma_grad.astype(np.float32), lambda_grad.astype(np.float32)
 
     def _eval_direct_operator(self, theta: np.ndarray, words: Sequence[PauliWord], coeffs: Sequence[float], name: str) -> float:
         tmpl = self._get_direct_operator_template(name, words, coeffs)

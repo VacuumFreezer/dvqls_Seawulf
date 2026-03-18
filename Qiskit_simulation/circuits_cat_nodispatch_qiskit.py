@@ -1,4 +1,4 @@
-"""Qiskit circuit templates for the 2x2 cluster30 distributed VQLS workflow."""
+"""Qiskit circuit templates for the 2x2 distributed VQLS workflow."""
 
 from __future__ import annotations
 
@@ -12,6 +12,10 @@ from qiskit.circuit.library import CCZGate, CHGate, CRYGate, CYGate
 from qiskit.quantum_info import SparsePauliOp
 
 from .static_ops_2x2_cluster30_qiskit import BStateSpec, PauliWord
+
+
+ANSATZ_CLUSTER_H_CZ_RY = "cluster_h_cz_ry"
+ANSATZ_BRICKWALL_RY_CZ = "brickwall_ry_cz"
 
 
 _PAULI_PRODUCT = {
@@ -103,28 +107,111 @@ class TermBundleQiskit:
     beta: CircuitTemplate
 
 
-def ring_edges(n_qubits: int) -> List[Tuple[int, int]]:
-    if n_qubits < 2:
-        return []
-    edges = [(q, q + 1) for q in range(n_qubits - 1)]
-    if n_qubits > 2:
-        edges.append((n_qubits - 1, 0))
+def _normalize_ansatz_kind(ansatz_kind: str | None) -> str:
+    kind = str(ansatz_kind or ANSATZ_CLUSTER_H_CZ_RY).strip().lower()
+    if kind not in (ANSATZ_CLUSTER_H_CZ_RY, ANSATZ_BRICKWALL_RY_CZ):
+        raise ValueError(f"Unsupported ansatz kind {ansatz_kind!r}")
+    return kind
+
+
+def cluster_scaffold_edges(
+    n_qubits: int,
+    scaffold_edges: Sequence[Tuple[int, int]] | None = None,
+) -> List[Tuple[int, int]]:
+    if scaffold_edges is None:
+        if n_qubits < 3:
+            return []
+        return [(q, q + 1) for q in range(1, n_qubits - 1)]
+
+    edges: List[Tuple[int, int]] = []
+    for pair in scaffold_edges:
+        if len(pair) != 2:
+            raise ValueError(f"Invalid scaffold edge {pair!r}")
+        left, right = int(pair[0]), int(pair[1])
+        if left < 0 or right < 0 or left >= n_qubits or right >= n_qubits or left == right:
+            raise ValueError(f"Out-of-range scaffold edge {(left, right)} for n_qubits={n_qubits}")
+        edges.append((left, right))
     return edges
 
+def _split_layer_params(params: Sequence, n_layers: int, n_data_qubits: int) -> List[Sequence]:
+    flat = list(params)
+    expected = int(n_layers) * int(n_data_qubits)
+    if len(flat) != expected:
+        raise ValueError(f"Expected {expected} ansatz parameters, got {len(flat)}")
+    return [flat[idx * n_data_qubits : (idx + 1) * n_data_qubits] for idx in range(n_layers)]
 
-def apply_basic_entangler_cz(qc: QuantumCircuit, params: Sequence, data_qubits: Sequence[int]):
-    for theta, qubit in zip(params, data_qubits):
-        qc.ry(theta, qubit)
-    for a, b in ring_edges(len(data_qubits)):
-        qc.cz(data_qubits[a], data_qubits[b])
+def apply_basic_entangler_cz(
+    qc: QuantumCircuit,
+    params: Sequence,
+    data_qubits: Sequence[int],
+    *,
+    layers: int = 1,
+    repeat_cz_each_layer: bool = False,
+    ansatz_kind: str = ANSATZ_CLUSTER_H_CZ_RY,
+    scaffold_edges: Sequence[Tuple[int, int]] | None = None,
+):
+    kind = _normalize_ansatz_kind(ansatz_kind)
+    edges = cluster_scaffold_edges(len(data_qubits), scaffold_edges=scaffold_edges)
+    layer_params = _split_layer_params(params, int(layers), len(data_qubits))
+
+    if kind == ANSATZ_BRICKWALL_RY_CZ:
+        for params_layer in layer_params:
+            for theta, qubit in zip(params_layer, data_qubits):
+                qc.ry(theta, qubit)
+            for a, b in edges:
+                qc.cz(data_qubits[a], data_qubits[b])
+        return
+
+    for qubit in data_qubits:
+        qc.h(qubit)
+
+    if not repeat_cz_each_layer:
+        for a, b in edges:
+            qc.cz(data_qubits[a], data_qubits[b])
+
+    for params_layer in layer_params:
+        if repeat_cz_each_layer:
+            for a, b in edges:
+                qc.cz(data_qubits[a], data_qubits[b])
+        for theta, qubit in zip(params_layer, data_qubits):
+            qc.ry(theta, qubit)
 
 
-def apply_basic_entangler_cz_inverse(qc: QuantumCircuit, params: Sequence, data_qubits: Sequence[int]):
-    edges = ring_edges(len(data_qubits))
-    for a, b in reversed(edges):
-        qc.cz(data_qubits[a], data_qubits[b])
-    for theta, qubit in reversed(list(zip(params, data_qubits))):
-        qc.ry(-theta, qubit)
+def apply_basic_entangler_cz_inverse(
+    qc: QuantumCircuit,
+    params: Sequence,
+    data_qubits: Sequence[int],
+    *,
+    layers: int = 1,
+    repeat_cz_each_layer: bool = False,
+    ansatz_kind: str = ANSATZ_CLUSTER_H_CZ_RY,
+    scaffold_edges: Sequence[Tuple[int, int]] | None = None,
+):
+    kind = _normalize_ansatz_kind(ansatz_kind)
+    edges = cluster_scaffold_edges(len(data_qubits), scaffold_edges=scaffold_edges)
+    layer_params = _split_layer_params(params, int(layers), len(data_qubits))
+
+    if kind == ANSATZ_BRICKWALL_RY_CZ:
+        for params_layer in reversed(layer_params):
+            for a, b in reversed(edges):
+                qc.cz(data_qubits[a], data_qubits[b])
+            for theta, qubit in reversed(list(zip(params_layer, data_qubits))):
+                qc.ry(-theta, qubit)
+        return
+
+    for params_layer in reversed(layer_params):
+        for theta, qubit in reversed(list(zip(params_layer, data_qubits))):
+            qc.ry(-theta, qubit)
+        if repeat_cz_each_layer:
+            for a, b in reversed(edges):
+                qc.cz(data_qubits[a], data_qubits[b])
+
+    if not repeat_cz_each_layer:
+        for a, b in reversed(edges):
+            qc.cz(data_qubits[a], data_qubits[b])
+
+    for qubit in reversed(list(data_qubits)):
+        qc.h(qubit)
 
 
 def apply_controlled_basic_entangler_cz(
@@ -132,11 +219,37 @@ def apply_controlled_basic_entangler_cz(
     params: Sequence,
     data_qubits: Sequence[int],
     ancilla: int,
+    *,
+    layers: int = 1,
+    repeat_cz_each_layer: bool = False,
+    ansatz_kind: str = ANSATZ_CLUSTER_H_CZ_RY,
+    scaffold_edges: Sequence[Tuple[int, int]] | None = None,
 ):
-    for theta, qubit in zip(params, data_qubits):
-        _append_cry(qc, theta, ancilla, qubit)
-    for a, b in ring_edges(len(data_qubits)):
-        _append_ccz(qc, ancilla, data_qubits[a], data_qubits[b])
+    kind = _normalize_ansatz_kind(ansatz_kind)
+    edges = cluster_scaffold_edges(len(data_qubits), scaffold_edges=scaffold_edges)
+    layer_params = _split_layer_params(params, int(layers), len(data_qubits))
+
+    if kind == ANSATZ_BRICKWALL_RY_CZ:
+        for params_layer in layer_params:
+            for theta, qubit in zip(params_layer, data_qubits):
+                _append_cry(qc, theta, ancilla, qubit)
+            for a, b in edges:
+                _append_ccz(qc, ancilla, data_qubits[a], data_qubits[b])
+        return
+
+    for qubit in data_qubits:
+        _append_ch(qc, ancilla, qubit)
+
+    if not repeat_cz_each_layer:
+        for a, b in edges:
+            _append_ccz(qc, ancilla, data_qubits[a], data_qubits[b])
+
+    for params_layer in layer_params:
+        if repeat_cz_each_layer:
+            for a, b in edges:
+                _append_ccz(qc, ancilla, data_qubits[a], data_qubits[b])
+        for theta, qubit in zip(params_layer, data_qubits):
+            _append_cry(qc, theta, ancilla, qubit)
 
 
 def apply_controlled_basic_entangler_cz_inverse(
@@ -144,12 +257,37 @@ def apply_controlled_basic_entangler_cz_inverse(
     params: Sequence,
     data_qubits: Sequence[int],
     ancilla: int,
+    *,
+    layers: int = 1,
+    repeat_cz_each_layer: bool = False,
+    ansatz_kind: str = ANSATZ_CLUSTER_H_CZ_RY,
+    scaffold_edges: Sequence[Tuple[int, int]] | None = None,
 ):
-    edges = ring_edges(len(data_qubits))
-    for a, b in reversed(edges):
-        _append_ccz(qc, ancilla, data_qubits[a], data_qubits[b])
-    for theta, qubit in reversed(list(zip(params, data_qubits))):
-        _append_cry(qc, -theta, ancilla, qubit)
+    kind = _normalize_ansatz_kind(ansatz_kind)
+    edges = cluster_scaffold_edges(len(data_qubits), scaffold_edges=scaffold_edges)
+    layer_params = _split_layer_params(params, int(layers), len(data_qubits))
+
+    if kind == ANSATZ_BRICKWALL_RY_CZ:
+        for params_layer in reversed(layer_params):
+            for a, b in reversed(edges):
+                _append_ccz(qc, ancilla, data_qubits[a], data_qubits[b])
+            for theta, qubit in reversed(list(zip(params_layer, data_qubits))):
+                _append_cry(qc, -theta, ancilla, qubit)
+        return
+
+    for params_layer in reversed(layer_params):
+        for theta, qubit in reversed(list(zip(params_layer, data_qubits))):
+            _append_cry(qc, -theta, ancilla, qubit)
+        if repeat_cz_each_layer:
+            for a, b in reversed(edges):
+                _append_ccz(qc, ancilla, data_qubits[a], data_qubits[b])
+
+    if not repeat_cz_each_layer:
+        for a, b in reversed(edges):
+            _append_ccz(qc, ancilla, data_qubits[a], data_qubits[b])
+
+    for qubit in reversed(list(data_qubits)):
+        _append_ch(qc, ancilla, qubit)
 
 
 def apply_pauli_word(qc: QuantumCircuit, word: PauliWord, data_qubits: Sequence[int]):
@@ -183,25 +321,34 @@ def apply_controlled_pauli_word(
             raise ValueError(f"Unsupported Pauli label {label!r}")
 
 
-def apply_cluster_removed_q2_prep(qc: QuantumCircuit, data_qubits: Sequence[int], spec: BStateSpec):
+def _bprep_edges(data_qubits: Sequence[int], spec: BStateSpec) -> List[Tuple[int, int]]:
+    label = str(spec.label)
+    if "cluster_removed_q1" in label:
+        return list(zip(data_qubits[:-1], data_qubits[1:]))
+    if "cluster_removed_q2" in label:
+        return list(zip(data_qubits[1:-1], data_qubits[2:]))
+    raise ValueError(f"Unsupported B-state preparation label {label!r}")
+
+
+def apply_cluster_bprep(qc: QuantumCircuit, data_qubits: Sequence[int], spec: BStateSpec):
     for qubit in data_qubits:
         qc.h(qubit)
-    for left, right in zip(data_qubits[1:-1], data_qubits[2:]):
+    for left, right in _bprep_edges(data_qubits, spec):
         qc.cz(left, right)
     for local_idx in spec.z_after_prep:
         qc.z(data_qubits[local_idx])
 
 
-def apply_cluster_removed_q2_prep_inverse(qc: QuantumCircuit, data_qubits: Sequence[int], spec: BStateSpec):
+def apply_cluster_bprep_inverse(qc: QuantumCircuit, data_qubits: Sequence[int], spec: BStateSpec):
     for local_idx in reversed(spec.z_after_prep):
         qc.z(data_qubits[local_idx])
-    for left, right in reversed(list(zip(data_qubits[1:-1], data_qubits[2:]))):
+    for left, right in reversed(_bprep_edges(data_qubits, spec)):
         qc.cz(left, right)
     for qubit in reversed(list(data_qubits)):
         qc.h(qubit)
 
 
-def apply_controlled_cluster_removed_q2_prep(
+def apply_controlled_cluster_bprep(
     qc: QuantumCircuit,
     data_qubits: Sequence[int],
     ancilla: int,
@@ -209,13 +356,13 @@ def apply_controlled_cluster_removed_q2_prep(
 ):
     for qubit in data_qubits:
         _append_ch(qc, ancilla, qubit)
-    for left, right in zip(data_qubits[1:-1], data_qubits[2:]):
+    for left, right in _bprep_edges(data_qubits, spec):
         _append_ccz(qc, ancilla, left, right)
     for local_idx in spec.z_after_prep:
         qc.cz(ancilla, data_qubits[local_idx])
 
 
-def apply_controlled_cluster_removed_q2_prep_inverse(
+def apply_controlled_cluster_bprep_inverse(
     qc: QuantumCircuit,
     data_qubits: Sequence[int],
     ancilla: int,
@@ -223,7 +370,7 @@ def apply_controlled_cluster_removed_q2_prep_inverse(
 ):
     for local_idx in reversed(spec.z_after_prep):
         qc.cz(ancilla, data_qubits[local_idx])
-    for left, right in reversed(list(zip(data_qubits[1:-1], data_qubits[2:]))):
+    for left, right in reversed(_bprep_edges(data_qubits, spec)):
         _append_ccz(qc, ancilla, left, right)
     for qubit in reversed(list(data_qubits)):
         _append_ch(qc, ancilla, qubit)
@@ -310,19 +457,35 @@ def build_expectation_template(
     *,
     n_data_qubits: int,
     observables: Sequence[SparsePauliOp],
+    layers: int = 1,
+    repeat_cz_each_layer: bool = False,
+    ansatz_kind: str = ANSATZ_CLUSTER_H_CZ_RY,
+    scaffold_edges: Sequence[Tuple[int, int]] | None = None,
     theta_name: str = "theta",
     template_name: str = "expectation",
 ) -> CircuitTemplate:
-    params = ParameterVector(theta_name, n_data_qubits)
+    params = ParameterVector(theta_name, int(layers) * n_data_qubits)
     qc = QuantumCircuit(n_data_qubits)
     data_qubits = list(range(n_data_qubits))
-    apply_basic_entangler_cz(qc, params, data_qubits)
+    apply_basic_entangler_cz(
+        qc,
+        params,
+        data_qubits,
+        layers=layers,
+        repeat_cz_each_layer=repeat_cz_each_layer,
+        ansatz_kind=ansatz_kind,
+        scaffold_edges=scaffold_edges,
+    )
     return _finalize_template(template_name, qc, observables, {theta_name: params})
 
 
 def build_overlap_template(
     *,
     n_data_qubits: int,
+    layers: int = 1,
+    repeat_cz_each_layer: bool = False,
+    ansatz_kind: str = ANSATZ_CLUSTER_H_CZ_RY,
+    scaffold_edges: Sequence[Tuple[int, int]] | None = None,
     left_kind: str,
     right_kind: str,
     pauli_word: PauliWord | None,
@@ -341,13 +504,13 @@ def build_overlap_template(
     left_params = None
     right_params = None
     if left_kind == "ansatz":
-        left_params = ParameterVector(left_name, n_data_qubits)
+        left_params = ParameterVector(left_name, int(layers) * n_data_qubits)
         blocks[left_name] = left_params
     elif left_kind != "bprep":
         raise ValueError(f"Unsupported left kind {left_kind!r}")
 
     if right_kind == "ansatz":
-        right_params = ParameterVector(right_name, n_data_qubits)
+        right_params = ParameterVector(right_name, int(layers) * n_data_qubits)
         blocks[right_name] = right_params
     elif right_kind != "bprep":
         raise ValueError(f"Unsupported right kind {right_kind!r}")
@@ -355,21 +518,39 @@ def build_overlap_template(
     qc.h(anc)
 
     if right_kind == "ansatz":
-        apply_controlled_basic_entangler_cz(qc, right_params, data_qubits, anc)
+        apply_controlled_basic_entangler_cz(
+            qc,
+            right_params,
+            data_qubits,
+            anc,
+            layers=layers,
+            repeat_cz_each_layer=repeat_cz_each_layer,
+            ansatz_kind=ansatz_kind,
+            scaffold_edges=scaffold_edges,
+        )
     else:
         if right_bspec is None:
             raise ValueError("right_bspec is required for right_kind='bprep'")
-        apply_controlled_cluster_removed_q2_prep(qc, data_qubits, anc, right_bspec)
+        apply_controlled_cluster_bprep(qc, data_qubits, anc, right_bspec)
 
     if pauli_word is not None and pauli_word.ops:
         apply_controlled_pauli_word(qc, pauli_word, data_qubits, anc)
 
     if left_kind == "ansatz":
-        apply_controlled_basic_entangler_cz_inverse(qc, left_params, data_qubits, anc)
+        apply_controlled_basic_entangler_cz_inverse(
+            qc,
+            left_params,
+            data_qubits,
+            anc,
+            layers=layers,
+            repeat_cz_each_layer=repeat_cz_each_layer,
+            ansatz_kind=ansatz_kind,
+            scaffold_edges=scaffold_edges,
+        )
     else:
         if left_bspec is None:
             raise ValueError("left_bspec is required for left_kind='bprep'")
-        apply_controlled_cluster_removed_q2_prep_inverse(qc, data_qubits, anc, left_bspec)
+        apply_controlled_cluster_bprep_inverse(qc, data_qubits, anc, left_bspec)
 
     qc.h(anc)
 
@@ -386,6 +567,10 @@ def build_beta_template(
     n_data_qubits: int,
     words: Sequence[PauliWord],
     coeffs: Sequence[float],
+    layers: int = 1,
+    repeat_cz_each_layer: bool = False,
+    ansatz_kind: str = ANSATZ_CLUSTER_H_CZ_RY,
+    scaffold_edges: Sequence[Tuple[int, int]] | None = None,
     template_name: str,
 ) -> CircuitTemplate:
     merged_words, merged_coeffs = aggregate_pauli_operator(words, coeffs)
@@ -396,6 +581,10 @@ def build_beta_template(
     return build_expectation_template(
         n_data_qubits=n_data_qubits,
         observables=observables,
+        layers=layers,
+        repeat_cz_each_layer=repeat_cz_each_layer,
+        ansatz_kind=ansatz_kind,
+        scaffold_edges=scaffold_edges,
         theta_name="alpha",
         template_name=template_name,
     )
@@ -407,10 +596,18 @@ def make_term_bundle_qiskit(
     U_spec: BStateSpec,
     A_words: Sequence[PauliWord],
     coeffs: Sequence[float],
+    layers: int = 1,
+    repeat_cz_each_layer: bool = False,
+    ansatz_kind: str = ANSATZ_CLUSTER_H_CZ_RY,
+    scaffold_edges: Sequence[Tuple[int, int]] | None = None,
 ) -> TermBundleQiskit:
     zeta = {
         word.label: build_overlap_template(
             n_data_qubits=n_input_qubit,
+            layers=layers,
+            repeat_cz_each_layer=repeat_cz_each_layer,
+            ansatz_kind=ansatz_kind,
+            scaffold_edges=scaffold_edges,
             left_kind="ansatz",
             right_kind="ansatz",
             pauli_word=word,
@@ -423,6 +620,10 @@ def make_term_bundle_qiskit(
     tau = {
         word.label: build_overlap_template(
             n_data_qubits=n_input_qubit,
+            layers=layers,
+            repeat_cz_each_layer=repeat_cz_each_layer,
+            ansatz_kind=ansatz_kind,
+            scaffold_edges=scaffold_edges,
             left_kind="bprep",
             right_kind="ansatz",
             pauli_word=word,
@@ -435,6 +636,10 @@ def make_term_bundle_qiskit(
     return TermBundleQiskit(
         omega=build_overlap_template(
             n_data_qubits=n_input_qubit,
+            layers=layers,
+            repeat_cz_each_layer=repeat_cz_each_layer,
+            ansatz_kind=ansatz_kind,
+            scaffold_edges=scaffold_edges,
             left_kind="ansatz",
             right_kind="ansatz",
             pauli_word=None,
@@ -444,6 +649,10 @@ def make_term_bundle_qiskit(
         ),
         delta=build_overlap_template(
             n_data_qubits=n_input_qubit,
+            layers=layers,
+            repeat_cz_each_layer=repeat_cz_each_layer,
+            ansatz_kind=ansatz_kind,
+            scaffold_edges=scaffold_edges,
             left_kind="bprep",
             right_kind="ansatz",
             pauli_word=None,
@@ -457,6 +666,10 @@ def make_term_bundle_qiskit(
             n_data_qubits=n_input_qubit,
             words=A_words,
             coeffs=coeffs,
+            layers=layers,
+            repeat_cz_each_layer=repeat_cz_each_layer,
+            ansatz_kind=ansatz_kind,
+            scaffold_edges=scaffold_edges,
             template_name="beta",
         ),
     )

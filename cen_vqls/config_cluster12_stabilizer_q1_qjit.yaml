@@ -1,0 +1,63 @@
+problem:
+  static_ops_path: problems/static_ops_2x2_cluster12_stabilizer_q1.py
+  system_key: "2x2"
+  prefer_centralized_problem: true
+  centralized_problem_key: centralized
+  consistency_system_key: "2x2"
+  consistency_atol: 1.0e-12
+  b_consistency_atol: 1.0e-12
+  b_state_tolerance: 1.0e-10
+
+ansatz:
+  layers: 8
+  init_low: -3.141592653589793
+  init_high: 3.141592653589793
+
+optimization:
+  steps: 3000
+  learning_rate: 0.001
+  beta1: 0.9
+  beta2: 0.999
+  eps: 1.0e-8
+  print_every: 50
+  optimize_metric: global_CG
+
+runtime:
+  seed: 2
+  device: lightning.qubit
+  interface: jax
+  diff_method: adjoint
+  use_qjit: true
+  fallback_to_jax_jit: false
+  qjit_autograph: false
+  jit_training_step: false
+  warmup_compile: false
+
+report:
+  out_dir: cen_vqls/reports
+  tag: centralized_vqls_cluster12_stabilizer_q1_qjit
+
+taskgen:
+  optimization_script: qjit_vqls
+  tag: cen_vqls_cluster12_stabilizer_q1_qjit
+  seed_scan:
+    mode: explicit
+    seeds: [2, 3]
+  script_map:
+    qjit_vqls: cen_vqls/centralized_vqls_ising_qjit.py
+    tracking_vqls: cen_vqls/centralized_vqls_ising_tracking.py
+    single: cen_vqls/single_agent_qjit.py
+  profile_overrides:
+    qjit_vqls:
+      optimization:
+        optimize_metric: global_CG
+      runtime:
+        interface: jax
+        device: lightning.qubit
+        diff_method: adjoint
+        use_qjit: true
+        fallback_to_jax_jit: false
+        jit_training_step: false
+        warmup_compile: false
+      report:
+        tag: centralized_vqls_cluster12_stabilizer_q1_qjit

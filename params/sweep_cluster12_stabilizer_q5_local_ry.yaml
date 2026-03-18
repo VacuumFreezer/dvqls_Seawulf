@@ -1,0 +1,27 @@
+run_root: run
+tag: cluster12_stabilizer_q5_local_ry
+
+problems:
+  - name: 10qubits_cluster_q5split
+    module: problems.static_ops_2x2_cluster12_stabilizer_q5
+
+topologies:
+  - name: line
+
+cases:
+  - name: catalyst_tracking_q5_local_ry
+    script: optimization/seawulf_cat_line_tracking_nodispatch_2x2_cluster12_stabilizer_q5_local_ry.py
+
+lr_sets:
+  - tag: lr1
+    lr: 0.01
+
+decay_sets:
+  - tag: d1
+    decay: 1.0
+
+seeds: [2, 3]
+
+common:
+  epochs: 3000
+  log_every: 20

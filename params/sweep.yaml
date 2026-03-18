@@ -52,7 +52,7 @@ lr_sets:
   # - tag: lr0
   #   lr: 0.03
   - tag: lr1
-    lr: 0.005
+    lr: 0.01
   # - tag: lr2
   #   lr: 0.003
 

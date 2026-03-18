@@ -97,12 +97,38 @@ def build_metropolis_matrix(neighbor_map: Mapping[int, Sequence[int]], n: int) -
     return w.astype(np.float32)
 
 
-def initialize_global_params(system, n_qubits: int, seed: int = 0) -> Dict[str, np.ndarray]:
+def initialize_global_params(system, n_qubits: int, layers: int, seed: int = 0) -> Dict[str, np.ndarray]:
     rng = np.random.default_rng(seed)
-    alpha = rng.uniform(-math.pi, math.pi, size=(system.n, system.n, n_qubits)).astype(np.float32)
-    beta = rng.uniform(-math.pi, math.pi, size=(system.n, system.n, n_qubits)).astype(np.float32)
-    sigma = rng.uniform(0.0, 2.0, size=(system.n, system.n)).astype(np.float32)
-    lamb = rng.uniform(0.0, 2.0, size=(system.n, system.n)).astype(np.float32)
+    metadata = getattr(system, "metadata", {}) or {}
+    init_angle_fill = metadata.get("init_angle_fill", None)
+    init_sigma_target = metadata.get("init_sigma_target", None)
+    agent_init_overrides = metadata.get("agent_init_overrides", {}) or {}
+
+    if init_angle_fill is None and init_sigma_target is None and not agent_init_overrides:
+        alpha = rng.uniform(-math.pi, math.pi, size=(system.n, system.n, layers, n_qubits)).astype(np.float32)
+        beta = rng.uniform(-math.pi, math.pi, size=(system.n, system.n, layers, n_qubits)).astype(np.float32)
+        sigma = rng.uniform(0.0, 2.0, size=(system.n, system.n)).astype(np.float32)
+        lamb = rng.uniform(0.0, 2.0, size=(system.n, system.n)).astype(np.float32)
+    else:
+        angle_fill = float(init_angle_fill if init_angle_fill is not None else 0.0)
+        sigma_target = float(init_sigma_target if init_sigma_target is not None else (1.0 / np.sqrt(2.0)))
+        alpha = np.zeros((system.n, system.n, layers, n_qubits), dtype=np.float32)
+        beta = np.zeros((system.n, system.n, layers, n_qubits), dtype=np.float32)
+        sigma = np.zeros((system.n, system.n), dtype=np.float32)
+        lamb = np.zeros((system.n, system.n), dtype=np.float32)
+
+        for sys_id in range(system.n):
+            for agent_id in range(system.n):
+                base = np.full((layers, n_qubits), angle_fill, dtype=np.float32)
+                overrides = agent_init_overrides.get(str(agent_id), agent_init_overrides.get(agent_id, {}))
+                for wire, value in dict(overrides).items():
+                    base[0, int(wire)] = float(value)
+
+                alpha[sys_id, agent_id] = base + 0.05 * rng.normal(size=(layers, n_qubits)).astype(np.float32)
+                beta[sys_id, agent_id] = base + 0.05 * rng.normal(size=(layers, n_qubits)).astype(np.float32)
+                sigma[sys_id, agent_id] = np.float32(sigma_target + 0.05 * rng.normal())
+                lamb[sys_id, agent_id] = np.float32(0.05 * rng.normal())
+
     b_norm = np.zeros((system.n, system.n), dtype=np.float32)
     for sys_id in range(system.n):
         b_norm[sys_id, :] = np.asarray(system.get_local_b_norms(sys_id), dtype=np.float32)
@@ -141,15 +167,16 @@ def unflatten_params(flat: np.ndarray, template: Mapping[str, np.ndarray], keys:
     flat = np.asarray(flat, dtype=np.float32).reshape(-1)
     out = clone_params(template)
     idx = 0
-    nq = template["alpha"].shape[-1]
     for i in range(template["alpha"].shape[0]):
         for j in range(template["alpha"].shape[1]):
             if "alpha" in keys:
-                out["alpha"][i, j] = flat[idx : idx + nq]
-                idx += nq
+                alpha_size = int(template["alpha"][i, j].size)
+                out["alpha"][i, j] = flat[idx : idx + alpha_size].reshape(template["alpha"][i, j].shape)
+                idx += alpha_size
             if "beta" in keys:
-                out["beta"][i, j] = flat[idx : idx + nq]
-                idx += nq
+                beta_size = int(template["beta"][i, j].size)
+                out["beta"][i, j] = flat[idx : idx + beta_size].reshape(template["beta"][i, j].shape)
+                idx += beta_size
             if "sigma" in keys:
                 out["sigma"][i, j] = flat[idx]
                 idx += 1
@@ -169,8 +196,9 @@ def consensus_mix(params: Mapping[str, np.ndarray], w_mat: np.ndarray) -> Dict[s
     mixed = clone_params(params)
     for col in range(params["alpha"].shape[1]):
         for row in range(params["alpha"].shape[0]):
-            weights = w_mat[row].reshape(-1, 1)
-            mixed["alpha"][row, col] = np.sum(weights * params["alpha"][:, col, :], axis=0, dtype=np.float32)
+            alpha_slice = params["alpha"][:, col, ...]
+            weights = w_mat[row].reshape((-1,) + (1,) * (alpha_slice.ndim - 1))
+            mixed["alpha"][row, col] = np.sum(weights * alpha_slice, axis=0, dtype=np.float32)
             mixed["sigma"][row, col] = np.sum(w_mat[row] * params["sigma"][:, col], dtype=np.float32)
     return mixed
 
@@ -207,9 +235,10 @@ def update_gradient_tracker(
     diff_sigma = current_grads["sigma"] - prev_grads["sigma"]
     for col in range(current_grads["alpha"].shape[1]):
         for row in range(current_grads["alpha"].shape[0]):
-            weights = w_mat[row].reshape(-1, 1)
+            alpha_slice = current_tracker["alpha"][:, col, ...]
+            weights = w_mat[row].reshape((-1,) + (1,) * (alpha_slice.ndim - 1))
             new_tracker["alpha"][row, col] = (
-                np.sum(weights * current_tracker["alpha"][:, col, :], axis=0, dtype=np.float32)
+                np.sum(weights * alpha_slice, axis=0, dtype=np.float32)
                 + diff_alpha[row, col]
             )
             new_tracker["sigma"][row, col] = (
@@ -273,6 +302,8 @@ def write_analysis(path: Path, args, system, builder: DistributedCostBuilderQisk
         f.write(f"system name: {system.name}\n")
         f.write(f"epochs: {args.epochs}\n")
         f.write(f"log_every: {args.log_every}\n")
+        f.write(f"layers: {args.layers}\n")
+        f.write(f"repeat_cz_each_layer: {bool(args.repeat_cz_each_layer)}\n")
         f.write(f"learning rate: {args.lr}\n")
         f.write(f"spsa_c: {args.spsa_c}\n")
         f.write(f"precision: {builder.precision}\n")
@@ -356,6 +387,8 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--lr", type=float, default=0.01)
     ap.add_argument("--log_every", type=int, default=50)
+    ap.add_argument("--layers", type=int, default=1)
+    ap.add_argument("--repeat_cz_each_layer", action="store_true")
     ap.add_argument("--spsa_c", type=float, default=0.05)
     ap.add_argument("--max_bond_dim", type=int, default=8)
     ap.add_argument("--num_threads", type=int, default=int(os.environ.get("SLURM_CPUS_PER_TASK", "1")))
@@ -371,11 +404,15 @@ def main():
     ops = load_static_ops(args.static_ops)
     system = load_problem_system(ops)
     n_qubits = int(system.n_data_qubits)
+    if args.layers < 1:
+        raise ValueError("--layers must be at least 1.")
     rng = np.random.default_rng(args.seed)
 
     builder = DistributedCostBuilderQiskit(
         system,
         TOPOLOGY_LINE_2,
+        ansatz_layers=args.layers,
+        repeat_cz_each_layer=args.repeat_cz_each_layer,
         max_bond_dim=args.max_bond_dim,
         num_threads=args.num_threads,
         precision="single",
@@ -383,11 +420,14 @@ def main():
     )
     w_mat = build_metropolis_matrix(TOPOLOGY_LINE_2, n=system.n)
 
-    params = initialize_global_params(system, n_qubits=n_qubits, seed=args.seed)
+    params = initialize_global_params(system, n_qubits=n_qubits, layers=args.layers, seed=args.seed)
     logger.info(f"System variant: {system.name}")
     logger.info(f"static_ops module: {args.static_ops}")
     logger.info(f"local data qubits per agent: {n_qubits}")
-    logger.info(f"epochs={args.epochs}, log_every={args.log_every}, lr={args.lr}, spsa_c={args.spsa_c}")
+    logger.info(
+        f"epochs={args.epochs}, log_every={args.log_every}, lr={args.lr}, spsa_c={args.spsa_c}, "
+        f"layers={args.layers}, repeat_cz_each_layer={bool(args.repeat_cz_each_layer)}"
+    )
     logger.info(f"Aer method=matrix_product_state, precision=single, max_bond_dim={args.max_bond_dim}")
     logger.info("Metropolis weight matrix Wm =\n" + str(w_mat))
     spectrum = system.metadata.get("spectrum")

@@ -5,3 +5,4 @@ Start: Wed Mar 11 03:02:45 EDT 2026
 Tasks file: Qiskit_simulation/run/qiskit_12q_stablizer/tasks.txt
 CMD: python Qiskit_simulation/seawulf_cat_line_tracking_nodispatch_2x2_cluster12_stabilizer_qiskit.py --static_ops Qiskit_simulation.static_ops_2x2_cluster12_stabilizer_qiskit --out /gpfs/home/tonshen/Seawulf_simulation/Qiskit_simulation/run/qiskit_12q_stablizer/seed=464301 --epochs 5000 --log_every 50 --lr 0.01 --spsa_c 0.05 --max_bond_dim 8 --seed 464301 --num_threads 1
 =========================================
+End: Wed Mar 11 05:33:40 EDT 2026

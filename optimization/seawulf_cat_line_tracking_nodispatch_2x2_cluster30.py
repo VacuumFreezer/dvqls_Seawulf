@@ -247,6 +247,16 @@ def _to_jsonable(value):
     return value
 
 
+def _summarize_exception(exc: Exception, *, max_lines: int = 2, max_chars: int = 400) -> str:
+    lines = [line.strip() for line in str(exc).splitlines() if line.strip()]
+    if not lines:
+        lines = [repr(exc)]
+    summary = " | ".join(lines[:max_lines])
+    if len(summary) > max_chars:
+        summary = summary[: max_chars - 3] + "..."
+    return f"{type(exc).__name__}: {summary}"
+
+
 def _global_param_summary(global_params):
     sigma = np.asarray(_to_jsonable(global_params["sigma"]), dtype=float)
     lam = np.asarray(_to_jsonable(global_params["lambda"]), dtype=float)
@@ -372,6 +382,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--static_ops", required=True, help="e.g. problems.static_ops_2x2_cluster30")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--topology", default="line", help="Sweep compatibility flag; only `line` is supported here.")
     ap.add_argument("--system_id", type=int, default=0)
     ap.add_argument("--epochs", type=int, default=2000)
     ap.add_argument("--seed", type=int, default=0)
@@ -389,6 +400,11 @@ def main():
         help="Force-disable sol_diff and ||Ax-b|| even when the loaded system supports dense validation.",
     )
     args = ap.parse_args()
+
+    if str(args.topology) != "line":
+        raise ValueError(
+            f"This 2-agent cluster30 workflow only supports the line topology, got `{args.topology}`."
+        )
 
     ops = load_static_ops(args.static_ops)
     SYSTEM, DATA_WIRES = load_problem_system_and_wires(ops)
@@ -497,20 +513,47 @@ def main():
         current_params = rebuild_global_params(args_flat, SYSTEM.n, GLOBAL_PARAMS["b_norm"])
         return ib.eval_total_loss(current_params)
 
+    def compute_grad_jax(args_flat):
+        return jax.grad(total_loss_fn)(args_flat)
+
+    def compute_loss_plain(args_flat):
+        return total_loss_fn(args_flat)
+
     if CATALYST_AVAILABLE:
         @qml.qjit
-        def compute_grad(args_flat):
+        def compute_grad_catalyst(args_flat):
             return catalyst.grad(total_loss_fn, method="auto")(args_flat)
 
         @qml.qjit
-        def compute_loss(args_flat):
+        def compute_loss_qjit(args_flat):
             return total_loss_fn(args_flat)
-    else:
+
+        use_catalyst_grad = True
+
         def compute_grad(args_flat):
-            return jax.grad(total_loss_fn)(args_flat)
+            nonlocal use_catalyst_grad
+
+            if use_catalyst_grad:
+                try:
+                    return compute_grad_catalyst(args_flat)
+                except Exception as exc:
+                    use_catalyst_grad = False
+                    logger.info(
+                        "Catalyst gradient compilation failed for this workload; "
+                        "falling back to jax.grad while keeping the qjit'd forward loss. "
+                        f"Summary: {_summarize_exception(exc)}"
+                    )
+
+            return compute_grad_jax(args_flat)
 
         def compute_loss(args_flat):
-            return total_loss_fn(args_flat)
+            return compute_loss_qjit(args_flat)
+    else:
+        def compute_grad(args_flat):
+            return compute_grad_jax(args_flat)
+
+        def compute_loss(args_flat):
+            return compute_loss_plain(args_flat)
 
     current_loss = compute_loss(to_jax_flat(flatten_params(GLOBAL_PARAMS)))
     logger.info(f"[Init] Initial Loss = {float(current_loss):.5e}")

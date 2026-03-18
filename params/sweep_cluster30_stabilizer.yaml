@@ -1,0 +1,27 @@
+run_root: run
+tag: cluster30_stabilizer_pennylane
+
+problems:
+  - name: 30qubits_cluster_stabilizer
+    module: problems.static_ops_2x2_cluster30_stabilizer
+
+topologies:
+  - name: line
+
+cases:
+  - name: catalyst_tracking
+    script: optimization/seawulf_cat_line_tracking_nodispatch_2x2_cluster30_stabilizer.py
+
+lr_sets:
+  - tag: lr0
+    lr: 0.005
+
+decay_sets:
+  - tag: d1
+    decay: 1.0
+
+seeds: [2]
+
+common:
+  epochs: 5000
+  log_every: 20

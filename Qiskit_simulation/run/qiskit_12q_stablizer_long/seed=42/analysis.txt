@@ -15,3 +15,5 @@ block term counts: [[4, 2], [2, 4]]
 spectrum: {'lambda_min': 0.020000000000000018, 'lambda_max': 1.0, 'condition_number': 49.99999999999996, 'n_distinct_eigenvalues': 13, 'distinct_eigenvalues': [0.020000000000000018, 0.06000000000000005, 0.22499999999999998, 0.265, 0.30500000000000005, 0.47, 0.51, 0.55, 0.715, 0.755, 0.795, 0.96, 1.0], 'b_is_eigenvector': False}
 residual is computed from overlap formulas on the averaged column states x0=(v00+v10)/2 and x1=(v01+v11)/2,
 without building dense 2^30 vectors. variance is the mean of the two column-wise pair variances.
+final parameter summary: {'sigma_min': 0.008232533931732178, 'sigma_max': 0.013137455098330975, 'sigma_mean': 0.011053279042243958, 'sigma_l2': 0.022453682497143745, 'lambda_min': -0.001694504520855844, 'lambda_max': 0.008497576229274273, 'lambda_mean': 0.0033949550706893206, 'lambda_l2': 0.010623508132994175, 'alpha_l2': 10.140542030334473, 'beta_l2': 13.5278959274292}
+final diagnostics: {'residual_norm': 1.0000300297400495, 'variance_col0': 6.593050629333512e-08, 'variance_col1': 9.858928439191779e-07, 'variance_mean': 5.259116751062565e-07}
