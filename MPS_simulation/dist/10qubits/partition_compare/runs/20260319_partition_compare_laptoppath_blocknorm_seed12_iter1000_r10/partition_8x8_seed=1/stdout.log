@@ -1,0 +1,24 @@
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/partition_compare_optimize.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml --case partition_8x8 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_laptoppath_blocknorm_seed12_iter1000_r10/partition_8x8_seed=1 --iterations 1000 --report-every 10 --init-seed 1
+Preparing partition-compare case `partition_8x8`.
+Iteration    0 | cost=40.290281465 | residual=0.930365151583 | consensus=3.72414331733 | error=0.972979704245
+Iteration   10 | cost=7.60692570916 | residual=0.637380620551 | consensus=0.335374645291 | error=0.683528503981
+Iteration   20 | cost=0.167930502269 | residual=0.905708156563 | consensus=0.132294946102 | error=0.910474205665
+Iteration   30 | cost=0.74319500361 | residual=1.13011198033 | consensus=0.243965892027 | error=1.13842974803
+Iteration   40 | cost=0.536630298909 | residual=1.22674588165 | consensus=0.374024159127 | error=1.25463454611
+Iteration   50 | cost=0.176973416214 | residual=1.20305833331 | consensus=0.453573734002 | error=1.24260756846
+Iteration   60 | cost=0.146102465431 | residual=1.11718510846 | consensus=0.422815814853 | error=1.15127800519
+Iteration   70 | cost=0.131716256849 | residual=1.03153666128 | consensus=0.292737447628 | error=1.05107409863
+Iteration   80 | cost=0.123301428325 | residual=0.970826593525 | consensus=0.144547336022 | error=0.97953374237
+Iteration   90 | cost=0.118187241372 | residual=0.933352178341 | consensus=0.0823558192204 | error=0.941618067075
+Iteration  100 | cost=0.115949940117 | residual=0.908804182808 | consensus=0.130178705385 | error=0.925519119272
+Iteration  110 | cost=0.115049850477 | residual=0.88443264621 | consensus=0.173499336808 | error=0.910471988112
+Iteration  120 | cost=0.113874633408 | residual=0.855713351127 | consensus=0.190049216361 | error=0.885215555449
+Iteration  130 | cost=0.112604895523 | residual=0.830576032799 | consensus=0.180534842047 | error=0.856765081274
+Iteration  140 | cost=0.111334675109 | residual=0.820552852124 | consensus=0.150368575566 | error=0.839734762489
+Iteration  150 | cost=0.110182122344 | residual=0.829387829525 | consensus=0.108547354116 | error=0.841469428825
+Iteration  160 | cost=0.109234932032 | residual=0.849979555587 | consensus=0.0669080746108 | error=0.856869850276
+Iteration  170 | cost=0.108427743635 | residual=0.871392808109 | consensus=0.0420516388866 | error=0.87532784412
+Iteration  180 | cost=0.107663203116 | residual=0.886326765741 | consensus=0.0471446377519 | error=0.889000758353
+Iteration  190 | cost=0.106886044416 | residual=0.892130627331 | consensus=0.0596652882502 | error=0.894465995222
+Iteration  200 | cost=0.106054216384 | residual=0.888514165094 | consensus=0.0638183643838 | error=0.890855254873
+Iteration  210 | cost=0.105162121245 | residual=0.876365702377 | consensus=0.0580519214573 | error=0.878820226409

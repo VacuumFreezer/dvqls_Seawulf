@@ -1,0 +1,5 @@
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/partition_compare_optimize.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml --case partition_4x4 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_all_seed12_lr002_sigma1_r10/partition_4x4_seed=1 --iterations 1000 --report-every 10 --init-seed 1
+Preparing partition-compare case `partition_4x4`.
+Iteration    0 | cost=2.1261852393 | residual=1.13773304963 | consensus=4.90648894751 | error=1.41677270423
+Iteration   10 | cost=1.18894466746 | residual=1.24612523 | consensus=0.489905997753 | error=1.8061042023
+Iteration   20 | cost=0.625644781191 | residual=1.134626797 | consensus=0.173532616698 | error=1.62260141194

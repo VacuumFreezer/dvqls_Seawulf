@@ -1,0 +1,6 @@
+/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/cotengra/hyperoptimizers/hyper.py:55: UserWarning: Couldn't find `optuna`, `cmaes`, or `nevergrad` so will use completely random sampling in place of hyper-optimization. It is recommended to install one of these libraries for higher quality contraction paths.
+  warnings.warn(
+/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/partition_compare_common.py:804: ComplexWarning: Casting complex values to real discards the imaginary part
+  global_action = np.asarray(problem_np["a_sparse"] @ x_est, dtype=np.float64)
+/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/partition_compare_common.py:953: ComplexWarning: Casting complex values to real discards the imaginary part
+  dense_head = np.asarray(matrix[:rows_needed, :].toarray(), dtype=np.float64)

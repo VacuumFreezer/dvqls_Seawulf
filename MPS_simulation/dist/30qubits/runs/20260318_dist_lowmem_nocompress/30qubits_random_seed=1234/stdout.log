@@ -1,0 +1,7 @@
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_optimize_30q_nocompress.py --init-mode random_uniform --iterations 200 --report-every 5 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_random_seed=1234 --init-seed 1234
+[iter=0] cost=1.200818297691 residual=1.282176979446 consensus=0.640591655925 rel_err=n/a
+[iter=5] cost=0.960919958190 residual=1.257111132776 consensus=0.039307972816 rel_err=n/a elapsed=793.84s
+[iter=10] cost=0.792317888583 residual=1.193442943700 consensus=0.017667046539 rel_err=n/a elapsed=1518.11s
+[iter=15] cost=0.668393543242 residual=1.130581864912 consensus=0.015903515346 rel_err=n/a elapsed=2237.05s
+[iter=20] cost=0.595291045361 residual=1.082372021286 consensus=0.022965669601 rel_err=n/a elapsed=2973.90s
+[iter=25] cost=0.563565154294 residual=1.054353076746 consensus=0.021058862931 rel_err=n/a elapsed=3710.88s

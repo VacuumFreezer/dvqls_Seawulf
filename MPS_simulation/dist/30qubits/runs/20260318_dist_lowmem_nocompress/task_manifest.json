@@ -1,0 +1,86 @@
+[
+  {
+    "label_dir": "5qubits",
+    "init_mode": "structured_linspace",
+    "init_seed": null,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_structured",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 5qubits --init-mode structured_linspace --iterations 200 --report-every 5 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_structured"
+  },
+  {
+    "label_dir": "10qubits",
+    "init_mode": "structured_linspace",
+    "init_seed": null,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_structured",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 10qubits --init-mode structured_linspace --iterations 200 --report-every 5 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_structured"
+  },
+  {
+    "label_dir": "30qubits",
+    "init_mode": "structured_linspace",
+    "init_seed": null,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_structured",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 30qubits --init-mode structured_linspace --iterations 200 --report-every 5 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_structured"
+  },
+  {
+    "label_dir": "5qubits",
+    "init_mode": "random_uniform",
+    "init_seed": 1234,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1234",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 5qubits --init-mode random_uniform --iterations 200 --report-every 5 --init-seed 1234 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1234"
+  },
+  {
+    "label_dir": "10qubits",
+    "init_mode": "random_uniform",
+    "init_seed": 1234,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1234",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 10qubits --init-mode random_uniform --iterations 200 --report-every 5 --init-seed 1234 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1234"
+  },
+  {
+    "label_dir": "30qubits",
+    "init_mode": "random_uniform",
+    "init_seed": 1234,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_random_seed=1234",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 30qubits --init-mode random_uniform --iterations 200 --report-every 5 --init-seed 1234 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_random_seed=1234"
+  },
+  {
+    "label_dir": "5qubits",
+    "init_mode": "random_uniform",
+    "init_seed": 1235,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1235",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 5qubits --init-mode random_uniform --iterations 200 --report-every 5 --init-seed 1235 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1235"
+  },
+  {
+    "label_dir": "10qubits",
+    "init_mode": "random_uniform",
+    "init_seed": 1235,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1235",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 10qubits --init-mode random_uniform --iterations 200 --report-every 5 --init-seed 1235 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1235"
+  },
+  {
+    "label_dir": "30qubits",
+    "init_mode": "random_uniform",
+    "init_seed": 1235,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_random_seed=1235",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 30qubits --init-mode random_uniform --iterations 200 --report-every 5 --init-seed 1235 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_random_seed=1235"
+  },
+  {
+    "label_dir": "5qubits",
+    "init_mode": "random_uniform",
+    "init_seed": 1236,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1236",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 5qubits --init-mode random_uniform --iterations 200 --report-every 5 --init-seed 1236 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1236"
+  },
+  {
+    "label_dir": "10qubits",
+    "init_mode": "random_uniform",
+    "init_seed": 1236,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1236",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 10qubits --init-mode random_uniform --iterations 200 --report-every 5 --init-seed 1236 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1236"
+  },
+  {
+    "label_dir": "30qubits",
+    "init_mode": "random_uniform",
+    "init_seed": 1236,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_random_seed=1236",
+    "command": "python MPS_simulation/dist/run_nocompress_case.py --label-dir 30qubits --init-mode random_uniform --iterations 200 --report-every 5 --init-seed 1236 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_random_seed=1236"
+  }
+]

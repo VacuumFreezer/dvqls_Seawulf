@@ -1,0 +1,43 @@
+shared:
+  global_qubits: 13
+  local_qubits: 12
+  j_coupling: 0.1
+
+optimize:
+  kappa: 20.0
+  layers: 12
+  gate_max_bond: null
+  gate_cutoff: 0.0
+  apply_max_bond: 64
+  apply_cutoff: 1.0e-10
+  apply_no_compress: true
+  learning_rate: 0.01
+  decay: 0.9999
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 1.0e-8
+  iterations: 2000
+  report_every: 10
+  init_seed: 0
+  angle_init_start: -3.141592653589793
+  angle_init_stop: 3.141592653589793
+  sigma_init_low: 0.0
+  sigma_init_high: 2.0
+  lambda_init_low: 0.0
+  lambda_init_high: 2.0
+  preview_elements: 200
+
+job_prep:
+  default_tag: formal_compare_mps_2x2_13q
+  default_cases:
+    - formal_compare_default
+  slurm:
+    partition: long-40core-shared
+    nodes: 1
+    ntasks: 1
+    cpus_per_task: 1
+    mem: 16G
+    time: 24:00:00
+
+cases:
+  formal_compare_default: {}

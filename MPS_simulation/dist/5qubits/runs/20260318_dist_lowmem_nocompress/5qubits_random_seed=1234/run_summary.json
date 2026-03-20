@@ -1,0 +1,16 @@
+{
+  "label_dir": "5qubits",
+  "script": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/quimb_dist_eq26_2x2_optimize_5q_nocompress.py",
+  "init_mode": "random_uniform",
+  "init_seed": 1234,
+  "iterations": 200,
+  "report_every": 5,
+  "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1234",
+  "artifacts": {
+    "json": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1234/optimize.json",
+    "report": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1234/optimize_report.md",
+    "history": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1234/optimize_metrics.jsonl",
+    "checkpoint": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1234/optimize_checkpoint.json",
+    "config": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/5qubits/runs/20260318_dist_lowmem_nocompress/5qubits_random_seed=1234/optimize_config_used.yaml"
+  }
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "case": "basic_entangler_l2",
+    "init_seed": 1234,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/single_agent_ansatz_compare/runs/20260319_single_agent_ansatz_compare_dense_iter1000_seed1234/basic_entangler_l2",
+    "command": "python MPS_simulation/dist/10qubits/single_agent_ansatz_compare/run_single_agent_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/single_agent_ansatz_compare/param.yaml --case basic_entangler_l2 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/single_agent_ansatz_compare/runs/20260319_single_agent_ansatz_compare_dense_iter1000_seed1234/basic_entangler_l2 --iterations 1000 --init-seed 1234"
+  },
+  {
+    "case": "basic_entangler_l7",
+    "init_seed": 1234,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/single_agent_ansatz_compare/runs/20260319_single_agent_ansatz_compare_dense_iter1000_seed1234/basic_entangler_l7",
+    "command": "python MPS_simulation/dist/10qubits/single_agent_ansatz_compare/run_single_agent_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/single_agent_ansatz_compare/param.yaml --case basic_entangler_l7 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/single_agent_ansatz_compare/runs/20260319_single_agent_ansatz_compare_dense_iter1000_seed1234/basic_entangler_l7 --iterations 1000 --init-seed 1234"
+  },
+  {
+    "case": "hadamard_ry_cz_l7",
+    "init_seed": 1234,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/single_agent_ansatz_compare/runs/20260319_single_agent_ansatz_compare_dense_iter1000_seed1234/hadamard_ry_cz_l7",
+    "command": "python MPS_simulation/dist/10qubits/single_agent_ansatz_compare/run_single_agent_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/single_agent_ansatz_compare/param.yaml --case hadamard_ry_cz_l7 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/single_agent_ansatz_compare/runs/20260319_single_agent_ansatz_compare_dense_iter1000_seed1234/hadamard_ry_cz_l7 --iterations 1000 --init-seed 1234"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "config": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml",
+  "case": "partition_2x2",
+  "iterations_override": 1000,
+  "report_every_override": 10,
+  "init_mode_override": null,
+  "init_seed_override": 2,
+  "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_laptoppath_blocknorm_seed12_iter1000_r10/partition_2x2_seed=2",
+  "artifacts": {
+    "json": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_laptoppath_blocknorm_seed12_iter1000_r10/partition_2x2_seed=2/optimize.json",
+    "report": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_laptoppath_blocknorm_seed12_iter1000_r10/partition_2x2_seed=2/optimize_report.md",
+    "history": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_laptoppath_blocknorm_seed12_iter1000_r10/partition_2x2_seed=2/optimize_metrics.jsonl",
+    "checkpoint": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_laptoppath_blocknorm_seed12_iter1000_r10/partition_2x2_seed=2/optimize_checkpoint.json",
+    "config": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_laptoppath_blocknorm_seed12_iter1000_r10/partition_2x2_seed=2/optimize_config_used.yaml"
+  }
+}

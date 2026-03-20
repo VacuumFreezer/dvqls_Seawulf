@@ -1,0 +1,1 @@
+{"iteration": 0, "global_cost": 40.06045149004818, "global_residual_l2": 1.0147087042753788, "consensus_error_l2": 3.731941540494306, "solution_error_l2": 1.057540233243767, "relative_solution_error_l2": 1.0560694193188687, "tracked_cost": 40.060451490048195, "alpha_grad_l2": 0.5752205611386131, "beta_grad_l2": 29.71642247972354, "alpha_step_l2": 0.0, "beta_step_l2": 0.0}

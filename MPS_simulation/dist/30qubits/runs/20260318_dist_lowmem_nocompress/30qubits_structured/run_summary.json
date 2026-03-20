@@ -1,0 +1,16 @@
+{
+  "label_dir": "30qubits",
+  "script": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_optimize_30q_nocompress.py",
+  "init_mode": "structured_linspace",
+  "init_seed": null,
+  "iterations": 200,
+  "report_every": 5,
+  "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_structured",
+  "artifacts": {
+    "json": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_structured/optimize.json",
+    "report": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_structured/optimize_report.md",
+    "history": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_structured/optimize_metrics.jsonl",
+    "checkpoint": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_structured/optimize_checkpoint.json",
+    "config": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_structured/optimize_config_used.yaml"
+  }
+}

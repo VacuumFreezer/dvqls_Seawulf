@@ -16,7 +16,6 @@ ROOT_DIR = THIS_DIR.parents[2]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from MPS_simulation.cen.quimb_vqls_eq26_benchmark import build_circuit_numpy  # noqa: E402
 from MPS_simulation.dist.quimb_dist_eq26_2x2_benchmark import (  # noqa: E402
     global_cost_jax,
     global_cost_numpy,
@@ -139,7 +138,10 @@ def build_direct_problem(cfg: SimpleNamespace) -> dict[str, object]:
     blocks = ((a11, ident_local.copy()), (ident_local.copy(), a22))
 
     b_state = qtn.MPS_computational_state("+" * cfg.local_qubits, dtype="float64")
+    b_row_norm = 1.0 / math.sqrt(2.0)
     b_norm = 0.5 / math.sqrt(2.0)
+    b_row_states = (b_state.copy(), b_state.copy())
+    b_row_norms = np.full(2, b_row_norm, dtype=np.float64)
     b_states = ((b_state.copy(), b_state.copy()), (b_state.copy(), b_state.copy()))
     b_norms = np.full((2, 2), b_norm, dtype=np.float64)
 
@@ -149,6 +151,8 @@ def build_direct_problem(cfg: SimpleNamespace) -> dict[str, object]:
 
     return {
         "blocks": blocks,
+        "b_row_states": b_row_states,
+        "b_row_norms": b_row_norms,
         "b_states": b_states,
         "b_norms": b_norms,
         "row_laplacian": row_laplacian,

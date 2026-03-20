@@ -1,0 +1,62 @@
+shared:
+  global_qubits: 13
+  j_coupling: 0.1
+
+optimize:
+  kappa: 20.0
+  layers: 2
+  hadamard_prefix: true
+  gate_max_bond: null
+  gate_cutoff: 0.0
+  apply_max_bond: 64
+  apply_cutoff: 1.0e-10
+  apply_no_compress: true
+  learning_rate: 0.02
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 1.0e-8
+  iterations: 1000
+  report_every: 2
+  init_mode: uniform_block_norm_j0
+  init_seed: 1234
+  init_start: -0.1
+  init_stop: 0.1
+  x_scale_init: 1.0
+  z_scale_init: 0.10
+  preview_elements: 200
+
+job_prep:
+  default_tag: partition_compare_13q_prepared
+  default_cases:
+    - partition_8x8
+    - partition_4x4
+    - partition_2x2
+    - partition_1x1
+  slurm:
+    partition: long-40core-shared
+    nodes: 1
+    ntasks: 1
+    cpus_per_task: 1
+    mem: 16G
+    time: 24:00:00
+
+cases:
+  partition_8x8:
+    n_rows: 8
+    n_cols: 8
+    local_qubits: 10
+
+  partition_4x4:
+    n_rows: 4
+    n_cols: 4
+    local_qubits: 11
+
+  partition_2x2:
+    n_rows: 2
+    n_cols: 2
+    local_qubits: 12
+
+  partition_1x1:
+    n_rows: 1
+    n_cols: 1
+    local_qubits: 13

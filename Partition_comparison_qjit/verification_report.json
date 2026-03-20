@@ -1,0 +1,102 @@
+{
+  "tolerance": 1e-10,
+  "consistent": true,
+  "reference": "cluster13_real_prefix_partition_1x1",
+  "systems": [
+    {
+      "name": "cluster13_real_prefix_partition_1x1",
+      "static_ops": "Partition_comparison_qjit/1b1/static_ops_cluster13_real_1x1.py",
+      "n_agents": 1,
+      "n_local_qubits": 13,
+      "shape": [
+        8192,
+        8192
+      ],
+      "nnz": 40960,
+      "x_star_residual_norm": 0.2263846284534363
+    },
+    {
+      "name": "cluster13_real_prefix_partition_2x2",
+      "static_ops": "Partition_comparison_qjit/2b2/static_ops_cluster13_real_2x2.py",
+      "n_agents": 2,
+      "n_local_qubits": 12,
+      "shape": [
+        8192,
+        8192
+      ],
+      "nnz": 40960,
+      "x_star_residual_norm": 0.2263846284534363
+    },
+    {
+      "name": "cluster13_real_prefix_partition_4x4",
+      "static_ops": "Partition_comparison_qjit/4b4/static_ops_cluster13_real_4x4.py",
+      "n_agents": 4,
+      "n_local_qubits": 11,
+      "shape": [
+        8192,
+        8192
+      ],
+      "nnz": 40960,
+      "x_star_residual_norm": 0.2263846284534363
+    },
+    {
+      "name": "cluster13_real_prefix_partition_8x8",
+      "static_ops": "Partition_comparison_qjit/8b8/static_ops_cluster13_real_8x8.py",
+      "n_agents": 8,
+      "n_local_qubits": 10,
+      "shape": [
+        8192,
+        8192
+      ],
+      "nnz": 40960,
+      "x_star_residual_norm": 0.22638462845343635
+    }
+  ],
+  "comparisons": [
+    {
+      "reference": "cluster13_real_prefix_partition_1x1",
+      "candidate": "cluster13_real_prefix_partition_2x2",
+      "A": {
+        "shape_0": 8192,
+        "shape_1": 8192,
+        "nnz_diff": 0,
+        "max_abs_diff": 0.0,
+        "data_fro_norm": 0.0
+      },
+      "b_max_abs_diff": 1.734723475976807e-18,
+      "x_star_max_abs_diff": 3.469446951953614e-18,
+      "candidate_x_star_residual_norm": 0.2263846284534363,
+      "same_problem": true
+    },
+    {
+      "reference": "cluster13_real_prefix_partition_1x1",
+      "candidate": "cluster13_real_prefix_partition_4x4",
+      "A": {
+        "shape_0": 8192,
+        "shape_1": 8192,
+        "nnz_diff": 0,
+        "max_abs_diff": 0.0,
+        "data_fro_norm": 0.0
+      },
+      "b_max_abs_diff": 1.734723475976807e-18,
+      "x_star_max_abs_diff": 5.204170427930421e-18,
+      "candidate_x_star_residual_norm": 0.2263846284534363,
+      "same_problem": true
+    },
+    {
+      "reference": "cluster13_real_prefix_partition_1x1",
+      "candidate": "cluster13_real_prefix_partition_8x8",
+      "A": {
+        "shape_0": 8192,
+        "shape_1": 8192,
+        "nnz_diff": 0,
+        "max_abs_diff": 0.0,
+        "data_fro_norm": 0.0
+      },
+      "b_max_abs_diff": 5.204170427930421e-18,
+      "x_star_max_abs_diff": 5.204170427930421e-18,
+      "candidate_x_star_residual_norm": 0.22638462845343635,
+      "same_problem": true
+    }
+  ]
+}

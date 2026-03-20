@@ -1,0 +1,36 @@
+optimize:
+  global_qubits: 13
+  local_qubits: 13
+  j_coupling: 0.1
+  kappa: 20.0
+  ansatz: basic_entangler_ry
+  layers: 3
+  forward_mode: dense_statevector
+  gate_max_bond: null
+  gate_cutoff: 0.0
+  apply_max_bond: 64
+  apply_cutoff: 1.0e-10
+  apply_no_compress: true
+  learning_rate: 0.01
+  decay: 0.9999
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 1.0e-8
+  iterations: 2000
+  report_every: 10
+  init_seed: 0
+  angle_init_start: -3.141592653589793
+  angle_init_stop: 3.141592653589793
+  sigma_init_low: 0.0
+  sigma_init_high: 2.0
+  lambda_init_low: 0.0
+  lambda_init_high: 2.0
+  preview_elements: 200
+
+cases:
+  formal_basic_entangler_ry_l3_dense: {}
+
+job_prep:
+  default_tag: 20260319_formal_single_agent_mps
+  default_cases:
+    - formal_basic_entangler_ry_l3_dense

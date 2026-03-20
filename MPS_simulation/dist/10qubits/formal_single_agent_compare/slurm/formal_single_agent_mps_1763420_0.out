@@ -1,0 +1,7 @@
+=========================================
+JobID: 1763420  ArrayTask: 0
+Host: dn051
+Start: Thu Mar 19 16:07:51 EDT 2026
+Tasks file: /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/formal_single_agent_compare/runs/20260319_formal_single_agent_mps_l3_dense/tasks.txt
+CMD: python MPS_simulation/dist/10qubits/formal_single_agent_compare/formal_single_agent_optimize.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/formal_single_agent_compare/param.yaml --case formal_basic_entangler_ry_l3_dense --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/formal_single_agent_compare/runs/20260319_formal_single_agent_mps_l3_dense/formal_basic_entangler_ry_l3_dense
+=========================================

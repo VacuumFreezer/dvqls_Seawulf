@@ -1,0 +1,17 @@
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_optimize_30q_nocompress.py --init-mode random_uniform --iterations 200 --report-every 5 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_random_seed=1236 --init-seed 1236
+[iter=0] cost=1.202647507898 residual=1.290403358039 consensus=0.530439720456 rel_err=n/a
+[iter=5] cost=0.954619754292 residual=1.254446862649 consensus=0.042759829349 rel_err=n/a elapsed=801.88s
+[iter=10] cost=0.779946572743 residual=1.186538807293 consensus=0.015012262539 rel_err=n/a elapsed=1522.91s
+[iter=15] cost=0.656179663716 residual=1.121921187610 consensus=0.014557301422 rel_err=n/a elapsed=2233.66s
+[iter=20] cost=0.588261734397 residual=1.075863790925 consensus=0.023668039196 rel_err=n/a elapsed=2961.28s
+[iter=25] cost=0.560807526305 residual=1.051194938484 consensus=0.020579349860 rel_err=n/a elapsed=3685.87s
+[iter=30] cost=0.552064097572 residual=1.038760156554 consensus=0.012401755380 rel_err=n/a elapsed=4418.65s
+[iter=35] cost=0.547341798373 residual=1.031938392920 consensus=0.010121001318 rel_err=n/a elapsed=5154.90s
+[iter=40] cost=0.542159371021 residual=1.027947299862 consensus=0.008314143083 rel_err=n/a elapsed=5873.26s
+[iter=45] cost=0.536789215614 residual=1.025487453315 consensus=0.005892206881 rel_err=n/a elapsed=6586.96s
+[iter=50] cost=0.531739174489 residual=1.023810952372 consensus=0.003362151180 rel_err=n/a elapsed=7308.37s
+[iter=55] cost=0.527528066663 residual=1.022408223541 consensus=0.002305991772 rel_err=n/a elapsed=8035.39s
+[iter=60] cost=0.524199267803 residual=1.021027551717 consensus=0.001988662388 rel_err=n/a elapsed=8748.80s
+[iter=65] cost=0.521623592591 residual=1.019633281089 consensus=0.002185276019 rel_err=n/a elapsed=9449.59s
+[iter=70] cost=0.519571911436 residual=1.018244748818 consensus=0.002103323857 rel_err=n/a elapsed=10147.13s
+[iter=75] cost=0.517861144399 residual=1.016878857571 consensus=0.002115673424 rel_err=n/a elapsed=10839.99s

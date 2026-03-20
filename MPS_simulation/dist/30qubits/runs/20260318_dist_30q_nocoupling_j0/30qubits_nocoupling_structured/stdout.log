@@ -1,0 +1,12 @@
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_optimize_30q_nocoupling.py --init-mode structured_linspace --iterations 200 --report-every 5 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_30q_nocoupling_j0/30qubits_nocoupling_structured
+[iter=0] cost=1.159285832041 residual=1.278592441517 consensus=0.450446059438 rel_err=n/a
+[iter=5] cost=0.901990004570 residual=1.238548131801 consensus=0.028490240559 rel_err=n/a elapsed=811.35s
+[iter=10] cost=0.740166001662 residual=1.170450745664 consensus=0.015760793173 rel_err=n/a elapsed=1536.32s
+[iter=15] cost=0.628695784108 residual=1.109009141320 consensus=0.023120032750 rel_err=n/a elapsed=2288.71s
+[iter=20] cost=0.577109957637 residual=1.068155924662 consensus=0.030273284730 rel_err=n/a elapsed=3038.25s
+[iter=25] cost=0.560825441228 residual=1.047858742519 consensus=0.020296404271 rel_err=n/a elapsed=3799.95s
+[iter=30] cost=0.555239160826 residual=1.037576160681 consensus=0.015353577573 rel_err=n/a elapsed=4510.64s
+[iter=35] cost=0.549686271836 residual=1.032304128897 consensus=0.013208739002 rel_err=n/a elapsed=5196.13s
+[iter=40] cost=0.543245631590 residual=1.029630364778 consensus=0.007298233588 rel_err=n/a elapsed=5866.95s
+[iter=45] cost=0.537146019482 residual=1.027817404874 consensus=0.004326745765 rel_err=n/a elapsed=6541.66s
+[iter=50] cost=0.532146055370 residual=1.026293503551 consensus=0.003788078453 rel_err=n/a elapsed=7202.41s

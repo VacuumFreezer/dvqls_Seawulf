@@ -1,0 +1,8 @@
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_optimize_30q_nocoupling.py --init-mode random_uniform --iterations 200 --report-every 5 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_30q_nocoupling_j0/30qubits_nocoupling_random_seed=2 --init-seed 2
+[iter=0] cost=1.163667975133 residual=1.262264873055 consensus=0.733418216086 rel_err=n/a
+[iter=5] cost=0.928675984416 residual=1.243097753013 consensus=0.034630959455 rel_err=n/a elapsed=789.22s
+[iter=10] cost=0.759920941307 residual=1.175444582976 consensus=0.018446292555 rel_err=n/a elapsed=1518.65s
+[iter=15] cost=0.639200309573 residual=1.111355574157 consensus=0.018387109358 rel_err=n/a elapsed=2231.22s
+[iter=20] cost=0.577148436377 residual=1.067209652804 consensus=0.025813838427 rel_err=n/a elapsed=2968.39s
+[iter=25] cost=0.555206075134 residual=1.044966835889 consensus=0.022314924104 rel_err=n/a elapsed=3697.15s
+[iter=30] cost=0.548352285486 residual=1.034315080101 consensus=0.014494186894 rel_err=n/a elapsed=4427.69s

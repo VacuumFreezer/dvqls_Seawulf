@@ -1,0 +1,12 @@
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/partition_compare_optimize.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml --case partition_2x2 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_all_seed12_lr002_sigma1_r10/partition_2x2_seed=1 --iterations 1000 --report-every 10 --init-seed 1
+Preparing partition-compare case `partition_2x2`.
+Iteration    0 | cost=1.05177490638 | residual=1.12365228781 | consensus=1.9982110946 | error=1.41950268719
+Iteration   10 | cost=0.836367548604 | residual=1.13789764373 | consensus=0.0203862559359 | error=1.5075574417
+Iteration   20 | cost=0.643303843619 | residual=1.0666953422 | consensus=0.0156973455896 | error=1.35073991123
+Iteration   30 | cost=0.568726021101 | residual=1.03338872063 | consensus=0.0101352058017 | error=1.2343665301
+Iteration   40 | cost=0.538118274242 | residual=1.01860840737 | consensus=0.00555503180253 | error=1.15786311303
+Iteration   50 | cost=0.522800926213 | residual=1.01118661886 | consensus=0.00320823702001 | error=1.1083696839
+Iteration   60 | cost=0.514385736783 | residual=1.00710528335 | consensus=0.00195944593102 | error=1.07569016816
+Iteration   70 | cost=0.509464084843 | residual=1.00469768132 | consensus=0.00118751463796 | error=1.05348879224
+Iteration   80 | cost=0.506379716793 | residual=1.00317559183 | consensus=0.000743255838742 | error=1.03800430122
+Iteration   90 | cost=0.504343313538 | residual=1.00216509781 | consensus=0.00050788385238 | error=1.02701919488

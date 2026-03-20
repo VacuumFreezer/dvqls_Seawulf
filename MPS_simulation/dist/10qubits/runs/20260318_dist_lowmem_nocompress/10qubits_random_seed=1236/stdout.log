@@ -1,0 +1,63 @@
+Running: /gpfs/home/tonshen/.conda/envs/MPS/bin/python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/quimb_dist_eq26_2x2_optimize_10q_nocompress.py --init-mode random_uniform --iterations 200 --report-every 5 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1236 --init-seed 1236
+[iter=0] cost=0.926904338047 residual=1.098439582929 consensus=0.400026579073 rel_err=1.2416179218235062
+[iter=5] cost=0.686907328667 residual=1.015135501585 consensus=0.006763107064 rel_err=1.1705314209736801 elapsed=269.00s
+[iter=10] cost=0.544781368396 residual=0.974132362083 consensus=0.026640916877 rel_err=1.1557774277925545 elapsed=513.75s
+[iter=15] cost=0.489416283821 residual=0.956761617017 consensus=0.018373200353 rel_err=1.1381774666001139 elapsed=770.17s
+[iter=20] cost=0.446500577252 residual=0.919288896538 consensus=0.008317438921 rel_err=1.0787578759620795 elapsed=1010.89s
+[iter=25] cost=0.385335764295 residual=0.853781731653 consensus=0.004337128876 rel_err=0.9801946052561924 elapsed=1231.29s
+[iter=30] cost=0.312443093316 residual=0.764848088711 consensus=0.003648273207 rel_err=0.8534106878362254 elapsed=1451.41s
+[iter=35] cost=0.244525869015 residual=0.671168893730 consensus=0.007222005942 rel_err=0.726746899171016 elapsed=1673.92s
+[iter=40] cost=0.184515622272 residual=0.576777821367 consensus=0.007202161704 rel_err=0.6106016862805909 elapsed=1890.28s
+[iter=45] cost=0.130781093577 residual=0.476595398723 consensus=0.004834299583 rel_err=0.49695876888630863 elapsed=2112.13s
+[iter=50] cost=0.089344121552 residual=0.385833216243 consensus=0.004608627204 rel_err=0.3974615930690867 elapsed=2335.54s
+[iter=55] cost=0.062159984100 residual=0.321138740911 consensus=0.004727555018 rel_err=0.3277981052014592 elapsed=2554.82s
+[iter=60] cost=0.044855979359 residual=0.278515394343 consensus=0.003737332532 rel_err=0.2834980028606823 elapsed=2773.43s
+[iter=65] cost=0.035189842667 residual=0.247600353144 consensus=0.002710758597 rel_err=0.25357312759749057 elapsed=2994.98s
+[iter=70] cost=0.029594476997 residual=0.222144689607 consensus=0.002941902303 rel_err=0.2298094810583319 elapsed=3217.13s
+[iter=75] cost=0.023860354997 residual=0.196372082564 consensus=0.002623899129 rel_err=0.2037737539881064 elapsed=3432.77s
+[iter=80] cost=0.018196132981 residual=0.169151317183 consensus=0.002298693863 rel_err=0.1743976053808964 elapsed=3646.30s
+[iter=85] cost=0.013492144094 residual=0.143204211546 consensus=0.002235796198 rel_err=0.14648783472175655 elapsed=3857.82s
+[iter=90] cost=0.010015927762 residual=0.122267914861 consensus=0.001904592554 rel_err=0.12489704109600568 elapsed=4066.88s
+[iter=95] cost=0.007538523255 residual=0.106939894795 consensus=0.001607070905 rel_err=0.10965456033451544 elapsed=4276.23s
+[iter=100] cost=0.005682226130 residual=0.093945849339 consensus=0.001167605039 rel_err=0.0967544012975003 elapsed=4484.23s
+[iter=105] cost=0.004178679193 residual=0.081304900426 consensus=0.000714738455 rel_err=0.08402670314381108 elapsed=4691.02s
+[iter=110] cost=0.002989015536 residual=0.069402024499 consensus=0.000668452426 rel_err=0.07205824309388828 elapsed=4898.52s
+[iter=115] cost=0.002141880967 residual=0.058983420490 consensus=0.000592560133 rel_err=0.061833908518217545 elapsed=5105.40s
+[iter=120] cost=0.001566047229 residual=0.050511980703 consensus=0.000631655986 rel_err=0.05379716518645932 elapsed=5312.53s
+[iter=125] cost=0.001154604596 residual=0.043346475441 consensus=0.000468238107 rel_err=0.046987876301975345 elapsed=5518.96s
+[iter=130] cost=0.000851108834 residual=0.037111173044 consensus=0.000355771692 rel_err=0.04096488992367049 elapsed=5725.56s
+[iter=135] cost=0.000635942618 residual=0.031992878374 consensus=0.000281939013 rel_err=0.03606069089439243 elapsed=5932.38s
+[iter=140] cost=0.000491956055 residual=0.028172530034 consensus=0.000288702637 rel_err=0.03249362308055458 elapsed=6139.00s
+[iter=145] cost=0.000394729761 residual=0.025343861689 consensus=0.000221235506 rel_err=0.029872752819106833 elapsed=6346.92s
+[iter=150] cost=0.000326789249 residual=0.023188613333 consensus=0.000164191882 rel_err=0.027855034249129804 elapsed=6553.00s
+[iter=155] cost=0.000278859911 residual=0.021545870225 consensus=0.000133328713 rel_err=0.026294995299489404 elapsed=6759.90s
+[iter=160] cost=0.000245293930 residual=0.020305604697 consensus=0.000103209401 rel_err=0.025094529098692985 elapsed=6967.00s
+[iter=165] cost=0.000221296658 residual=0.019362795768 consensus=0.000098532415 rel_err=0.02415136661399739 elapsed=7174.18s
+[iter=170] cost=0.000203183877 residual=0.018610397354 consensus=0.000068805235 rel_err=0.023365397449651146 elapsed=7387.15s
+[iter=175] cost=0.000188888795 residual=0.017983528479 consensus=0.000059905530 rel_err=0.022685266934152522 elapsed=7593.76s
+[iter=180] cost=0.000177169726 residual=0.017447220059 consensus=0.000052350648 rel_err=0.022085886056909493 elapsed=7803.02s
+[iter=185] cost=0.000167247842 residual=0.016976503291 consensus=0.000048075582 rel_err=0.02154782581829521 elapsed=8010.06s
+[iter=190] cost=0.000158553489 residual=0.016549319617 consensus=0.000039105511 rel_err=0.02105362341311025 elapsed=8216.73s
+[iter=195] cost=0.000150747752 residual=0.016153276909 consensus=0.000030202970 rel_err=0.02059303598364368 elapsed=8424.92s
+[iter=200] cost=0.000143661755 residual=0.015783434998 consensus=0.000032238593 rel_err=0.020160753271639097 elapsed=8631.69s
+
+Final summary:
+{
+  "global_cost": 0.00014366175523672364,
+  "residual_norm_l2": 0.01578343499845304,
+  "consensus_error_l2": 3.223859250661935e-05,
+  "row_variance_mse": 5.07483811917897e-13,
+  "relative_solution_error_l2": 0.020160753271639097,
+  "iteration": 200,
+  "elapsed_s": 8631.685933370143,
+  "alpha_grad_l2": 0.0005599642327274792,
+  "beta_grad_l2": 0.00026646482708543795,
+  "alpha_step_l2": 0.0024506103321638405,
+  "beta_step_l2": 0.0019835148330594457
+}
+
+Wrote JSON to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1236/optimize.json
+Wrote report to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1236/optimize_report.md
+Wrote live history to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1236/optimize_metrics.jsonl
+Wrote checkpoint to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1236/optimize_checkpoint.json
+Wrote run summary to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/runs/20260318_dist_lowmem_nocompress/10qubits_random_seed=1236/run_summary.json

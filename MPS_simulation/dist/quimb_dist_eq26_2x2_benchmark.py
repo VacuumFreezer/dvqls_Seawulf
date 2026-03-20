@@ -13,11 +13,11 @@ from scipy.sparse import identity
 from scipy.sparse.linalg import eigsh
 
 THIS_DIR = Path(__file__).resolve().parent
-CEN_DIR = THIS_DIR.parent / "cen"
-if str(CEN_DIR) not in sys.path:
-    sys.path.insert(0, str(CEN_DIR))
+REPO_ROOT = THIS_DIR.parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
-from quimb_vqls_eq26_benchmark import (  # noqa: E402
+from MPS_simulation.quimb_dist_eq26_common import (  # noqa: E402
     build_circuit_numpy,
     build_circuit_jax,
     time_callable,
@@ -208,6 +208,22 @@ def build_partitioned_problem_numpy(cfg: Config) -> dict[str, object]:
         np.array(b_dense[:half_dim], copy=True),
         np.array(b_dense[half_dim:], copy=True),
     )
+    b_row_states = []
+    b_row_norms = np.zeros(2, dtype=np.float64)
+    for row in b_rows:
+        row_norm = float(np.linalg.norm(row))
+        if row_norm <= 1.0e-15:
+            row_state_vector = np.zeros_like(row)
+            row_state_vector[0] = 1.0
+        else:
+            row_state_vector = row / row_norm
+        b_row_states.append(
+            qtn.MatrixProductState.from_dense(
+                row_state_vector,
+                dims=[2] * cfg.local_qubits,
+            )
+        )
+        b_row_norms[len(b_row_states) - 1] = row_norm
     column_split = np.full((2, 2), 0.5, dtype=np.float64)
     b_vectors = []
     b_states = []
@@ -239,6 +255,8 @@ def build_partitioned_problem_numpy(cfg: Config) -> dict[str, object]:
     return {
         "blocks": blocks,
         "b_rows": b_rows,
+        "b_row_states": tuple(b_row_states),
+        "b_row_norms": b_row_norms,
         "b_vectors": tuple(b_vectors),
         "b_states": tuple(b_states),
         "b_norms": b_norms,

@@ -1,0 +1,80 @@
+/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/cotengra/hyperoptimizers/hyper.py:55: UserWarning: Couldn't find `optuna`, `cmaes`, or `nevergrad` so will use completely random sampling in place of hyper-optimization. It is recommended to install one of these libraries for higher quality contraction paths.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_optimize_30q_nocompress.py", line 25, in <module>
+    main()
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_optimize_30q_nocompress.py", line 21, in main
+    shared_main(argv)
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/quimb_dist_eq26_2x2_optimize_nocompress.py", line 801, in main
+    result = optimize(cfg, artifact_paths)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/quimb_dist_eq26_2x2_optimize_nocompress.py", line 657, in optimize
+    metrics, _ = compute_metrics(alpha_np, beta_np, cfg, problem_np, reference)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/quimb_dist_eq26_2x2_optimize_nocompress.py", line 357, in compute_metrics
+    analysis = build_state_analysis(alpha, cfg, problem_np)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/quimb_dist_eq26_2x2_optimize_nocompress.py", line 311, in build_state_analysis
+    unit_states = [[build_circuit_numpy(cfg.local_qubits, alpha[i, j, 1:], cfg).psi for j in range(2)] for i in range(2)]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/quimb_dist_eq26_2x2_optimize_nocompress.py", line 311, in <listcomp>
+    unit_states = [[build_circuit_numpy(cfg.local_qubits, alpha[i, j, 1:], cfg).psi for j in range(2)] for i in range(2)]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/quimb_dist_eq26_2x2_optimize_nocompress.py", line 311, in <listcomp>
+    unit_states = [[build_circuit_numpy(cfg.local_qubits, alpha[i, j, 1:], cfg).psi for j in range(2)] for i in range(2)]
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/quimb_dist_eq26_common.py", line 282, in build_circuit_numpy
+    _apply_brickwall_ry_cz(circuit, angles, n_qubits)
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/quimb_dist_eq26_common.py", line 264, in _apply_brickwall_ry_cz
+    circuit.apply_gate("CZ", left, left + 1)
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/circuit.py", line 2058, in apply_gate
+    self._apply_gate(gate, **gate_opts)
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/circuit.py", line 2000, in _apply_gate
+    self._psi.gate_(G, gate.qubits, tags=tags, **opts)
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/tensor_1d.py", line 677, in gate
+    return gate_TN_1D(self, *args, inplace=inplace, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/tensor_1d.py", line 250, in gate_TN_1D
+    return tn.gate_with_auto_swap(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/tensor_1d.py", line 388, in wrapped
+    return fn(self, *args, info=info, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/tensor_1d.py", line 2256, in gate_with_auto_swap
+    mps.canonicalize_((i, i + 1), info=info)
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/tensor_1d.py", line 1166, in canonicalize
+    mps.right_canonicalize_(j, bra=bra)
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/tensor_1d.py", line 968, in right_canonicalize
+    mps.right_canonize_site(i, bra=bra, create_bond=create_bond)
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/tensor_1d.py", line 851, in right_canonize_site
+    tensor_canonize_bond(tr, tl, create_bond=create_bond)
+  File "/gpfs/home/tonshen/.conda/envs/MPS/lib/python3.11/functools.py", line 909, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/tensor_core.py", line 788, in tensor_canonize_bond
+    new_T1, tRfact = T1.split(lix, get="tensors", **split_opts)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/tensor_core.py", line 2625, in split
+    return tensor_split(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home/tonshen/.conda/envs/MPS/lib/python3.11/functools.py", line 909, in wrapper
+    return dispatch(args[0].__class__)(*args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/quimb/tensor/tensor_core.py", line 651, in tensor_split
+    left, s, right = _SPLIT_FNS[method](array, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/scratch/tonshen/conda_env_support/MPS/site-packages/autoray/autoray.py", line 1108, in __call__
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/home/tonshen/.conda/envs/MPS/lib/python3.11/site-packages/numba/np/linalg.py", line 841, in _check_finite_matrix
+numpy.linalg.LinAlgError: Array must not contain infs or NaNs.
+Traceback (most recent call last):
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/run_nocompress_case.py", line 84, in <module>
+    main()
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/run_nocompress_case.py", line 60, in main
+    run_command(cmd)
+  File "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/run_nocompress_case.py", line 36, in run_command
+    subprocess.run(cmd, check=True, cwd=str(REPO_ROOT))
+  File "/gpfs/home/tonshen/.conda/envs/MPS/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/gpfs/home/tonshen/.conda/envs/MPS/bin/python', '/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/quimb_dist_eq26_2x2_optimize_30q_nocompress.py', '--init-mode', 'random_uniform', '--iterations', '200', '--report-every', '5', '--out-dir', '/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/30qubits/runs/20260318_dist_lowmem_nocompress/30qubits_random_seed=1234', '--init-seed', '1234']' returned non-zero exit status 1.

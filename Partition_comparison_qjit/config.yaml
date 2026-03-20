@@ -1,0 +1,36 @@
+tag: cluster13_real_partition_compare
+run_root: Partition_comparison_qjit/run
+python_bin: /gpfs/home/tonshen/.conda/envs/pennylane/bin/python
+
+problems:
+  - name: 1b1
+    static_ops: Partition_comparison_qjit/1b1/static_ops_cluster13_real_1x1.py
+  - name: 2b2
+    static_ops: Partition_comparison_qjit/2b2/static_ops_cluster13_real_2x2.py
+  - name: 4b4
+    static_ops: Partition_comparison_qjit/4b4/static_ops_cluster13_real_4x4.py
+  - name: 8b8
+    static_ops: Partition_comparison_qjit/8b8/static_ops_cluster13_real_8x8.py
+
+cases:
+  - name: qjit_formal
+    script: Partition_comparison_qjit/seawulf_partition_comparison_qjit.py
+
+common:
+  topology: line
+  ansatz: brickwall_ry_cz
+  layers: 1
+  epochs: 10000
+  log_every: 50
+  repeat_cz_each_layer: false
+  local_ry_support: ""
+
+lr_sets:
+  - tag: lr1e-2
+    lr: 0.01
+
+decay_sets:
+  - tag: decay0p9999
+    decay: 0.9999
+
+seeds: [0]

@@ -1,0 +1,50 @@
+[
+  {
+    "case": "partition_8x8",
+    "init_seed": 1,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_8x8_seed=1",
+    "command": "python MPS_simulation/dist/10qubits/partition_compare/run_partition_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml --case partition_8x8 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_8x8_seed=1 --iterations 1000 --report-every 10 --init-seed 1"
+  },
+  {
+    "case": "partition_8x8",
+    "init_seed": 2,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_8x8_seed=2",
+    "command": "python MPS_simulation/dist/10qubits/partition_compare/run_partition_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml --case partition_8x8 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_8x8_seed=2 --iterations 1000 --report-every 10 --init-seed 2"
+  },
+  {
+    "case": "partition_4x4",
+    "init_seed": 1,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_4x4_seed=1",
+    "command": "python MPS_simulation/dist/10qubits/partition_compare/run_partition_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml --case partition_4x4 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_4x4_seed=1 --iterations 1000 --report-every 10 --init-seed 1"
+  },
+  {
+    "case": "partition_4x4",
+    "init_seed": 2,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_4x4_seed=2",
+    "command": "python MPS_simulation/dist/10qubits/partition_compare/run_partition_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml --case partition_4x4 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_4x4_seed=2 --iterations 1000 --report-every 10 --init-seed 2"
+  },
+  {
+    "case": "partition_2x2",
+    "init_seed": 1,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_2x2_seed=1",
+    "command": "python MPS_simulation/dist/10qubits/partition_compare/run_partition_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml --case partition_2x2 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_2x2_seed=1 --iterations 1000 --report-every 10 --init-seed 1"
+  },
+  {
+    "case": "partition_2x2",
+    "init_seed": 2,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_2x2_seed=2",
+    "command": "python MPS_simulation/dist/10qubits/partition_compare/run_partition_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml --case partition_2x2 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_2x2_seed=2 --iterations 1000 --report-every 10 --init-seed 2"
+  },
+  {
+    "case": "partition_1x1",
+    "init_seed": 1,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_1x1_seed=1",
+    "command": "python MPS_simulation/dist/10qubits/partition_compare/run_partition_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml --case partition_1x1 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_1x1_seed=1 --iterations 1000 --report-every 10 --init-seed 1"
+  },
+  {
+    "case": "partition_1x1",
+    "init_seed": 2,
+    "out_dir": "/gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_1x1_seed=2",
+    "command": "python MPS_simulation/dist/10qubits/partition_compare/run_partition_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/param.yaml --case partition_1x1 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_13q_seed12_iter1000_r10/partition_1x1_seed=2 --iterations 1000 --report-every 10 --init-seed 2"
+  }
+]

@@ -1,0 +1,7 @@
+=========================================
+JobID: 1762731  ArrayTask: 1
+Host: dn051
+Start: Thu Mar 19 13:29:50 EDT 2026
+Tasks file: MPS_simulation/dist/10qubits/single_agent_ansatz_compare/runs/20260319_single_agent_ansatz_compare_iter1000_seed1234/tasks.txt
+CMD: python MPS_simulation/dist/10qubits/single_agent_ansatz_compare/run_single_agent_case.py --config /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/single_agent_ansatz_compare/param.yaml --case basic_entangler_l7 --out-dir /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/single_agent_ansatz_compare/runs/20260319_single_agent_ansatz_compare_iter1000_seed1234/basic_entangler_l7 --iterations 1000 --init-seed 1234
+=========================================
