@@ -704,53 +704,10 @@ def main(argv=None):
         current_params = rebuild_global_params(args_flat, SYSTEM.n, GLOBAL_PARAMS["b_norm"])
         return ib.eval_total_loss(current_params)
 
-    def compute_grad_jax(args_flat):
-        return jax.grad(total_loss_fn)(args_flat)
-
-    def compute_loss_plain(args_flat):
-        return total_loss_fn(args_flat)
-
-    if CATALYST_AVAILABLE:
-        @qml.qjit
-        def compute_grad_catalyst(args_flat):
-            return catalyst.grad(total_loss_fn, method="auto")(args_flat)
-
-        @qml.qjit
-        def compute_loss_qjit(args_flat):
-            return total_loss_fn(args_flat)
-
-        use_catalyst_grad = True
-
-        def compute_grad(args_flat):
-            nonlocal use_catalyst_grad
-
-            if use_catalyst_grad:
-                try:
-                    return compute_grad_catalyst(args_flat)
-                except Exception as exc:
-                    use_catalyst_grad = False
-                    logger.info(
-                        "Catalyst gradient compilation failed for this workload; "
-                        "falling back to jax.grad while keeping the qjit'd forward loss. "
-                        f"Summary: {_summarize_exception(exc)}"
-                    )
-
-            return compute_grad_jax(args_flat)
-
-        def compute_loss(args_flat):
-            return compute_loss_qjit(args_flat)
-    else:
-        def compute_grad(args_flat):
-            return compute_grad_jax(args_flat)
-
-        def compute_loss(args_flat):
-            return compute_loss_plain(args_flat)
-
-    logger.info("Starting initial forward loss evaluation.")
-    t_init_loss = time.time()
-    current_loss = compute_loss(to_jax_flat(flatten_params(GLOBAL_PARAMS)))
-    logger.info(f"Finished initial forward loss evaluation in {time.time() - t_init_loss:.2f} s.")
-    logger.info(f"[Init] Initial Loss = {float(current_loss):.5e}")
+    compute_loss_and_grad = jax.jit(jax.value_and_grad(total_loss_fn))
+    logger.info(
+        "Optimization backend: jax.jit(value_and_grad), matching optimization/met_line_tracking.py."
+    )
 
     lr_schedule = optax.exponential_decay(
         init_value=args.lr,
@@ -760,16 +717,17 @@ def main(argv=None):
     )
     opt_adam = optax.adam(lr_schedule)
 
-    loss_history = [float(current_loss)]
+    loss_history = []
     metric_epochs = []
     diff_history = []
     ax_minus_b_history = []
 
     flat_params_init = to_jax_flat(flatten_params(GLOBAL_PARAMS, keys=None))
-    logger.info("Starting initial gradient evaluation.")
+    logger.info("Starting initial loss+gradient evaluation.")
     t_init_grad = time.time()
-    grads_flat_init = compute_grad(flat_params_init)
-    logger.info(f"Finished initial gradient evaluation in {time.time() - t_init_grad:.2f} s.")
+    current_loss, grads_flat_init = compute_loss_and_grad(flat_params_init)
+    logger.info(f"Finished initial loss+gradient evaluation in {time.time() - t_init_grad:.2f} s.")
+    logger.info(f"[Init] Initial Loss = {float(current_loss):.5e}")
     grad_grid_init = rebuild_global_params(grads_flat_init, SYSTEM.n, GLOBAL_PARAMS["b_norm"])
 
     tracker_grid = init_tracker_from_grad(grad_grid_init)
@@ -777,6 +735,7 @@ def main(argv=None):
 
     all_keys = ["alpha", "beta", "sigma", "lambda"]
     opt_adam_state = opt_adam.init(to_jax_flat(flatten_params(GLOBAL_PARAMS, keys=all_keys)))
+    loss_history.append(float(current_loss))
 
     t0 = time.time()
 
@@ -790,8 +749,7 @@ def main(argv=None):
         update_global_from_flat(GLOBAL_PARAMS, new_flat_params, keys=all_keys)
 
         flat_params_all = to_jax_flat(flatten_params(GLOBAL_PARAMS, keys=None))
-        grads_flat = compute_grad(flat_params_all)
-        current_cost = compute_loss(flat_params_all)
+        current_cost, grads_flat = compute_loss_and_grad(flat_params_all)
 
         current_grad_grid = rebuild_global_params(grads_flat, SYSTEM.n, GLOBAL_PARAMS["b_norm"])
         tracker_grid = update_gradient_tracker_metropolis_jax(

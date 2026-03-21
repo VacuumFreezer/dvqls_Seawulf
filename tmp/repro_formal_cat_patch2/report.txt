@@ -1,0 +1,32 @@
+[2026-03-20 02:15:17] System variant: cluster12_stabilizer_2x2_q2_index
+[2026-03-20 02:15:17] static_ops module: problems.static_ops_2x2_cluster12_stabilizer
+[2026-03-20 02:15:17] local data qubits per agent: 11
+[2026-03-20 02:15:17] ansatz: brickwall_ry_cz (Trainable RY layer followed by open-chain CZ)
+[2026-03-20 02:15:17] layers: 1
+[2026-03-20 02:15:17] repeat_cz_each_layer: False
+[2026-03-20 02:15:17] local_ry_support: ()
+[2026-03-20 02:15:17] scaffold_edges: ((1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10))
+[2026-03-20 02:15:17] term counts by block: [[4, 2], [2, 4]]
+[2026-03-20 02:15:17] Analytic spectrum: lambda_min=0.02000000, lambda_max=1.00000000, cond(A)=50.00000000
+[2026-03-20 02:15:17] Per Hadamard-test statevector (12 wires): 64.00 KiB
+[2026-03-20 02:15:17] Conservative peak per Hadamard test: 128.00 KiB
+[2026-03-20 02:15:17] QNode evaluations per compute_loss call: 88
+[2026-03-20 02:15:17] Sequential statevector traffic per compute_loss call: 5.50 MiB
+[2026-03-20 02:15:17] These memory figures are for compute_loss only; compute_grad will be higher.
+[2026-03-20 02:15:17] Dense validation metrics are enabled for this run because the loaded system supports dense validation.
+[2026-03-20 02:15:30] Dense validation matrix shape: (4096, 4096)
+[2026-03-20 02:15:31] Metropolis weight matrix Wm =
+[[0.66666667 0.33333333]
+ [0.33333333 0.66666667]]
+[2026-03-20 02:15:31] Starting prebuild_local_evals() for distributed Hadamard-test bundles.
+[2026-03-20 02:15:31] Finished prebuild_local_evals() in 0.07 s.
+[2026-03-20 02:15:31] Starting initial forward loss evaluation.
+[2026-03-20 02:15:40] Finished initial forward loss evaluation in 9.35 s.
+[2026-03-20 02:15:40] [Init] Initial Loss = 8.06174e-01
+[2026-03-20 02:15:40] Starting initial gradient evaluation.
+[2026-03-20 02:16:08] Catalyst gradient compilation failed for this workload; switching the optimization backend to jax.jit(value_and_grad). Summary: CompileError: Illegal updateAnalysis prev:{[-1]:Pointer} new: {[-1]:Integer} | val:   %36 = shl i64 %32, 1 origin=  store i64 %36, ptr %23, align 4, !tbaa !4
+[2026-03-20 02:16:19] Finished initial gradient evaluation in 38.14 s.
+[2026-03-20 02:16:20] [Epoch 0001] Total Loss = 7.72887e-01 | Sol Diff = 1.33806e+00 | ||Ax-b|| = 1.11206e+00
+[2026-03-20 02:16:21] Final parameters written to: /gpfs/home/tonshen/Seawulf_simulation/tmp/repro_formal_cat_patch2/final_params.json
+[2026-03-20 02:16:21] Post-analysis written to: /gpfs/home/tonshen/Seawulf_simulation/tmp/repro_formal_cat_patch2/analysis.txt
+[2026-03-20 02:16:21] Finished. Outputs written to: /gpfs/home/tonshen/Seawulf_simulation/tmp/repro_formal_cat_patch2

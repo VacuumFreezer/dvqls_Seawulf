@@ -1,0 +1,48 @@
+tag: init_mode_benchmark_13q
+run_root: Partition_comparison_qjit/init_mode_benchmark/run
+python_bin: /gpfs/home/tonshen/.conda/envs/pennylane/bin/python
+
+problems:
+  - name: 1b1
+    static_ops: Partition_comparison_qjit/1b1/static_ops_cluster13_real_1x1.py
+  - name: 2b2
+    static_ops: Partition_comparison_qjit/2b2/static_ops_cluster13_real_2x2.py
+
+cases:
+  - name: deep5_uniform_sigma1_lambda1
+    script: Partition_comparison_qjit/seawulf_partition_comparison_qjit.py
+    layers: 5
+    init_mode: uniform_pm_pi
+    init_sigma_value: 1.0
+    init_sigma_noise_std: 0.0
+    init_lambda_value: 1.0
+    init_lambda_noise_std: 0.0
+  - name: shallow1_pi2_gaussian
+    script: Partition_comparison_qjit/seawulf_partition_comparison_qjit.py
+    layers: 1
+    init_mode: constant_center_gaussian
+    init_angle_center: 1.5707963267948966
+    init_angle_noise_std: 0.05
+
+common:
+  topology: line
+  ansatz: brickwall_ry_cz
+  epochs: 1000
+  log_every: 5
+  repeat_cz_each_layer: false
+  local_ry_support: ""
+  init_mode: uniform_pm_pi
+  init_angle_center: 1.5707963267948966
+  init_angle_noise_std: 0.05
+  init_sigma_noise_std: 0.05
+  init_lambda_noise_std: 0.05
+
+lr_sets:
+  - tag: lr1e-2
+    lr: 0.01
+
+decay_sets:
+  - tag: decay0p9999
+    decay: 0.9999
+
+seeds: [0]

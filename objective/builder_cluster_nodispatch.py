@@ -244,13 +244,8 @@ def prebuild_local_evals(
             _ENTRY_L.append(int(len(A_gates)))
 
 
-def eval_total_loss(current_params, *, SYSTEM=None, interface="jax"):
-    """Global loss reducer over the flat prebuilt tables.
-
-    Keep this reducer as a plain Python/JAX function so callers can safely use
-    `jax.grad` as a fallback when Catalyst gradient compilation fails on the
-    underlying controlled-adjoint Hadamard-test QNodes.
-    """
+def eval_total_loss_plain(current_params, *, SYSTEM=None, interface="jax"):
+    """Plain Python/JAX entry point for the global loss reducer."""
     del SYSTEM
 
     total = 0.0
@@ -262,6 +257,12 @@ def eval_total_loss(current_params, *, SYSTEM=None, interface="jax"):
 
 
 @qml.qjit
+def eval_total_loss(current_params, *, SYSTEM=None, interface="jax"):
+    """qjit entry point for the global loss reducer."""
+    return eval_total_loss_plain(current_params, SYSTEM=SYSTEM, interface=interface)
+
+
+@qml.qjit
 def eval_total_loss_qjit(current_params, *, SYSTEM=None, interface="jax"):
     """Optional compiled entry point for callers that want a qjit'd forward loss."""
-    return eval_total_loss(current_params, SYSTEM=SYSTEM, interface=interface)
+    return eval_total_loss_plain(current_params, SYSTEM=SYSTEM, interface=interface)

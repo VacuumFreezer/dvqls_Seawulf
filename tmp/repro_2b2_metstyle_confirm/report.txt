@@ -1,0 +1,37 @@
+[2026-03-20 02:22:13] System variant: cluster13_real_prefix_partition_2x2
+[2026-03-20 02:22:13] static_ops: Partition_comparison_qjit/2b2/static_ops_cluster13_real_2x2.py
+[2026-03-20 02:22:13] agents per row/column: 2
+[2026-03-20 02:22:13] local data qubits: 12
+[2026-03-20 02:22:13] ansatz: brickwall_ry_cz (Trainable RY layer followed by open-chain CZ)
+[2026-03-20 02:22:13] layers: 1
+[2026-03-20 02:22:13] repeat_cz_each_layer: False
+[2026-03-20 02:22:13] init: mode=metadata_gaussian, angle_center=1.57079633, angle_noise_std=0.05000000, sigma_value=None, sigma_noise_std=0.05000000, lambda_value=None, lambda_noise_std=0.05000000
+[2026-03-20 02:22:13] local_ry_support: ()
+[2026-03-20 02:22:13] scaffold_edges: ((1, 2), (3, 4), (5, 6), (7, 8), (9, 10), (0, 1), (2, 3), (4, 5), (6, 7), (8, 9), (10, 11))
+[2026-03-20 02:22:13] term counts by block: [[5, 1], [1, 5]]
+[2026-03-20 02:22:13] row graph: {0: [1], 1: [0]}
+[2026-03-20 02:22:13] column graph: {0: [1], 1: [0]}
+[2026-03-20 02:22:13] Analytic spectrum: lambda_min=0.05000000, lambda_max=1.00000000, cond(A)=20.00000000
+[2026-03-20 02:22:13] Per Hadamard-test statevector (13 wires): 128.00 KiB
+[2026-03-20 02:22:13] Conservative peak per Hadamard test: 256.00 KiB
+[2026-03-20 02:22:13] QNode evaluations per compute_loss call: 100
+[2026-03-20 02:22:13] Sequential statevector traffic per compute_loss call: 12.50 MiB
+[2026-03-20 02:22:13] These memory figures are for compute_loss only; compute_grad will be higher.
+[2026-03-20 02:22:13] Computing true solution x* via scipy.sparse.linalg.spsolve on the reconstructed global matrix.
+[2026-03-20 02:22:13] Global right-hand side shape: (8192,)
+[2026-03-20 02:22:13] True solution shape: (8192,)
+[2026-03-20 02:22:14] Metropolis weight matrix Wm =
+[[0.66666667 0.33333333]
+ [0.33333333 0.66666667]]
+[2026-03-20 02:22:14] Starting prebuild_local_evals() for distributed Hadamard-test bundles.
+[2026-03-20 02:22:14] Finished prebuild_local_evals() in 0.07 s.
+[2026-03-20 02:22:14] Optimization backend: jax.jit(value_and_grad), matching optimization/met_line_tracking.py.
+[2026-03-20 02:22:14] Starting initial loss+gradient evaluation.
+[2026-03-20 02:22:26] Finished initial loss+gradient evaluation in 12.71 s.
+[2026-03-20 02:22:26] [Init] Initial Loss = 2.93721e-01
+[2026-03-20 02:22:28] [Epoch 0001] Cost = 2.60606e-01 | ||Ax-b|| = 1.81431e-01 | L2 = 1.99569e-01 | Consensus = 2.27270e-04 | wall_s = 1.56 | log_dt_s = 1.56
+[2026-03-20 02:22:29] [Epoch 0002] Cost = 2.36320e-01 | ||Ax-b|| = 1.83486e-01 | L2 = 2.00834e-01 | Consensus = 8.14452e-05 | wall_s = 2.60 | log_dt_s = 1.04
+[2026-03-20 02:22:30] [Epoch 0003] Cost = 2.13466e-01 | ||Ax-b|| = 1.88146e-01 | L2 = 2.04736e-01 | Consensus = 2.75109e-05 | wall_s = 3.51 | log_dt_s = 0.92
+[2026-03-20 02:22:32] Final parameters written to: /gpfs/home/tonshen/Seawulf_simulation/tmp/repro_2b2_metstyle_confirm/final_params.json
+[2026-03-20 02:22:32] Analysis report written to: /gpfs/home/tonshen/Seawulf_simulation/tmp/repro_2b2_metstyle_confirm/analysis.txt
+[2026-03-20 02:22:32] Finished. Outputs written to: /gpfs/home/tonshen/Seawulf_simulation/tmp/repro_2b2_metstyle_confirm

@@ -1,0 +1,36 @@
+[2026-03-20 02:14:35] System variant: cluster13_real_prefix_partition_1x1
+[2026-03-20 02:14:35] static_ops: Partition_comparison_qjit/1b1/static_ops_cluster13_real_1x1.py
+[2026-03-20 02:14:35] agents per row/column: 1
+[2026-03-20 02:14:35] local data qubits: 13
+[2026-03-20 02:14:35] ansatz: brickwall_ry_cz (Trainable RY layer followed by open-chain CZ)
+[2026-03-20 02:14:35] layers: 1
+[2026-03-20 02:14:35] repeat_cz_each_layer: False
+[2026-03-20 02:14:35] init: mode=metadata_gaussian, angle_center=1.57079633, angle_noise_std=0.05000000, sigma_value=None, sigma_noise_std=0.05000000, lambda_value=None, lambda_noise_std=0.05000000
+[2026-03-20 02:14:35] local_ry_support: ()
+[2026-03-20 02:14:35] scaffold_edges: ((0, 1), (2, 3), (4, 5), (6, 7), (8, 9), (10, 11), (1, 2), (3, 4), (5, 6), (7, 8), (9, 10), (11, 12))
+[2026-03-20 02:14:35] term counts by block: [[6]]
+[2026-03-20 02:14:35] row graph: {0: []}
+[2026-03-20 02:14:35] column graph: {0: []}
+[2026-03-20 02:14:35] Analytic spectrum: lambda_min=0.05000000, lambda_max=1.00000000, cond(A)=20.00000000
+[2026-03-20 02:14:35] Per Hadamard-test statevector (14 wires): 256.00 KiB
+[2026-03-20 02:14:35] Conservative peak per Hadamard test: 512.00 KiB
+[2026-03-20 02:14:35] QNode evaluations per compute_loss call: 49
+[2026-03-20 02:14:35] Sequential statevector traffic per compute_loss call: 12.25 MiB
+[2026-03-20 02:14:35] These memory figures are for compute_loss only; compute_grad will be higher.
+[2026-03-20 02:14:35] Computing true solution x* via scipy.sparse.linalg.spsolve on the reconstructed global matrix.
+[2026-03-20 02:14:35] Global right-hand side shape: (8192,)
+[2026-03-20 02:14:35] True solution shape: (8192,)
+[2026-03-20 02:14:36] Metropolis weight matrix Wm =
+[[1.]]
+[2026-03-20 02:14:36] Starting prebuild_local_evals() for distributed Hadamard-test bundles.
+[2026-03-20 02:14:36] Finished prebuild_local_evals() in 0.08 s.
+[2026-03-20 02:14:36] Starting initial forward loss evaluation.
+[2026-03-20 02:14:41] Finished initial forward loss evaluation in 5.08 s.
+[2026-03-20 02:14:41] [Init] Initial Loss = 3.09437e-02
+[2026-03-20 02:14:41] Starting initial gradient evaluation.
+[2026-03-20 02:14:53] Catalyst gradient compilation failed for this workload; switching the optimization backend to jax.jit(value_and_grad). Summary: CompileError: Illegal updateAnalysis prev:{[-1]:Pointer} new: {[-1]:Integer} | val:   %32 = shl i64 %28, 1 origin=  store i64 %32, ptr %19, align 4, !tbaa !4
+[2026-03-20 02:15:00] Finished initial gradient evaluation in 18.97 s.
+[2026-03-20 02:15:01] [Epoch 0001] Cost = 2.65802e-02 | ||Ax-b|| = 1.63034e-01 | L2 = 1.78934e-01 | Consensus = 0.00000e+00 | wall_s = 0.94 | log_dt_s = 0.94
+[2026-03-20 02:15:02] Final parameters written to: /gpfs/home/tonshen/Seawulf_simulation/tmp/repro_env_patch2/1b1_repro/final_params.json
+[2026-03-20 02:15:03] Analysis report written to: /gpfs/home/tonshen/Seawulf_simulation/tmp/repro_env_patch2/1b1_repro/analysis.txt
+[2026-03-20 02:15:03] Finished. Outputs written to: /gpfs/home/tonshen/Seawulf_simulation/tmp/repro_env_patch2/1b1_repro

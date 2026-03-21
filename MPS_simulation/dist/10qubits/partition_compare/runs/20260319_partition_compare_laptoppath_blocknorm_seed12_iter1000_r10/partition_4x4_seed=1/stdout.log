@@ -98,3 +98,9 @@ Iteration  940 | cost=0.0943064156964 | residual=0.42020788523 | consensus=0.003
 Iteration  950 | cost=0.0942012966385 | residual=0.4195127676 | consensus=0.00428292005796 | error=0.432975641592
 Iteration  960 | cost=0.0941045596098 | residual=0.418929303338 | consensus=0.00457372471993 | error=0.432330407877
 Iteration  970 | cost=0.0940214366324 | residual=0.418417478074 | consensus=0.00378233225529 | error=0.431756240137
+Iteration  980 | cost=0.0939617007219 | residual=0.418035896623 | consensus=0.00475466625712 | error=0.431326153549
+Iteration  990 | cost=0.0938983637265 | residual=0.417684896838 | consensus=0.00399877934208 | error=0.430928822798
+Iteration 1000 | cost=0.0938546615187 | residual=0.417419646418 | consensus=0.00360349303209 | error=0.430627873577
+Wrote JSON report to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_laptoppath_blocknorm_seed12_iter1000_r10/partition_4x4_seed=1/optimize.json
+Wrote markdown report to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_laptoppath_blocknorm_seed12_iter1000_r10/partition_4x4_seed=1/optimize_report.md
+Wrote run summary to /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/10qubits/partition_compare/runs/20260319_partition_compare_laptoppath_blocknorm_seed12_iter1000_r10/partition_4x4_seed=1/run_summary.json

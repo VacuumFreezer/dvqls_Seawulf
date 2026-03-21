@@ -78,6 +78,11 @@ def _apply_scaffold_edges(scaffold_edges):
         qml.CZ(wires=[left, right])
 
 
+def _apply_scaffold_edges_reverse(scaffold_edges):
+    for left, right in reversed(tuple(scaffold_edges)):
+        qml.CZ(wires=[left, right])
+
+
 def _normalize_local_wire_subset(local_ry_support, n_input_qubit: int) -> tuple[int, ...]:
     if local_ry_support is None:
         return ()
@@ -91,6 +96,40 @@ def _normalize_local_wire_subset(local_ry_support, n_input_qubit: int) -> tuple[
             )
         subset.append(idx)
     return tuple(sorted(set(subset)))
+
+
+def _apply_rotation_layer(weights_row, n_input_qubit: int, *, kind: str, local_ry_support: tuple[int, ...]):
+    if kind == ANSATZ_CLUSTER_LOCAL_RY:
+        for wire in local_ry_support:
+            qml.RY(weights_row[wire], wires=wire)
+        return
+
+    for wire in range(n_input_qubit):
+        if kind in (ANSATZ_CLUSTER_RZ, ANSATZ_CLUSTER_RZ_LOCAL_RY):
+            qml.RZ(weights_row[wire], wires=wire)
+        else:
+            qml.RY(weights_row[wire], wires=wire)
+
+    if kind == ANSATZ_CLUSTER_RZ_LOCAL_RY:
+        for wire in local_ry_support:
+            qml.RY(weights_row[wire], wires=wire)
+
+
+def _apply_rotation_layer_inverse(weights_row, n_input_qubit: int, *, kind: str, local_ry_support: tuple[int, ...]):
+    if kind == ANSATZ_CLUSTER_LOCAL_RY:
+        for wire in reversed(local_ry_support):
+            qml.RY(-weights_row[wire], wires=wire)
+        return
+
+    if kind == ANSATZ_CLUSTER_RZ_LOCAL_RY:
+        for wire in reversed(local_ry_support):
+            qml.RY(-weights_row[wire], wires=wire)
+
+    for wire in range(n_input_qubit - 1, -1, -1):
+        if kind in (ANSATZ_CLUSTER_RZ, ANSATZ_CLUSTER_RZ_LOCAL_RY):
+            qml.RZ(-weights_row[wire], wires=wire)
+        else:
+            qml.RY(-weights_row[wire], wires=wire)
 
 
 def apply_selected_ansatz(
@@ -128,19 +167,43 @@ def apply_selected_ansatz(
     for layer in range(int(weights.shape[0])):
         if repeat_cz_each_layer:
             _apply_scaffold_edges(scaffold_edges)
-        if kind == ANSATZ_CLUSTER_LOCAL_RY:
-            for wire in local_ry_support:
-                qml.RY(weights[layer, wire], wires=wire)
-            continue
+        _apply_rotation_layer(weights[layer], n_input_qubit, kind=kind, local_ry_support=local_ry_support)
 
-        for wire in range(n_input_qubit):
-            if kind in (ANSATZ_CLUSTER_RZ, ANSATZ_CLUSTER_RZ_LOCAL_RY):
-                qml.RZ(weights[layer, wire], wires=wire)
-            else:
-                qml.RY(weights[layer, wire], wires=wire)
-        if kind == ANSATZ_CLUSTER_RZ_LOCAL_RY:
-            for wire in local_ry_support:
-                qml.RY(weights[layer, wire], wires=wire)
+
+def apply_selected_ansatz_inverse(
+    weights,
+    n_input_qubit: int,
+    *,
+    ansatz_kind: str = ANSATZ_CLUSTER_RZ,
+    repeat_cz_each_layer: bool = False,
+    local_ry_support=None,
+    scaffold_edges=None,
+):
+    kind = normalize_ansatz_kind(ansatz_kind)
+    local_ry_support = _normalize_local_wire_subset(local_ry_support, n_input_qubit)
+    scaffold_edges = _normalize_scaffold_edges(scaffold_edges, n_input_qubit)
+
+    if kind in (ANSATZ_CLUSTER_RZ_LOCAL_RY, ANSATZ_CLUSTER_LOCAL_RY) and not local_ry_support:
+        raise ValueError(f"Ansatz `{kind}` requires a non-empty local_ry_support wire set.")
+
+    if kind == ANSATZ_BRICKWALL_RY_CZ:
+        for layer in range(int(weights.shape[0]) - 1, -1, -1):
+            _apply_scaffold_edges_reverse(scaffold_edges)
+            for wire in range(n_input_qubit - 1, -1, -1):
+                qml.RY(-weights[layer, wire], wires=wire)
+        return
+
+    for layer in range(int(weights.shape[0]) - 1, -1, -1):
+        _apply_rotation_layer_inverse(weights[layer], n_input_qubit, kind=kind, local_ry_support=local_ry_support)
+        if repeat_cz_each_layer:
+            _apply_scaffold_edges_reverse(scaffold_edges)
+
+    if not repeat_cz_each_layer:
+        _apply_scaffold_edges_reverse(scaffold_edges)
+
+    if kind != ANSATZ_NO_HADAMARD_RY:
+        for w in range(n_input_qubit - 1, -1, -1):
+            qml.Hadamard(wires=w)
 
 
 def dev_cpu(nwires: int):
@@ -200,8 +263,28 @@ class HadamardTest:
             scaffold_edges=self.scaffold_edges,
         )
 
+    def W_var_block_inverse(self, betas):
+        apply_selected_ansatz_inverse(
+            betas,
+            self.n_input_qubit,
+            ansatz_kind=self.ansatz_kind,
+            repeat_cz_each_layer=self.repeat_cz_each_layer,
+            local_ry_support=self.local_ry_support,
+            scaffold_edges=self.scaffold_edges,
+        )
+
     def V_var_block(self, alphas):
         apply_selected_ansatz(
+            alphas,
+            self.n_input_qubit,
+            ansatz_kind=self.ansatz_kind,
+            repeat_cz_each_layer=self.repeat_cz_each_layer,
+            local_ry_support=self.local_ry_support,
+            scaffold_edges=self.scaffold_edges,
+        )
+
+    def V_var_block_inverse(self, alphas):
+        apply_selected_ansatz_inverse(
             alphas,
             self.n_input_qubit,
             ansatz_kind=self.ansatz_kind,
@@ -229,7 +312,7 @@ class OmegaTerm(HadamardTest):
         def qnode(b1, b2):
             qml.Hadamard(wires=anc)
             qml.ctrl(self.W_var_block, control=anc)(b2)
-            qml.ctrl(qml.adjoint(self.W_var_block), control=anc)(b1)
+            qml.ctrl(self.W_var_block_inverse, control=anc)(b1)
             qml.Hadamard(wires=anc)
             return qml.expval(qml.PauliZ(anc))
 
@@ -258,7 +341,7 @@ class DeltaTerm(HadamardTest):
             qml.Hadamard(wires=anc)
             qml.PhaseShift(phase, wires=anc)
             qml.ctrl(self.U_op, control=anc)()
-            qml.ctrl(qml.adjoint(self.W_var_block), control=anc)(bk)
+            qml.ctrl(self.W_var_block_inverse, control=anc)(bk)
             qml.Hadamard(wires=anc)
             return qml.expval(qml.PauliZ(anc))
 
@@ -296,7 +379,7 @@ class ZetaTerm(HadamardTest):
             qml.Hadamard(wires=anc)
             qml.ctrl(self.W_var_block, control=anc)(bk)
             qml.ctrl(A_l_dag, control=anc)()
-            qml.ctrl(qml.adjoint(self.V_var_block), control=anc)(a)
+            qml.ctrl(self.V_var_block_inverse, control=anc)(a)
             qml.Hadamard(wires=anc)
             return qml.expval(qml.PauliZ(anc))
 
@@ -329,7 +412,7 @@ class TauTerm(HadamardTest):
             qml.PhaseShift(phase, wires=anc)
             qml.ctrl(self.U_op, control=anc)()
             qml.ctrl(A_l_dag, control=anc)()
-            qml.ctrl(qml.adjoint(self.V_var_block), control=anc)(alphas)
+            qml.ctrl(self.V_var_block_inverse, control=anc)(alphas)
             qml.Hadamard(wires=anc)
             return qml.expval(qml.PauliZ(anc))
 

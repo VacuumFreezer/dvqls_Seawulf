@@ -1,0 +1,73 @@
+{
+  "static_ops": "Partition_comparison_qjit/1b1/static_ops_cluster13_real_1x1.py",
+  "out": "/gpfs/home/tonshen/Seawulf_simulation/tmp/repro_env_patch2/1b1_repro",
+  "topology": "line",
+  "epochs": 1,
+  "seed": 0,
+  "lr": 0.01,
+  "decay": 0.9999,
+  "log_every": 1,
+  "ansatz": "brickwall_ry_cz",
+  "layers": 1,
+  "repeat_cz_each_layer": 0,
+  "init_mode": "metadata_gaussian",
+  "init_angle_center": 1.5707963267948966,
+  "init_angle_noise_std": 0.05,
+  "init_sigma_value": null,
+  "init_sigma_noise_std": 0.05,
+  "init_lambda_value": null,
+  "init_lambda_noise_std": 0.05,
+  "local_ry_support": [],
+  "scaffold_edges": [
+    [
+      0,
+      1
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      8,
+      9
+    ],
+    [
+      10,
+      11
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      7,
+      8
+    ],
+    [
+      9,
+      10
+    ],
+    [
+      11,
+      12
+    ]
+  ],
+  "n_agents": 1,
+  "n_qubits": 13
+}

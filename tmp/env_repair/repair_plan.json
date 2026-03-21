@@ -1,0 +1,190 @@
+{
+  "version": "1",
+  "pip_version": "25.3",
+  "install": [
+    {
+      "download_info": {
+        "url": "https://files.pythonhosted.org/packages/47/05/ecc73c5bc4c3392b86cfec1f7e5229381e3bffeb2786c287b898a75d9905/pennylane-0.44.1-py3-none-any.whl",
+        "archive_info": {
+          "hash": "sha256=ec54742b614bdfa39431e48cc4e2652c657e35e6dbecef663da679232cbab8c7",
+          "hashes": {
+            "sha256": "ec54742b614bdfa39431e48cc4e2652c657e35e6dbecef663da679232cbab8c7"
+          }
+        }
+      },
+      "is_direct": false,
+      "is_yanked": false,
+      "requested": true,
+      "metadata": {
+        "metadata_version": "2.4",
+        "name": "pennylane",
+        "version": "0.44.1",
+        "dynamic": [
+          "license-file"
+        ],
+        "summary": "PennyLane is a cross-platform Python library for quantum computing, quantum machine learning, and quantum chemistry. Train a quantum computer the same way as a neural network.",
+        "description": "<p align=\"center\">\n  <!-- Tests (GitHub actions) -->\n  <a href=\"https://github.com/PennyLaneAI/pennylane/actions?query=workflow%3ATests\">\n    <img src=\"https://img.shields.io/github/actions/workflow/status/PennyLaneAI/PennyLane/tests.yml?branch=master&style=flat-square\" />\n  </a>\n  <!-- CodeCov -->\n  <a href=\"https://codecov.io/gh/PennyLaneAI/pennylane\">\n    <img src=\"https://img.shields.io/codecov/c/github/PennyLaneAI/pennylane/master.svg?logo=codecov&style=flat-square\" />\n  </a>\n  <!-- ReadTheDocs -->\n  <a href=\"https://docs.pennylane.ai/en/latest\">\n    <img src=\"https://readthedocs.com/projects/xanaduai-pennylane/badge/?version=latest&style=flat-square\" />\n  </a>\n  <!-- PyPI -->\n  <a href=\"https://pypi.org/project/PennyLane\">\n    <img src=\"https://img.shields.io/pypi/v/PennyLane.svg?style=flat-square\" />\n  </a>\n  <!-- Forum -->\n  <a href=\"https://discuss.pennylane.ai\">\n    <img src=\"https://img.shields.io/discourse/https/discuss.pennylane.ai/posts.svg?logo=discourse&style=flat-square\" />\n  </a>\n  <!-- License -->\n  <a href=\"https://www.apache.org/licenses/LICENSE-2.0\">\n    <img src=\"https://img.shields.io/pypi/l/PennyLane.svg?logo=apache&style=flat-square\" />\n  </a>\n</p>\n\n<p align=\"center\">\n  <a href=\"https://pennylane.ai\">PennyLane</a> is a cross-platform Python library for\n  <a href=\"https://pennylane.ai/qml/quantum-computing/\">quantum computing</a>,\n  <a href=\"https://pennylane.ai/qml/quantum-machine-learning/\">quantum machine learning</a>,\n  and\n  <a href=\"https://pennylane.ai/qml/quantum-chemistry/\">quantum chemistry</a>.\n</p>\n\n<p align=\"center\">\n  The definitive open-source framework for quantum programming. Built by researchers, for research.\n  <img src=\"https://raw.githubusercontent.com/PennyLaneAI/pennylane/master/doc/_static/readme/pl-logo-lightmode.png#gh-light-mode-only\" width=\"700px\">\n    <!--\n    Use a relative import for the dark mode image. When loading on PyPI, this\n    will fail automatically and show nothing.\n    -->\n    <img src=\"./doc/_static/readme/pl-logo-darkmode.png#gh-dark-mode-only\" width=\"700px\" onerror=\"this.style.display='none'\" alt=\"\"/>\n</p>\n\n## Key Features\n\n<img src=\"https://raw.githubusercontent.com/PennyLaneAI/pennylane/master/doc/_static/code.png\" width=\"400px\" align=\"right\">\n\n- <strong>*Program quantum computers*</strong>. Build quantum circuits with a wide range of state preparations, gates, and measurements. Run on [high-performance simulators](https://pennylane.ai/performance/) or [various hardware devices](https://pennylane.ai/plugins/), with advanced features like mid-circuit measurements and error mitigation.\n\n- <strong>*Master quantum algorithms*</strong>. From NISQ to fault-tolerant quantum computing, unlock algorithms for research and application. Analyze performance, visualize circuits, and access tools for [quantum chemistry](https://docs.pennylane.ai/en/stable/introduction/chemistry.html) and [algorithm development](https://pennylane.ai/search/?contentType=DEMO&categories=algorithms&sort=publication_date).\n\n- <strong>*Machine learning with quantum hardware and simulators*</strong>. Integrate with **PyTorch**, **TensorFlow**, **JAX**, **Keras**, or **NumPy** to define and train hybrid models using quantum-aware optimizers and hardware-compatible gradients for advanced research tasks. [Quantum machine learning quickstart](https://docs.pennylane.ai/en/stable/introduction/interfaces.html).\n\n\n- <strong>*Quantum datasets*</strong>. Access high-quality, pre-simulated datasets to decrease time-to-research and accelerate algorithm development. [Browse the datasets](https://pennylane.ai/datasets/) or contribute your own data.\n\n\n- <strong>*Compilation and performance*</strong>. Experimental support for just-in-time\n  compilation. Compile your entire hybrid workflow, with support for \n  advanced features such as adaptive circuits, real-time measurement \n  feedback, and unbounded loops. See\n  [Catalyst](https://github.com/pennylaneai/catalyst) for more details.\n\nFor more details and additional features, please see the [PennyLane website](https://pennylane.ai/features/).\n\n## Installation\n\nPennyLane requires Python version 3.11 and above. Installation of PennyLane, as well as all\ndependencies, can be done using pip:\n\n```console\npython -m pip install pennylane\n```\n\n## Docker support\n\nDocker images are found on the [PennyLane Docker Hub page](https://hub.docker.com/u/pennylaneai), where there is also a detailed description about PennyLane Docker support. [See description here](https://docs.pennylane.ai/projects/lightning/en/stable/dev/docker.html) for more information.\n\n## Getting started\n\nGet up and running quickly with PennyLane by following our [quickstart guide](https://docs.pennylane.ai/en/stable/introduction/pennylane.html), designed to introduce key features and help you start building quantum circuits right away.\n\nWhether you're exploring quantum machine learning (QML), quantum computing, or quantum chemistry, PennyLane offers a wide range of tools and resources to support your research:\n\n<img src=\"https://raw.githubusercontent.com/PennyLaneAI/pennylane/master/doc/_static/readme/research.png\" align=\"right\" width=\"350px\">\n\n### Key Resources:\n\n* [Research-oriented Demos](https://pennylane.ai/qml/demonstrations)\n* [Learn Quantum Programming](https://pennylane.ai/qml/) with the [Codebook](https://pennylane.ai/codebook/) and [Coding Challenges](https://pennylane.ai/challenges/)\n* [Frequently Asked Questions](https://pennylane.ai/faq)\n* [Glossary](https://pennylane.ai/qml/glossary)\n* [Videos](https://pennylane.ai/qml/videos)\n\n\nYou can also check out our [documentation](https://pennylane.readthedocs.io) for [quickstart\nguides](https://pennylane.readthedocs.io/en/stable/introduction/pennylane.html) to using PennyLane,\nand detailed developer guides on [how to write your\nown](https://pennylane.readthedocs.io/en/stable/development/plugins.html) PennyLane-compatible\nquantum device.\n\n## Demos\n\nTake a deeper dive into quantum computing by exploring cutting-edge algorithms using PennyLane and quantum hardware. [Explore PennyLane demos](https://pennylane.ai/qml/demonstrations).\n\n<a href=\"https://pennylane.ai/qml/demonstrations\">\n  <img src=\"https://raw.githubusercontent.com/PennyLaneAI/pennylane/master/doc/_static/readme/demos.png\" width=\"900px\">\n</a>\n\nIf you would like to contribute your own demo, see our [demo submission\nguide](https://pennylane.ai/qml/demos_submission).\n\n## Research Applications\n\nPennyLane is at the forefront of research in quantum computing, quantum machine learning, and quantum chemistry. Explore how PennyLane is used for research in the following publications:\n\n- **Quantum Computing**: [Fast quantum circuit cutting with randomized measurements](https://quantum-journal.org/papers/q-2023-03-02-934/)\n\n- **Quantum Machine Learning**: [Better than classical? The subtle art of benchmarking quantum machine learning models](https://arxiv.org/abs/2403.07059)\n\n- **Quantum Chemistry**: [Accelerating Quantum Computations of Chemistry Through Regularized Compressed Double Factorization](https://quantum-journal.org/papers/q-2024-06-13-1371/)\n\nImpactful research drives PennyLane. Let us know what features you need for your research on [GitHub](https://github.com/PennyLaneAI/pennylane/issues/new?assignees=&labels=enhancement+%3Asparkles%3A&projects=&template=feature_request.yml) or on our [website](https://pennylane.ai/research).\n\n\n\n## Contributing to PennyLane\n\nWe welcome contributions—simply fork the PennyLane repository, and then make a [pull\nrequest](https://help.github.com/articles/about-pull-requests/) containing your contribution. All\ncontributors to PennyLane will be listed as authors on the releases. All users who contribute\nsignificantly to the code (new plugins, new functionality, etc.) will be listed on the PennyLane\narXiv paper.\n\nWe also encourage bug reports, suggestions for new features and enhancements, and even links to cool\nprojects or applications built on PennyLane.\n\nSee our [contributions\npage](https://github.com/PennyLaneAI/pennylane/blob/master/.github/CONTRIBUTING.md) and our\n[Development guide](https://pennylane.readthedocs.io/en/stable/development/guide.html) for more\ndetails.\n\n## Support\n\n- **Source Code:** https://github.com/PennyLaneAI/pennylane\n- **Issue Tracker:** https://github.com/PennyLaneAI/pennylane/issues\n\nIf you are having issues, please let us know by posting the issue on our GitHub issue tracker.\n\nJoin the [PennyLane Discussion Forum](https://discuss.pennylane.ai/) to connect with the quantum community, get support, and engage directly with our team. It’s the perfect place to share ideas, ask questions, and collaborate with fellow researchers and developers!\n\nNote that we are committed to providing a friendly, safe, and welcoming environment for all.\nPlease read and respect the [Code of Conduct](.github/CODE_OF_CONDUCT.md).\n\n## Authors\n\nPennyLane is the work of [many contributors](https://github.com/PennyLaneAI/pennylane/graphs/contributors).\n\nIf you are doing research using PennyLane, please cite [our paper](https://arxiv.org/abs/1811.04968):\n\n> Ville Bergholm et al. *PennyLane: Automatic differentiation of hybrid quantum-classical\n> computations.* 2018. arXiv:1811.04968\n\n## License\n\nPennyLane is **free** and **open source**, released under the Apache License, Version 2.0.\n",
+        "description_content_type": "text/markdown",
+        "maintainer_email": "\"Xanadu Quantum Technologies Inc.\" <software@xanadu.ai>",
+        "license_expression": "Apache-2.0",
+        "license_file": [
+          "LICENSE"
+        ],
+        "classifier": [
+          "Development Status :: 4 - Beta",
+          "Environment :: Console",
+          "Intended Audience :: Science/Research",
+          "Natural Language :: English",
+          "Operating System :: POSIX",
+          "Operating System :: MacOS :: MacOS X",
+          "Operating System :: POSIX :: Linux",
+          "Operating System :: Microsoft :: Windows",
+          "Programming Language :: Python",
+          "Programming Language :: Python :: 3",
+          "Programming Language :: Python :: 3.11",
+          "Programming Language :: Python :: 3.12",
+          "Programming Language :: Python :: 3.13",
+          "Programming Language :: Python :: 3.14",
+          "Programming Language :: Python :: 3 :: Only",
+          "Topic :: Scientific/Engineering :: Physics"
+        ],
+        "requires_dist": [
+          "scipy",
+          "networkx",
+          "rustworkx>=0.14.0",
+          "autograd",
+          "appdirs",
+          "autoray==0.8.2",
+          "cachetools",
+          "pennylane-lightning>=0.44",
+          "requests",
+          "tomlkit",
+          "typing_extensions",
+          "packaging",
+          "diastatic-malt==2.15.2",
+          "gast",
+          "numpy",
+          "cvxpy; extra == \"kernels\"",
+          "cvxopt; extra == \"kernels\"",
+          "jax==0.7.1; extra == \"docs\"",
+          "jaxlib==0.7.1; extra == \"docs\"",
+          "mistune==0.8.4; extra == \"docs\"",
+          "m2r2; extra == \"docs\"",
+          "numpy<=2.2,>=2.0; extra == \"docs\"",
+          "pygments-github-lexers; extra == \"docs\"",
+          "pyzx; extra == \"docs\"",
+          "docutils==0.20; extra == \"docs\"",
+          "sphinx==8.1; extra == \"docs\"",
+          "sphinx-automodapi==0.19; extra == \"docs\"",
+          "sphinx-copybutton; extra == \"docs\"",
+          "sphinxcontrib-bibtex==2.6.3; extra == \"docs\"",
+          "sphinxcontrib-applehelp==2.0.0; extra == \"docs\"",
+          "sphinxcontrib-devhelp==2.0.0; extra == \"docs\"",
+          "sphinxcontrib-qthelp==2.0.0; extra == \"docs\"",
+          "sphinxcontrib-htmlhelp==2.1.0; extra == \"docs\"",
+          "sphinxcontrib-serializinghtml==2.0.0; extra == \"docs\"",
+          "torch==2.9.0; extra == \"docs\"",
+          "tensornetwork==0.3; extra == \"docs\"",
+          "jinja2>=3.1; extra == \"docs\"",
+          "networkx==3.1; extra == \"docs\"",
+          "pennylane-sphinx-theme; extra == \"docs\"",
+          "tomli~=2.0.0; extra == \"docs\"",
+          "sphinxext-opengraph==0.9.0; extra == \"docs\"",
+          "matplotlib==3.10.0; extra == \"docs\"",
+          "galois; extra == \"docs\"",
+          "requests==2.32.4; extra == \"docs\""
+        ],
+        "requires_python": ">=3.11",
+        "project_url": [
+          "repository, https://github.com/PennyLaneAI/pennylane"
+        ],
+        "provides_extra": [
+          "kernels",
+          "docs"
+        ]
+      }
+    },
+    {
+      "download_info": {
+        "url": "https://files.pythonhosted.org/packages/92/09/376c152588f0d9e7c0f97b2c6ab37d1f295a4def3d0210fff98ba2db0eeb/pennylane_catalyst-0.14.1-cp311-cp311-manylinux_2_28_x86_64.whl",
+        "archive_info": {
+          "hash": "sha256=a412c177d3cb7160212e520fb78bec5dc78c324bf1bc1d4930e047f172bfd3f6",
+          "hashes": {
+            "sha256": "a412c177d3cb7160212e520fb78bec5dc78c324bf1bc1d4930e047f172bfd3f6"
+          }
+        }
+      },
+      "is_direct": false,
+      "is_yanked": false,
+      "requested": true,
+      "metadata": {
+        "metadata_version": "2.4",
+        "name": "pennylane_catalyst",
+        "version": "0.14.1",
+        "dynamic": [
+          "classifier",
+          "description",
+          "description-content-type",
+          "home-page",
+          "license",
+          "license-file",
+          "maintainer",
+          "maintainer-email",
+          "requires-dist",
+          "requires-python",
+          "summary"
+        ],
+        "summary": "A JIT compiler for hybrid quantum programs in PennyLane",
+        "description": "[![Tests](https://github.com/PennyLaneAI/catalyst/actions/workflows/check-catalyst.yaml/badge.svg?branch=main&event=push)](https://github.com/PennyLaneAI/catalyst/actions/workflows/check-catalyst.yaml)\n[![Coverage](https://img.shields.io/codecov/c/github/PennyLaneAI/catalyst/main.svg?logo=codecov&style=flat-square)](https://codecov.io/gh/PennyLaneAI/catalyst)\n[![Documentation](https://readthedocs.com/projects/xanaduai-catalyst/badge/?version=latest)](https://docs.pennylane.ai/projects/catalyst)\n[![DOI](https://joss.theoj.org/papers/10.21105/joss.06720/status.svg)](https://doi.org/10.21105/joss.06720)\n[![PyPI](https://img.shields.io/pypi/v/PennyLane-Catalyst.svg?style=flat-square)](https://pypi.org/project/PennyLane-Catalyst)\n[![Forum](https://img.shields.io/discourse/https/discuss.pennylane.ai/posts.svg?logo=discourse&style=flat-square)](https://discuss.pennylane.ai)\n[![License](https://img.shields.io/pypi/l/PennyLane.svg?logo=apache&style=flat-square)](https://www.apache.org/licenses/LICENSE-2.0)\n\n<p align=\"center\">\n  <img src=\"https://raw.githubusercontent.com/PennyLaneAI/catalyst/main/doc/_static/pl-catalyst-logo-lightmode.png#gh-light-mode-only\" width=\"700px\">\n    <!--\n    Use a relative import for the dark mode image. When loading on PyPI, this\n    will fail automatically and show nothing.\n    -->\n  <img src=\"./doc/_static/pl-catalyst-logo-darkmode.png#gh-dark-mode-only\" width=\"700px\" onerror=\"this.style.display='none'\" alt=\"\"/>\n</p>\n\nCatalyst is an experimental package that enables just-in-time (JIT) compilation of hybrid\nquantum-classical programs.\n\n**Catalyst is currently under heavy development — if you have suggestions on the API or use-cases\nyou'd like to be covered, please open an GitHub issue or reach out. We'd love to hear about how\nyou're using the library, collaborate on development, or integrate additional devices and\nfrontends.**\n\n## Key Features\n\n- Compile the entire quantum-classical workflow, including any optimization loops.\n\n- Use Catalyst alongside PennyLane directly from Python. Simply decorate quantum code and hybrid\n  functions with `@qjit`, leading to significant performance improvements over standard Python\n  execution.\n\n- Access advanced control flow that supports both quantum and classical instructions.\n\n- Infrastructure for both quantum *and* classical compilation, allowing you to compile quantum\n  circuits that contain control flow.\n\n- Built to be end-to-end differentiable.\n\n- Support for [PennyLane-Lightning](https://github.com/PennyLaneAI/pennylane-lightning) high performance\n  simulators, and [Amazon Braket](https://amazon-braket-pennylane-plugin-python.readthedocs.io)\n  devices. Additional hardware support, including QPUs, to come.\n\n## Overview\n\nCatalyst currently consists of the following components:\n\n- [Catalyst Compiler](https://docs.pennylane.ai/projects/catalyst/en/latest/modules/mlir.html).\n\n  The core Catalyst compiler is built using [MLIR](https://mlir.llvm.org/), with the addition of a\n  quantum dialect used to represent quantum instructions. This allows for a high-level intermediate\n  representation of the classical and quantum components of the program, resulting in advantages\n  during optimization. Once optimized, the compiler lowers the representation down to LLVM +\n  [QIR](https://www.qir-alliance.org/), and a machine binary is produced.\n\n- [Catalyst\n  Runtime](https://docs.pennylane.ai/projects/catalyst/en/latest/modules/runtime.html).\n\n  The runtime is a C++ runtime with multiple-device support based on QIR that enables the execution\n  of Catalyst-compiled quantum programs. A complete list of all backend devices along with the quantum\n  instruction set supported by these runtime implementations can be found by visiting\n  [the runtime documentation](https://docs.pennylane.ai/projects/catalyst/en/latest/modules/runtime.html).\n\nIn addition, we also provide a Python frontend for [PennyLane](https://pennylane.ai) and [JAX](https://jax.readthedocs.io):\n\n- [PennyLane JAX frontend](https://docs.pennylane.ai/projects/catalyst/en/latest/modules/frontend.html).\n\n  A Python library that provides a `@qjit` decorator to just-in-time compile PennyLane hybrid\n  quantum-classical programs. In addition, the frontend package provides Python functions for\n  defining Catalyst-compatible control flow structures, gradient, and mid-circuit measurement.\n\n## Installation\n\nCatalyst is officially supported on Linux (x86_64, aarch64) and macOS (arm64) platforms,\nand pre-built binaries are being distributed via the Python Package Index (PyPI) for Python versions 3.11 and\nhigher. To install it, simply run the following ``pip`` command:\n\n```console\npip install pennylane-catalyst\n```\n\nCatalyst no longer supports macOS with x86_64 architecture after 0.11.0. This includes Macs running on Intel processors.\nIf you would like to use Catalyst on these systems, please install Catalyst version 0.11.0, PennyLane version 0.41.0, PennyLane-Lightning\nversion 0.41.0, and Jax version 0.4.28:\n\n```console\npip install pennylane-catalyst==0.11.0\npip install pennylane==0.41.0\npip install pennylane-lightning==0.41.0\npip install jax==0.4.28\n```\n\nIf you wish to contribute to Catalyst or develop against our runtime or compiler, instructions for\n[building from source](https://docs.pennylane.ai/projects/catalyst/en/latest/dev/installation.html#minimal-building-from-source-guide)\nare also available.\n\n## Trying Catalyst with PennyLane\n\nTo get started using the Catalyst JIT compiler from Python, check out our [quick start\nguide](https://docs.pennylane.ai/projects/catalyst/en/latest/dev/quick_start.html), as well as our\nvarious examples and tutorials in our [documentation](https://docs.pennylane.ai/projects/catalyst).\n\nFor an introduction to quantum computing and quantum machine learning, you can also visit the\nPennyLane website for [tutorials, videos, and demonstrations](https://pennylane.ai/qml).\n\n## Roadmap\n\n- **Frontend:** As we continue to build out Catalyst, the PennyLane frontend will likely be\n  upstreamed into PennyLane proper, providing native JIT functionality built-in to PennyLane. The\n  Catalyst compiler and runtime will remain part of the Catalyst project. *If you are interested in\n  working on additional frontends for Catalyst, please get in touch.*\n\n- **Compiler:** We will continue to build out the compiler stack, and add quantum compilation\n  routines. This includes an API for providing or writing Catalyst-compatible compilation routines.\n  In addition, we will be improving the autodifferentiation support, and adding support for\n  classical autodiff, additional quantum gradients, and quantum-aware optimization methods.\n\n- **Runtime:** We will be adding support for more devices, including quantum hardware devices. In\n  addition, we will be building out support for hetereogeneous execution. *If you are interested in\n  working on connecting a quantum device with Catalyst, please get in touch.*\n\nTo get the details right, we need your help — please send us your use cases by starting a\nconversation, or trying Catalyst out.\n\n## Contributing to Catalyst\n\nWe welcome contributions — simply fork the Catalyst repository, and then make a [pull\nrequest](https://help.github.com/articles/about-pull-requests/) containing your contribution.\n\nWe also encourage bug reports, suggestions for new features and enhancements.\n\n## Support\n\n- **Source Code:** https://github.com/PennyLaneAI/catalyst\n- **Issue Tracker:** https://github.com/PennyLaneAI/catalyst/issues\n\nIf you are having issues, please let us know by posting the issue on our GitHub issue tracker.\n\nWe also have a [PennyLane discussion forum](https://discuss.pennylane.ai)—come join the community\nand chat with the PennyLane team.\n\nNote that we are committed to providing a friendly, safe, and welcoming environment for all. Please\nread and respect the [Code of Conduct](.github/CODE_OF_CONDUCT.md).\n\n## Authors\n\nCatalyst is the work of [many contributors](https://github.com/PennyLaneAI/catalyst/graphs/contributors).\n\nIf you are doing research using Catalyst, please cite our paper:\n\n```bibtex\n@article{\n  Ittah2024,\n  doi = {10.21105/joss.06720},\n  url = {https://doi.org/10.21105/joss.06720},\n  year = {2024},\n  publisher = {The Open Journal},\n  volume = {9},\n  number = {99},\n  pages = {6720},\n  author = {David Ittah and Ali Asadi and Erick Ochoa Lopez and Sergei Mironov and Samuel Banning and Romain Moyard and Mai Jacob Peng and Josh Izaac},\n  title = {Catalyst: a Python JIT compiler for auto-differentiable hybrid quantum programs},\n  journal = {Journal of Open Source Software}\n}\n```\n\n## License\n\nCatalyst is **free** and **open source**, released under the Apache License, Version 2.0.\n\n## Acknowledgements\n\nCatalyst makes use of the following libraries and tools, which are under their own respective\nlicenses:\n\n- [JAX](https://github.com/jax-ml/jax)\n- [TensorFlow](https://github.com/tensorflow/tensorflow)\n- [OpenXLA](https://github.com/openxla/xla)\n- [LLVM/MLIR](https://github.com/llvm/llvm-project)\n- [EnzymeAD](https://github.com/EnzymeAD/Enzyme)\n- [pybind11](https://github.com/pybind/pybind11)\n- [nanobind](https://github.com/wjakob/nanobind)\n- [accelerate-lapacke](https://github.com/lepus2589/accelerate-lapacke)\n- [LAPACK](https://github.com/Reference-LAPACK/lapack)\n- [TOML++](https://github.com/marzer/tomlplusplus)\n- [json](https://github.com/nlohmann/json)\n- [stim](https://github.com/quantumlib/Stim)\n",
+        "description_content_type": "text/markdown",
+        "home_page": "https://github.com/PennyLaneAI/catalyst",
+        "maintainer": "Xanadu Inc.",
+        "maintainer_email": "software@xanadu.ai",
+        "license": "Apache License 2.0",
+        "license_file": [
+          "LICENSE"
+        ],
+        "classifier": [
+          "Environment :: Console",
+          "Natural Language :: English",
+          "Intended Audience :: Science/Research",
+          "Development Status :: 3 - Alpha",
+          "Operating System :: POSIX",
+          "Operating System :: POSIX :: Linux",
+          "Programming Language :: Python :: 3",
+          "Programming Language :: Python :: 3.11",
+          "Programming Language :: Python :: 3.12",
+          "Programming Language :: Python :: 3.13",
+          "Programming Language :: Python :: 3.14",
+          "Programming Language :: Python :: 3 :: Only"
+        ],
+        "requires_dist": [
+          "pennylane>=0.44.1",
+          "pennylane-lightning>=0.44",
+          "jax==0.7.1",
+          "jaxlib==0.7.1",
+          "numpy!=2.0.0",
+          "scipy-openblas32>=0.3.26",
+          "diastatic-malt==2.15.2",
+          "gast",
+          "xdsl==0.55.4",
+          "xdsl-jax==0.1.1"
+        ],
+        "requires_python": ">=3.11"
+      }
+    }
+  ],
+  "environment": {
+    "implementation_name": "cpython",
+    "implementation_version": "3.11.14",
+    "os_name": "posix",
+    "platform_machine": "x86_64",
+    "platform_release": "5.14.0-570.33.2.el9_6.x86_64",
+    "platform_system": "Linux",
+    "platform_version": "#1 SMP PREEMPT_DYNAMIC Fri Aug 15 17:42:51 UTC 2025",
+    "python_full_version": "3.11.14",
+    "platform_python_implementation": "CPython",
+    "python_version": "3.11",
+    "sys_platform": "linux"
+  }
+}

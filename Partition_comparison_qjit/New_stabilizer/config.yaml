@@ -1,0 +1,36 @@
+tag: xzx13_fresh_partition_compare
+run_root: Partition_comparison_qjit/New_stabilizer/run
+python_bin: /gpfs/home/tonshen/.conda/envs/pennylane/bin/python
+
+problems:
+  - name: 1d1
+    static_ops: Partition_comparison_qjit/New_stabilizer/1d1/static_ops_13q_xzx_fresh_1x1.py
+  - name: 2d2
+    static_ops: Partition_comparison_qjit/New_stabilizer/2d2/static_ops_13q_xzx_fresh_2x2.py
+  - name: 4d4
+    static_ops: Partition_comparison_qjit/New_stabilizer/4d4/static_ops_13q_xzx_fresh_4x4.py
+  - name: 8d8
+    static_ops: Partition_comparison_qjit/New_stabilizer/8d8/static_ops_13q_xzx_fresh_8x8.py
+
+cases:
+  - name: qjit_formal
+    script: Partition_comparison_qjit/New_stabilizer/seawulf_partition_comparison_qjit.py
+
+common:
+  topology: line
+  ansatz: brickwall_ry_cz
+  layers: 1
+  epochs: 1000
+  log_every: 5
+  repeat_cz_each_layer: false
+  local_ry_support: ""
+
+lr_sets:
+  - tag: lr1e-2
+    lr: 0.01
+
+decay_sets:
+  - tag: decay0p9999
+    decay: 0.9999
+
+seeds: [0]
