@@ -13,6 +13,16 @@ try:
 except Exception:  # pragma: no cover - verifier can run without PennyLane
     qml = None
 
+try:
+    from scipy import sparse as sp
+    from scipy.sparse.linalg import spsolve
+
+    SCIPY_AVAILABLE = True
+except Exception:  # pragma: no cover - optional at verification/build time
+    sp = None
+    spsolve = None
+    SCIPY_AVAILABLE = False
+
 
 N_TOTAL_QUBITS = 13
 ALPHA = 21.0 / 40.0
@@ -21,6 +31,14 @@ BASE_BLOCK_ANGLE = np.pi / 2.0
 
 PLUS_STATE_QUBITS = frozenset((1, 3, 4, 6, 7, 9, 10, 12, 13))
 ZERO_STATE_QUBITS = frozenset((2, 5, 8, 11))
+
+B_STATE_ORIGINAL = "original"
+B_STATE_ALL_PLUS = "all_plus"
+VALID_B_STATE_KINDS = (B_STATE_ORIGINAL, B_STATE_ALL_PLUS)
+
+B_PREP_RY = "ry"
+B_PREP_HADAMARD = "hadamard"
+VALID_B_PREP_KINDS = (B_PREP_RY, B_PREP_HADAMARD)
 
 STABILIZER_TERMS: Tuple[Tuple[str, Dict[int, str]], ...] = (
     ("K_1", {1: "X", 2: "Z", 3: "X"}),
@@ -57,8 +75,25 @@ def bitstring_label(index: int, width: int) -> str:
     return "".join(str(bit) for bit in bits) if bits else "global"
 
 
-def _global_reference_angle(global_qubit: int, *, last_angle: float) -> float:
+def _normalize_b_state_kind(kind: str) -> str:
+    value = str(kind).strip().lower()
+    if value not in VALID_B_STATE_KINDS:
+        raise ValueError(f"Unsupported b_state_kind {kind!r}; expected one of {VALID_B_STATE_KINDS}.")
+    return value
+
+
+def _normalize_b_prep_kind(kind: str) -> str:
+    value = str(kind).strip().lower()
+    if value not in VALID_B_PREP_KINDS:
+        raise ValueError(f"Unsupported b_prep_kind {kind!r}; expected one of {VALID_B_PREP_KINDS}.")
+    return value
+
+
+def _global_reference_angle(global_qubit: int, *, state_kind: str, last_angle: float) -> float:
+    state_kind = _normalize_b_state_kind(state_kind)
     qubit = int(global_qubit)
+    if state_kind == B_STATE_ALL_PLUS:
+        return BASE_BLOCK_ANGLE
     if qubit == N_TOTAL_QUBITS:
         return float(last_angle)
     if qubit in ZERO_STATE_QUBITS:
@@ -70,17 +105,31 @@ def _single_qubit_amplitude(angle: float, bit: int) -> float:
     return float(np.cos(angle / 2.0) if int(bit) == 0 else np.sin(angle / 2.0))
 
 
-def _product_state_angles_for_global_qubits(global_qubits: Sequence[int], *, last_angle: float) -> np.ndarray:
+def _product_state_angles_for_global_qubits(
+    global_qubits: Sequence[int],
+    *,
+    state_kind: str,
+    last_angle: float,
+) -> np.ndarray:
     return np.asarray(
-        [_global_reference_angle(global_qubit, last_angle=float(last_angle)) for global_qubit in global_qubits],
+        [
+            _global_reference_angle(global_qubit, state_kind=state_kind, last_angle=float(last_angle))
+            for global_qubit in global_qubits
+        ],
         dtype=np.float64,
     )
 
 
-def _prefix_block_scale(prefix_bits: Sequence[int], *, last_angle: float, include_solution_scale: float = 1.0) -> float:
+def _prefix_block_scale(
+    prefix_bits: Sequence[int],
+    *,
+    state_kind: str,
+    last_angle: float,
+    include_solution_scale: float = 1.0,
+) -> float:
     scale = 1.0
     for global_qubit, bit in enumerate(prefix_bits, start=1):
-        angle = _global_reference_angle(global_qubit, last_angle=float(last_angle))
+        angle = _global_reference_angle(global_qubit, state_kind=state_kind, last_angle=float(last_angle))
         scale *= _single_qubit_amplitude(angle, int(bit))
     return float(include_solution_scale) * float(scale)
 
@@ -200,6 +249,26 @@ def _product_ry_factory(data_wires: Sequence[int], angles: Sequence[float]):
     return gate
 
 
+def _product_hadamard_factory(data_wires: Sequence[int], angles: Sequence[float]):
+    angles = tuple(float(angle) for angle in angles)
+
+    def gate():
+        if qml is None:
+            raise RuntimeError("PennyLane is required to execute state-prep gate factories.")
+        if not angles:
+            return qml.Identity(wires=data_wires[0])
+        for local_wire, angle in enumerate(angles):
+            if abs(float(angle)) <= 1e-15:
+                continue
+            if abs(float(angle) - BASE_BLOCK_ANGLE) > 1e-12:
+                raise ValueError(
+                    "Hadamard-based b-preparation only supports local amplitudes prepared by 0 or pi/2 rotations."
+                )
+            qml.Hadamard(wires=data_wires[local_wire])
+
+    return gate
+
+
 def _local_chain_edge_layers(
     index_qubits: int,
 ) -> tuple[tuple[tuple[int, int], ...], tuple[tuple[int, int], ...], tuple[tuple[int, int], ...]]:
@@ -262,6 +331,42 @@ class LinearSystemData:
         self._mat_cache: Dict[int, np.ndarray] = {}
         self._block_b_cache: Dict[int, np.ndarray] = {}
         self._true_solution_cache: np.ndarray | None = None
+
+    def _local_masks(self, local_pauli_map: Dict[int, str]) -> tuple[int, int]:
+        x_mask = 0
+        z_mask = 0
+        for wire in range(int(self.n_data_qubits)):
+            bit = 1 << (int(self.n_data_qubits) - wire - 1)
+            label = local_pauli_map.get(wire, "I")
+            if label == "X":
+                x_mask |= bit
+            elif label == "Z":
+                z_mask |= bit
+        return x_mask, z_mask
+
+    @staticmethod
+    def _popcount(value: int) -> int:
+        return bin(int(value)).count("1")
+
+    def reconstruct_global_entries(self) -> dict[tuple[int, int], complex]:
+        n_agents = int(self.n)
+        n_local = int(self.n_data_qubits)
+        local_dim = 1 << n_local
+        entries: dict[tuple[int, int], complex] = {}
+
+        for row_id in range(n_agents):
+            for col_id in range(n_agents):
+                for coeff, local_paulis in zip(self.coeffs[row_id][col_id], self.local_pauli_maps_grid[row_id][col_id]):
+                    x_mask, z_mask = self._local_masks(local_paulis)
+                    for local_col in range(local_dim):
+                        local_row = local_col ^ x_mask
+                        phase = -1.0 if self._popcount(local_col & z_mask) % 2 else 1.0
+                        global_row = row_id * local_dim + local_row
+                        global_col = col_id * local_dim + local_col
+                        key = (global_row, global_col)
+                        entries[key] = entries.get(key, 0.0 + 0.0j) + (complex(coeff) * phase)
+
+        return {key: value for key, value in entries.items() if abs(value) > 1e-14}
 
     def _make_wrapper(self, gate_factories):
         def wrapper(term_id):
@@ -327,6 +432,22 @@ class LinearSystemData:
     def true_solution_vector(self) -> np.ndarray:
         if self._true_solution_cache is not None:
             return self._true_solution_cache
+
+        if SCIPY_AVAILABLE:
+            entries = self.reconstruct_global_entries()
+            dim = int(self.n) * (1 << int(self.n_data_qubits))
+            rows = []
+            cols = []
+            data = []
+            for (row, col), value in entries.items():
+                rows.append(int(row))
+                cols.append(int(col))
+                data.append(complex(value))
+            matrix = sp.coo_matrix((np.asarray(data), (np.asarray(rows), np.asarray(cols))), shape=(dim, dim)).tocsr()
+            global_b = np.asarray(self.get_global_b_vector(), dtype=np.complex128)
+            self._true_solution_cache = np.asarray(spsolve(matrix, global_b), dtype=np.complex128)
+            return self._true_solution_cache
+
         blocks = []
         for row in range(self.n):
             blocks.append(float(self.row_x_scales[row]) * np.asarray(self.row_x_state[row], dtype=complex))
@@ -334,12 +455,20 @@ class LinearSystemData:
         return self._true_solution_cache
 
 
-def build_partition_namespace(index_qubits: int, *, epsilon: float = DEFAULT_EPSILON) -> dict:
+def build_partition_namespace(
+    index_qubits: int,
+    *,
+    epsilon: float = DEFAULT_EPSILON,
+    b_state_kind: str = B_STATE_ORIGINAL,
+    b_prep_kind: str = B_PREP_RY,
+) -> dict:
     k = int(index_qubits)
     if k < 0 or k > 3:
         raise ValueError(f"Expected index_qubits in {{0, 1, 2, 3}}, got {k}.")
 
     epsilon = float(epsilon)
+    b_state_kind = _normalize_b_state_kind(b_state_kind)
+    b_prep_kind = _normalize_b_prep_kind(b_prep_kind)
     n_agents = 1 << k
     n_data_qubits = N_TOTAL_QUBITS - k
     data_wires = list(range(n_data_qubits))
@@ -355,9 +484,21 @@ def build_partition_namespace(index_qubits: int, *, epsilon: float = DEFAULT_EPS
         global_terms.append((beta, dict(pauli_map), label))
     global_terms.append((epsilon, {13: "Z"}, "Z_13"))
 
-    b_local_angles = _product_state_angles_for_global_qubits(local_global_qubits, last_angle=BASE_BLOCK_ANGLE)
-    x_local_angles = _product_state_angles_for_global_qubits(local_global_qubits, last_angle=final_angle)
-    b_gate = _product_ry_factory(data_wires, b_local_angles)
+    b_local_angles = _product_state_angles_for_global_qubits(
+        local_global_qubits, state_kind=b_state_kind, last_angle=BASE_BLOCK_ANGLE
+    )
+    if b_state_kind == B_STATE_ORIGINAL:
+        x_local_angles = _product_state_angles_for_global_qubits(
+            local_global_qubits, state_kind=b_state_kind, last_angle=final_angle
+        )
+    else:
+        x_local_angles = np.asarray(b_local_angles, dtype=np.float64)
+
+    if b_prep_kind == B_PREP_RY:
+        b_gate = _product_ry_factory(data_wires, b_local_angles)
+    else:
+        b_gate = _product_hadamard_factory(data_wires, b_local_angles)
+
     x_gate = _product_ry_factory(data_wires, x_local_angles)
     b_local_state = _product_state_vector(b_local_angles)
     x_local_state = _product_state_vector(x_local_angles)
@@ -370,8 +511,18 @@ def build_partition_namespace(index_qubits: int, *, epsilon: float = DEFAULT_EPS
 
     for index in range(n_agents):
         bits = bitstring_tuple(index, k)
-        row_b_norms.append(_prefix_block_scale(bits, last_angle=BASE_BLOCK_ANGLE))
-        row_x_scales.append(_prefix_block_scale(bits, last_angle=BASE_BLOCK_ANGLE, include_solution_scale=solution_scale))
+        row_b_norms.append(_prefix_block_scale(bits, state_kind=b_state_kind, last_angle=BASE_BLOCK_ANGLE))
+        if b_state_kind == B_STATE_ORIGINAL:
+            row_x_scales.append(
+                _prefix_block_scale(
+                    bits,
+                    state_kind=b_state_kind,
+                    last_angle=BASE_BLOCK_ANGLE,
+                    include_solution_scale=solution_scale,
+                )
+            )
+        else:
+            row_x_scales.append(_prefix_block_scale(bits, state_kind=b_state_kind, last_angle=BASE_BLOCK_ANGLE))
 
     b_weights = [
         [
@@ -465,9 +616,10 @@ def build_partition_namespace(index_qubits: int, *, epsilon: float = DEFAULT_EPS
     init_overrides = {}
     for agent_id in range(n_agents):
         overrides = {}
-        for local_wire, global_qubit in enumerate(local_global_qubits):
-            if global_qubit in ZERO_STATE_QUBITS:
-                overrides[local_wire] = 0.0
+        if b_state_kind == B_STATE_ORIGINAL:
+            for local_wire, global_qubit in enumerate(local_global_qubits):
+                if global_qubit in ZERO_STATE_QUBITS:
+                    overrides[local_wire] = 0.0
         if overrides:
             init_overrides[agent_id] = overrides
 
@@ -483,6 +635,8 @@ def build_partition_namespace(index_qubits: int, *, epsilon: float = DEFAULT_EPS
         "block_phase_by_row": [1.0 for _ in range(n_agents)],
         "row_b_norms": row_b_norms,
         "row_x_scales": row_x_scales,
+        "b_state_kind": b_state_kind,
+        "b_prep_kind": b_prep_kind,
         "epsilon": epsilon,
         "alpha": ALPHA,
         "beta": beta,
@@ -497,7 +651,10 @@ def build_partition_namespace(index_qubits: int, *, epsilon: float = DEFAULT_EPS
         "spectrum": spectrum_info,
         "real_problem": True,
         "recommended_ansatz": "brickwall_ry_cz",
-        "exact_solution_family": "single_ry_layer_product_state",
+        "recommended_layers": 4,
+        "exact_solution_family": (
+            "single_ry_layer_product_state" if b_state_kind == B_STATE_ORIGINAL else "computed_via_sparse_solve"
+        ),
         "init_sigma_target": 1.0,
         "init_angle_fill": init_angle_fill,
         "agent_init_overrides": init_overrides,
@@ -512,7 +669,7 @@ def build_partition_namespace(index_qubits: int, *, epsilon: float = DEFAULT_EPS
         b_gates_grid=raw_b_gates,
         data_wires=data_wires,
         b_weights_grid=b_weights,
-        name=f"xzx13_real_prefix_partition_{partition_label}",
+        name=f"xzx13_{b_state_kind}_{b_prep_kind}_prefix_partition_{partition_label}",
         metadata=metadata,
         local_pauli_maps_grid=local_pauli_maps_grid,
         global_term_breakdown=term_breakdown_grid,
@@ -535,6 +692,8 @@ def build_partition_namespace(index_qubits: int, *, epsilon: float = DEFAULT_EPS
         "ROW_X_SCALES": tuple(float(x) for x in row_x_scales),
         "TRUE_SOLUTION_FINAL_ANGLE": final_angle,
         "TRUE_SOLUTION_SCALE": solution_scale,
+        "B_STATE_KIND": b_state_kind,
+        "B_PREP_KIND": b_prep_kind,
         "GLOBAL_TERMS": global_terms,
         "SPECTRUM_INFO": spectrum_info,
         "RAW_GATES": gates_grid,

@@ -35,11 +35,11 @@ except Exception as exc:  # pragma: no cover - env dependent fallback
     qml.qjit = _identity_qjit
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from Partition_comparison_qjit.benchmark_13q_real_cluster_common import load_module_from_path
+from Partition_comparison_qjit.Old_asymmetry_stabilizer.benchmark_13q_real_cluster_common import load_module_from_path
 from common.DIGing_jax import (
     build_metropolis_matrix,
     consensus_mix_metropolis_jax,
@@ -71,7 +71,7 @@ except Exception:
     spsolve = None
     SCIPY_AVAILABLE = False
 
-from Partition_comparison_qjit.verify_partition_consistency import reconstruct_global_entries
+from Partition_comparison_qjit.Old_asymmetry_stabilizer.verify_partition_consistency import reconstruct_global_entries
 
 
 def load_static_ops(spec: str):

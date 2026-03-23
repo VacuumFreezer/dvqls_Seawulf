@@ -7,11 +7,11 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from Partition_comparison_qjit.benchmark_13q_real_cluster_common import load_module_from_path
+from Partition_comparison_qjit.Old_asymmetry_stabilizer.benchmark_13q_real_cluster_common import load_module_from_path
 
 DEFAULT_STATIC_OPS = (
     "Partition_comparison_qjit/1b1/static_ops_cluster13_real_1x1.py",

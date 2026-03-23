@@ -14,14 +14,20 @@ _DEV = {}
 ANSATZ_CLUSTER_RZ = "cluster_rz"
 ANSATZ_CLUSTER_RY = "cluster_ry"
 ANSATZ_BRICKWALL_RY_CZ = "brickwall_ry_cz"
+ANSATZ_HADAMARD_BRICKWALL_RY_CZ = "hadamard_brickwall_ry_cz"
+ANSATZ_BRICKWALL_RY_CNOT = "brickwall_ry_cnot"
 ANSATZ_NO_HADAMARD_RY = "no_hadamard_ry"
+ANSATZ_RY_ONLY = "ry_only"
 ANSATZ_CLUSTER_RZ_LOCAL_RY = "cluster_rz_local_ry"
 ANSATZ_CLUSTER_LOCAL_RY = "cluster_local_ry"
 VALID_ANSATZ_KINDS = (
     ANSATZ_CLUSTER_RZ,
     ANSATZ_CLUSTER_RY,
     ANSATZ_BRICKWALL_RY_CZ,
+    ANSATZ_HADAMARD_BRICKWALL_RY_CZ,
+    ANSATZ_BRICKWALL_RY_CNOT,
     ANSATZ_NO_HADAMARD_RY,
+    ANSATZ_RY_ONLY,
     ANSATZ_CLUSTER_RZ_LOCAL_RY,
     ANSATZ_CLUSTER_LOCAL_RY,
 )
@@ -42,6 +48,12 @@ def describe_ansatz(ansatz_kind: str) -> str:
         return "Hadamard scaffold + open-chain CZ + trainable RY"
     if kind == ANSATZ_BRICKWALL_RY_CZ:
         return "Trainable RY layer followed by open-chain CZ"
+    if kind == ANSATZ_HADAMARD_BRICKWALL_RY_CZ:
+        return "Single Hadamard layer followed by trainable RY layers with open-chain CZ"
+    if kind == ANSATZ_BRICKWALL_RY_CNOT:
+        return "Trainable RY layer followed by open-chain CNOT"
+    if kind == ANSATZ_RY_ONLY:
+        return "Trainable RY layers only"
     if kind == ANSATZ_CLUSTER_RZ_LOCAL_RY:
         return "Hadamard scaffold + open-chain CZ + trainable RZ with local RY correction"
     if kind == ANSATZ_CLUSTER_LOCAL_RY:
@@ -81,6 +93,16 @@ def _apply_scaffold_edges(scaffold_edges):
 def _apply_scaffold_edges_reverse(scaffold_edges):
     for left, right in reversed(tuple(scaffold_edges)):
         qml.CZ(wires=[left, right])
+
+
+def _apply_scaffold_edges_cnot(scaffold_edges):
+    for left, right in scaffold_edges:
+        qml.CNOT(wires=[left, right])
+
+
+def _apply_scaffold_edges_cnot_reverse(scaffold_edges):
+    for left, right in reversed(tuple(scaffold_edges)):
+        qml.CNOT(wires=[left, right])
 
 
 def _normalize_local_wire_subset(local_ry_support, n_input_qubit: int) -> tuple[int, ...]:
@@ -157,6 +179,28 @@ def apply_selected_ansatz(
             _apply_scaffold_edges(scaffold_edges)
         return
 
+    if kind == ANSATZ_HADAMARD_BRICKWALL_RY_CZ:
+        for wire in range(n_input_qubit):
+            qml.Hadamard(wires=wire)
+        for layer in range(int(weights.shape[0])):
+            for wire in range(n_input_qubit):
+                qml.RY(weights[layer, wire], wires=wire)
+            _apply_scaffold_edges(scaffold_edges)
+        return
+
+    if kind == ANSATZ_BRICKWALL_RY_CNOT:
+        for layer in range(int(weights.shape[0])):
+            for wire in range(n_input_qubit):
+                qml.RY(weights[layer, wire], wires=wire)
+            _apply_scaffold_edges_cnot(scaffold_edges)
+        return
+
+    if kind == ANSATZ_RY_ONLY:
+        for layer in range(int(weights.shape[0])):
+            for wire in range(n_input_qubit):
+                qml.RY(weights[layer, wire], wires=wire)
+        return
+
     if kind != ANSATZ_NO_HADAMARD_RY:
         for w in range(n_input_qubit):
             qml.Hadamard(wires=w)
@@ -189,6 +233,28 @@ def apply_selected_ansatz_inverse(
     if kind == ANSATZ_BRICKWALL_RY_CZ:
         for layer in range(int(weights.shape[0]) - 1, -1, -1):
             _apply_scaffold_edges_reverse(scaffold_edges)
+            for wire in range(n_input_qubit - 1, -1, -1):
+                qml.RY(-weights[layer, wire], wires=wire)
+        return
+
+    if kind == ANSATZ_HADAMARD_BRICKWALL_RY_CZ:
+        for layer in range(int(weights.shape[0]) - 1, -1, -1):
+            _apply_scaffold_edges_reverse(scaffold_edges)
+            for wire in range(n_input_qubit - 1, -1, -1):
+                qml.RY(-weights[layer, wire], wires=wire)
+        for wire in range(n_input_qubit - 1, -1, -1):
+            qml.Hadamard(wires=wire)
+        return
+
+    if kind == ANSATZ_BRICKWALL_RY_CNOT:
+        for layer in range(int(weights.shape[0]) - 1, -1, -1):
+            _apply_scaffold_edges_cnot_reverse(scaffold_edges)
+            for wire in range(n_input_qubit - 1, -1, -1):
+                qml.RY(-weights[layer, wire], wires=wire)
+        return
+
+    if kind == ANSATZ_RY_ONLY:
+        for layer in range(int(weights.shape[0]) - 1, -1, -1):
             for wire in range(n_input_qubit - 1, -1, -1):
                 qml.RY(-weights[layer, wire], wires=wire)
         return

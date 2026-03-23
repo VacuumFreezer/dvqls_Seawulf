@@ -19,7 +19,7 @@ cases:
 common:
   topology: line
   ansatz: brickwall_ry_cz
-  layers: 1
+  layers: 4
   epochs: 1000
   log_every: 5
   repeat_cz_each_layer: false

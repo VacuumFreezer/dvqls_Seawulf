@@ -236,9 +236,8 @@ def prebuild_local_evals(
             _ENTRY_L.append(int(len(A_gates)))
 
 
-@qml.qjit
-def eval_total_loss(current_params, *, SYSTEM=None, interface="jax"):
-    """Global loss reducer over the flat prebuilt tables."""
+def eval_total_loss_plain(current_params, *, SYSTEM=None, interface="jax"):
+    """Plain Python/JAX entry point for the global loss reducer."""
     del SYSTEM
 
     total = 0.0
@@ -247,3 +246,11 @@ def eval_total_loss(current_params, *, SYSTEM=None, interface="jax"):
         agent_params = _build_agent_params(entry_idx, current_params, interface=interface)
         total = total + _combine_local_loss(entry_idx, agent_params, interface=interface)
     return total
+
+
+@qml.qjit
+def eval_total_loss(current_params, *, SYSTEM=None, interface="jax"):
+    """Global loss reducer over the flat prebuilt tables."""
+    del SYSTEM
+
+    return eval_total_loss_plain(current_params, interface=interface)
