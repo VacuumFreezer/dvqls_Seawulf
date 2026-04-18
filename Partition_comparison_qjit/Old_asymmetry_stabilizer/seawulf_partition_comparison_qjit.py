@@ -53,8 +53,10 @@ import objective.builder_cluster_nodispatch as ib
 from objective.circuits_cluster_nodispatch import (
     ANSATZ_BRICKWALL_RY_CZ,
     ANSATZ_CLUSTER_LOCAL_RY,
+    ANSATZ_PAPER_FIG3_RY_CZ,
     ANSATZ_CLUSTER_RZ,
     ANSATZ_CLUSTER_RZ_LOCAL_RY,
+    ANSATZ_RY_ONLY,
     VALID_ANSATZ_KINDS,
     apply_selected_ansatz,
     describe_ansatz,
@@ -173,13 +175,46 @@ VALID_INIT_MODES = (
 )
 
 
-def _build_metadata_angle_base(metadata, layers: int, n_qubits: int, agent_id: int) -> np.ndarray:
+def _angle_tensor_shape(ansatz_kind: str, layers: int, n_qubits: int) -> tuple[int, ...]:
+    kind = normalize_ansatz_kind(ansatz_kind)
+    if kind == ANSATZ_PAPER_FIG3_RY_CZ:
+        return (int(layers), 2, int(n_qubits))
+    return (int(layers), int(n_qubits))
+
+
+def ansatz_structure_summary(ansatz_kind: str, layers: int, n_qubits: int) -> dict[str, int]:
+    kind = normalize_ansatz_kind(ansatz_kind)
+    logical_layers = int(layers)
+    if kind == ANSATZ_PAPER_FIG3_RY_CZ:
+        trainable_ry_sublayers = 2 * logical_layers
+        cz_sublayers = 2 * logical_layers
+        trainable_params_per_ansatz = 2 * logical_layers * int(n_qubits)
+    elif kind == ANSATZ_RY_ONLY:
+        trainable_ry_sublayers = logical_layers
+        cz_sublayers = 0
+        trainable_params_per_ansatz = logical_layers * int(n_qubits)
+    else:
+        trainable_ry_sublayers = logical_layers
+        cz_sublayers = logical_layers
+        trainable_params_per_ansatz = logical_layers * int(n_qubits)
+    return {
+        "logical_layers": logical_layers,
+        "trainable_ry_sublayers": int(trainable_ry_sublayers),
+        "entangling_cz_sublayers": int(cz_sublayers),
+        "trainable_parameters_per_ansatz": int(trainable_params_per_ansatz),
+    }
+
+
+def _build_metadata_angle_base(metadata, *, ansatz_kind: str, layers: int, n_qubits: int, agent_id: int) -> np.ndarray:
     init_angle_fill = float(metadata.get("init_angle_fill", 0.0))
     agent_init_overrides = metadata.get("agent_init_overrides", {})
-    base = np.full((layers, n_qubits), init_angle_fill, dtype=np.float64)
+    base = np.full(_angle_tensor_shape(ansatz_kind, layers=layers, n_qubits=n_qubits), init_angle_fill, dtype=np.float64)
     overrides = agent_init_overrides.get(str(agent_id), agent_init_overrides.get(agent_id, {}))
     for wire, value in dict(overrides).items():
-        base[0, int(wire)] = float(value)
+        if base.ndim == 3:
+            base[0, :, int(wire)] = float(value)
+        else:
+            base[0, int(wire)] = float(value)
     return base
 
 
@@ -189,6 +224,7 @@ def initialize_cluster_params_jax(
     layers: int,
     seed: int = 0,
     *,
+    ansatz_kind: str = ANSATZ_BRICKWALL_RY_CZ,
     init_mode: str = INIT_MODE_UNIFORM_PM_PI,
     init_angle_center: float = (np.pi / 2.0),
     init_angle_noise_std: float = 0.05,
@@ -203,6 +239,8 @@ def initialize_cluster_params_jax(
     metadata = getattr(system, "metadata", {})
     sigma_target = float(metadata.get("init_sigma_target", 1.0 / np.sqrt(2.0)))
     init_mode = str(init_mode)
+    ansatz_kind = normalize_ansatz_kind(ansatz_kind)
+    angle_shape = _angle_tensor_shape(ansatz_kind, layers=layers, n_qubits=n_qubits)
     if init_mode not in VALID_INIT_MODES:
         raise ValueError(f"Unknown init_mode `{init_mode}`. Expected one of {VALID_INIT_MODES}.")
 
@@ -223,28 +261,34 @@ def initialize_cluster_params_jax(
                 maxval = jnp.pi
                 a = jax.random.uniform(
                     sub_a,
-                    shape=(layers, n_qubits),
+                    shape=angle_shape,
                     minval=minval,
                     maxval=maxval,
                     dtype=jnp.float64,
                 )
                 b = jax.random.uniform(
                     sub_b,
-                    shape=(layers, n_qubits),
+                    shape=angle_shape,
                     minval=minval,
                     maxval=maxval,
                     dtype=jnp.float64,
                 )
             else:
                 if init_mode == INIT_MODE_METADATA_GAUSSIAN:
-                    base = _build_metadata_angle_base(metadata, layers=layers, n_qubits=n_qubits, agent_id=agent_id)
+                    base = _build_metadata_angle_base(
+                        metadata,
+                        ansatz_kind=ansatz_kind,
+                        layers=layers,
+                        n_qubits=n_qubits,
+                        agent_id=agent_id,
+                    )
                 else:
-                    base = np.full((layers, n_qubits), float(init_angle_center), dtype=np.float64)
+                    base = np.full(angle_shape, float(init_angle_center), dtype=np.float64)
                 a = jnp.asarray(base) + float(init_angle_noise_std) * jax.random.normal(
-                    sub_a, shape=(layers, n_qubits), dtype=jnp.float64
+                    sub_a, shape=angle_shape, dtype=jnp.float64
                 )
                 b = jnp.asarray(base) + float(init_angle_noise_std) * jax.random.normal(
-                    sub_b, shape=(layers, n_qubits), dtype=jnp.float64
+                    sub_b, shape=angle_shape, dtype=jnp.float64
                 )
 
             sigma_base = sigma_target if init_sigma_value is None else float(init_sigma_value)
@@ -544,13 +588,17 @@ def write_analysis_report(
             for key, value in getattr(system, "metadata", {}).items()
             if key not in {"reference_row_gates", "exact_solution_gates_by_col"}
         }
+        ansatz_summary = ansatz_structure_summary(args.ansatz, layers=int(args.layers), n_qubits=len(data_wires))
         out.write("13-qubit real cluster partition-comparison run\n")
         out.write(f"static_ops: {ops_module_name}\n")
         out.write(f"system name: {getattr(system, 'name', 'unknown')}\n")
         out.write(f"n agents: {system.n}\n")
         out.write(f"local data qubits: {len(data_wires)}\n")
         out.write(f"ansatz: {args.ansatz} ({describe_ansatz(args.ansatz)})\n")
-        out.write(f"layers: {int(args.layers)}\n")
+        out.write(f"requested logical layers: {ansatz_summary['logical_layers']}\n")
+        out.write(f"actual trainable RY sublayers per ansatz: {ansatz_summary['trainable_ry_sublayers']}\n")
+        out.write(f"actual CZ sublayers per ansatz: {ansatz_summary['entangling_cz_sublayers']}\n")
+        out.write(f"trainable parameters in one ansatz: {ansatz_summary['trainable_parameters_per_ansatz']}\n")
         out.write(f"repeat_cz_each_layer: {bool(args.repeat_cz_each_layer)}\n")
         out.write(f"init_mode: {args.init_mode}\n")
         out.write(f"init_angle_center: {float(args.init_angle_center):.8f}\n")
@@ -666,7 +714,14 @@ def main(argv=None):
     logger.info(f"agents per row/column: {n_agents}")
     logger.info(f"local data qubits: {n_qubits}")
     logger.info(f"ansatz: {args.ansatz} ({describe_ansatz(args.ansatz)})")
-    logger.info(f"layers: {int(args.layers)}")
+    ansatz_summary = ansatz_structure_summary(args.ansatz, layers=int(args.layers), n_qubits=n_qubits)
+    logger.info(
+        "ansatz structure: "
+        f"logical_layers={ansatz_summary['logical_layers']}, "
+        f"trainable_ry_sublayers={ansatz_summary['trainable_ry_sublayers']}, "
+        f"cz_sublayers={ansatz_summary['entangling_cz_sublayers']}, "
+        f"params_per_ansatz={ansatz_summary['trainable_parameters_per_ansatz']}"
+    )
     logger.info(f"repeat_cz_each_layer: {bool(args.repeat_cz_each_layer)}")
     logger.info(
         "init: "
@@ -718,6 +773,10 @@ def main(argv=None):
         "log_every": int(args.log_every),
         "ansatz": args.ansatz,
         "layers": int(args.layers),
+        "ansatz_logical_layers": int(ansatz_summary["logical_layers"]),
+        "ansatz_trainable_ry_sublayers": int(ansatz_summary["trainable_ry_sublayers"]),
+        "ansatz_cz_sublayers": int(ansatz_summary["entangling_cz_sublayers"]),
+        "ansatz_trainable_parameters_per_ansatz": int(ansatz_summary["trainable_parameters_per_ansatz"]),
         "repeat_cz_each_layer": bool(args.repeat_cz_each_layer),
         "init_mode": args.init_mode,
         "init_angle_center": float(args.init_angle_center),
@@ -743,6 +802,7 @@ def main(argv=None):
         n_qubits=n_qubits,
         layers=int(args.layers),
         seed=args.seed,
+        ansatz_kind=args.ansatz,
         init_mode=args.init_mode,
         init_angle_center=float(args.init_angle_center),
         init_angle_noise_std=float(args.init_angle_noise_std),

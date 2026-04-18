@@ -1,0 +1,8 @@
+=========================================
+JobID: 1783968  ArrayTask: 5
+Host: dn061
+Start: Sun Mar 29 03:44:21 EDT 2026
+Tasks file: /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/51qubits/run/20260329_51q_first100_seedspread_1_1000/tasks.txt
+CMD: python /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/51qubits/quimb_dist_eq26_j0p1_two_layer_ry_cz_true_scales_51q.py --global-qubits 51 --local-qubits 50 --j-coupling 0.1 --kappa 20.0 --row-self-loop-weight 1.0 --learning-rate 0.02 --iterations 100 --report-every 5 --init-seed 625 --sigma-init 0.7071067811865475 --angle-init-radius 0.5235987755982988 --out-json /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/51qubits/run/20260329_51q_first100_seedspread_1_1000/benchmarks/j0p1_two_layer_ry_cz_true_scales_51q_pi6_lr0p02_iter100_seed625.json --out-figure /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/51qubits/run/20260329_51q_first100_seedspread_1_1000/benchmarks/j0p1_two_layer_ry_cz_true_scales_51q_pi6_lr0p02_iter100_seed625_cost.png --out-report /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/51qubits/run/20260329_51q_first100_seedspread_1_1000/benchmarks/j0p1_two_layer_ry_cz_true_scales_51q_pi6_lr0p02_iter100_seed625_report.md
+=========================================
+End: Sun Mar 29 05:33:11 EDT 2026

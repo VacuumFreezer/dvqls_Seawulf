@@ -1,0 +1,53 @@
+{
+  "reference": "static_ops_13q_full_cluster_stabilizer_1x1.py",
+  "systems": [
+    {
+      "name": "static_ops_13q_full_cluster_stabilizer_1x1.py",
+      "n_agents": 1,
+      "n_local_qubits": 13,
+      "nnz": 114688,
+      "projection_block_check_max_abs_diff": 0.0
+    },
+    {
+      "name": "static_ops_13q_full_cluster_stabilizer_2x2.py",
+      "n_agents": 2,
+      "n_local_qubits": 12,
+      "nnz": 114688,
+      "projection_block_check_max_abs_diff": 1.734723475976807e-18
+    },
+    {
+      "name": "static_ops_13q_full_cluster_stabilizer_4x4.py",
+      "n_agents": 4,
+      "n_local_qubits": 11,
+      "nnz": 114688,
+      "projection_block_check_max_abs_diff": 1.734723475976807e-18
+    },
+    {
+      "name": "static_ops_13q_full_cluster_stabilizer_8x8.py",
+      "n_agents": 8,
+      "n_local_qubits": 10,
+      "nnz": 114688,
+      "projection_block_check_max_abs_diff": 3.469446951953614e-18
+    }
+  ],
+  "comparisons": [
+    {
+      "candidate": "static_ops_13q_full_cluster_stabilizer_2x2.py",
+      "A_max_abs_diff": 0.0,
+      "A_nnz_diff": 0,
+      "b_max_abs_diff": 1.734723475976807e-18
+    },
+    {
+      "candidate": "static_ops_13q_full_cluster_stabilizer_4x4.py",
+      "A_max_abs_diff": 0.0,
+      "A_nnz_diff": 0,
+      "b_max_abs_diff": 1.734723475976807e-18
+    },
+    {
+      "candidate": "static_ops_13q_full_cluster_stabilizer_8x8.py",
+      "A_max_abs_diff": 0.0,
+      "A_nnz_diff": 0,
+      "b_max_abs_diff": 3.469446951953614e-18
+    }
+  ]
+}

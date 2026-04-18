@@ -14,6 +14,7 @@ _DEV = {}
 ANSATZ_CLUSTER_RZ = "cluster_rz"
 ANSATZ_CLUSTER_RY = "cluster_ry"
 ANSATZ_BRICKWALL_RY_CZ = "brickwall_ry_cz"
+ANSATZ_PAPER_FIG3_RY_CZ = "paper_fig3_ry_cz"
 ANSATZ_HADAMARD_BRICKWALL_RY_CZ = "hadamard_brickwall_ry_cz"
 ANSATZ_BRICKWALL_RY_CNOT = "brickwall_ry_cnot"
 ANSATZ_NO_HADAMARD_RY = "no_hadamard_ry"
@@ -24,6 +25,7 @@ VALID_ANSATZ_KINDS = (
     ANSATZ_CLUSTER_RZ,
     ANSATZ_CLUSTER_RY,
     ANSATZ_BRICKWALL_RY_CZ,
+    ANSATZ_PAPER_FIG3_RY_CZ,
     ANSATZ_HADAMARD_BRICKWALL_RY_CZ,
     ANSATZ_BRICKWALL_RY_CNOT,
     ANSATZ_NO_HADAMARD_RY,
@@ -48,6 +50,8 @@ def describe_ansatz(ansatz_kind: str) -> str:
         return "Hadamard scaffold + open-chain CZ + trainable RY"
     if kind == ANSATZ_BRICKWALL_RY_CZ:
         return "Trainable RY layer followed by open-chain CZ"
+    if kind == ANSATZ_PAPER_FIG3_RY_CZ:
+        return "Paper Fig. 3 ansatz: RY, alternating even-bond CZ, RY, alternating odd-bond CZ"
     if kind == ANSATZ_HADAMARD_BRICKWALL_RY_CZ:
         return "Single Hadamard layer followed by trainable RY layers with open-chain CZ"
     if kind == ANSATZ_BRICKWALL_RY_CNOT:
@@ -92,6 +96,27 @@ def _apply_scaffold_edges(scaffold_edges):
 
 def _apply_scaffold_edges_reverse(scaffold_edges):
     for left, right in reversed(tuple(scaffold_edges)):
+        qml.CZ(wires=[left, right])
+
+
+def _split_alternating_scaffold_edges(scaffold_edges) -> tuple[tuple[tuple[int, int], ...], tuple[tuple[int, int], ...]]:
+    normalized = []
+    for left, right in scaffold_edges:
+        a, b = sorted((int(left), int(right)))
+        normalized.append((a, b))
+
+    even_edges = tuple((left, right) for left, right in normalized if (right - left) == 1 and (left % 2) == 0)
+    odd_edges = tuple((left, right) for left, right in normalized if (right - left) == 1 and (left % 2) == 1)
+    return even_edges, odd_edges
+
+
+def _apply_edges(edges):
+    for left, right in edges:
+        qml.CZ(wires=[left, right])
+
+
+def _apply_edges_reverse(edges):
+    for left, right in reversed(tuple(edges)):
         qml.CZ(wires=[left, right])
 
 
@@ -172,6 +197,17 @@ def apply_selected_ansatz(
             f"Ansatz `{kind}` requires a non-empty local_ry_support wire set."
         )
 
+    if kind == ANSATZ_PAPER_FIG3_RY_CZ:
+        even_edges, odd_edges = _split_alternating_scaffold_edges(scaffold_edges)
+        for layer in range(int(weights.shape[0])):
+            for wire in range(n_input_qubit):
+                qml.RY(weights[layer, 0, wire], wires=wire)
+            _apply_edges(even_edges)
+            for wire in range(n_input_qubit):
+                qml.RY(weights[layer, 1, wire], wires=wire)
+            _apply_edges(odd_edges)
+        return
+
     if kind == ANSATZ_BRICKWALL_RY_CZ:
         for layer in range(int(weights.shape[0])):
             for wire in range(n_input_qubit):
@@ -229,6 +265,17 @@ def apply_selected_ansatz_inverse(
 
     if kind in (ANSATZ_CLUSTER_RZ_LOCAL_RY, ANSATZ_CLUSTER_LOCAL_RY) and not local_ry_support:
         raise ValueError(f"Ansatz `{kind}` requires a non-empty local_ry_support wire set.")
+
+    if kind == ANSATZ_PAPER_FIG3_RY_CZ:
+        even_edges, odd_edges = _split_alternating_scaffold_edges(scaffold_edges)
+        for layer in range(int(weights.shape[0]) - 1, -1, -1):
+            _apply_edges_reverse(odd_edges)
+            for wire in range(n_input_qubit - 1, -1, -1):
+                qml.RY(-weights[layer, 1, wire], wires=wire)
+            _apply_edges_reverse(even_edges)
+            for wire in range(n_input_qubit - 1, -1, -1):
+                qml.RY(-weights[layer, 0, wire], wires=wire)
+        return
 
     if kind == ANSATZ_BRICKWALL_RY_CZ:
         for layer in range(int(weights.shape[0]) - 1, -1, -1):

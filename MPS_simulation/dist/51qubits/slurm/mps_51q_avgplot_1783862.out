@@ -1,0 +1,9 @@
+=========================================
+JobID: 1783862
+Host: dn042
+Start: Sun Mar 29 07:19:34 EDT 2026
+Plot input list: /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/51qubits/run/20260329_51q_first100_seedspread_1_1000/plot_jsons.txt
+Plot outdir: /gpfs/home/tonshen/Seawulf_simulation/MPS_simulation/dist/51qubits/run/20260329_51q_first100_seedspread_1_1000/plots
+Averaging 10 runs
+=========================================
+End: Sun Mar 29 07:21:04 EDT 2026

@@ -1,0 +1,109 @@
+problem:
+  static_ops_path: problems/static_ops_3net_Ising.py
+  system_key: 4x4
+  prefer_centralized_problem: true
+  centralized_problem_key: centralized
+  consistency_system_key: 4x4
+  consistency_atol: 1.0e-12
+  b_consistency_atol: 1.0e-12
+  b_state_tolerance: 1.0e-10
+ansatz:
+  layers: 8
+  init_low: -3.141592653589793
+  init_high: 3.141592653589793
+  init_sigma: 1.0
+optimization:
+  steps: 1
+  learning_rate: 0.01
+  beta1: 0.9
+  beta2: 0.999
+  eps: 1.0e-08
+  print_every: 1
+  optimize_metric: global_CG
+runtime:
+  seed: 5692
+  device: lightning.qubit
+  interface: jax
+  diff_method: adjoint
+  use_qjit: false
+  fallback_to_jax_jit: true
+  qjit_autograph: false
+  jit_training_step: true
+  warmup_compile: true
+report:
+  out_dir: /gpfs/home/tonshen/Seawulf_simulation/tmp/smoke_vqls_10q
+  tag: smoke_vqls_10q
+taskgen:
+  optimization_script: tracking_vqls
+  tag: my_cen_vqls_tasks
+  seed_scan:
+    mode: explicit
+    num_seeds: 5
+    seed_min: 0
+    seed_max: 1000
+    rng_seed: null
+    seeds:
+    - 2
+    - 3
+    - 7
+    - 42
+    - 54
+    - 532
+    - 564
+    - 601
+    - 1234
+    - 4321
+    - 6026
+    - 9312
+  script_map:
+    qjit_vqls: cen_vqls/centralized_vqls_ising_qjit.py
+    tracking_vqls: cen_vqls/centralized_vqls_ising_tracking.py
+    single: cen_vqls/single_agent_qjit.py
+  profile_overrides:
+    qjit_vqls:
+      optimization:
+        optimize_metric: global_CG
+      runtime:
+        interface: jax
+        device: lightning.qubit
+        diff_method: adjoint
+        use_qjit: true
+        fallback_to_jax_jit: false
+      report:
+        tag: centralized_vqls_ising_qjit
+    tracking_vqls:
+      optimization:
+        optimize_metric: global_CG
+      runtime:
+        interface: jax
+        device: lightning.qubit
+        diff_method: adjoint
+        use_qjit: true
+        fallback_to_jax_jit: true
+        grad_mode: qjit
+        qnode_compile: none
+        qjit_autograph: false
+        jit_training_step: false
+        warmup_compile: true
+        log_local_cost: false
+      report:
+        tag: centralized_vqls_ising_tracking
+    single:
+      ansatz:
+        init_sigma: 1.0
+      optimization:
+        steps: 20000
+        learning_rate: 0.001
+        print_every: 20
+        optimize_metric: global_residual_sq
+      runtime:
+        interface: jax
+        device: lightning.qubit
+        diff_method: adjoint
+        use_qjit: true
+        fallback_to_jax_jit: true
+        qjit_autograph: false
+        jit_training_step: true
+        warmup_compile: true
+      report:
+        tag: centralized_vqls_ising_residual

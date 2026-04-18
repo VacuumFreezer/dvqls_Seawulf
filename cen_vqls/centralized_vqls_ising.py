@@ -977,14 +977,17 @@ def compute_l2_error_unnormalized(
     ax_norm = float(np.linalg.norm(ax))
     scale = float(b_unnorm_norm / (ax_norm + 1.0e-14))
     x_est_unnorm = scale * x_norm
-    residual_ax_minus_b_abs_raw = float(np.linalg.norm((a_dense @ x_est_unnorm) - b_unnorm))
+    ax_est_unnorm = a_dense @ x_est_unnorm
+    residual_ax_minus_b_abs_raw = float(np.linalg.norm(ax_est_unnorm - b_unnorm))
     residual_ax_minus_b_rel_raw = float(residual_ax_minus_b_abs_raw / (b_unnorm_norm + 1.0e-14))
 
     x_true_norm = float(np.linalg.norm(x_true))
     abs_err_raw = float(np.linalg.norm(x_est_unnorm - x_true))
     rel_err_raw = float(abs_err_raw / (x_true_norm + 1.0e-14))
 
-    overlap = np.vdot(x_est_unnorm, x_true)
+    # The variational state only prepares |x> up to a global phase. Recover the
+    # physical sign/phase by matching A x_est to b instead of using x_true.
+    overlap = np.vdot(ax_est_unnorm, b_unnorm)
     phase_angle = float(np.angle(overlap)) if np.abs(overlap) > 1.0e-16 else 0.0
     x_est_aligned = x_est_unnorm * np.exp(-1.0j * phase_angle)
     residual_ax_minus_b_abs_aligned = float(np.linalg.norm((a_dense @ x_est_aligned) - b_unnorm))

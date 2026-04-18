@@ -1,0 +1,70 @@
+run_root: run
+tag: vqls_single_agent_10q_ising_e10000_lr1e-2_log20_s3
+
+seeds: [5692, 3442, 8135]
+
+algorithms:
+  - name: centralized_vqls
+    kind: centralized_qjit
+    script: cen_vqls/centralized_vqls_ising_qjit.py
+    base_config: cen_vqls/config.yaml
+    report_tag: centralized_vqls_ising_qjit
+    config_overrides:
+      problem:
+        static_ops_path: problems/static_ops_3net_Ising.py
+        system_key: "4x4"
+        prefer_centralized_problem: true
+        centralized_problem_key: centralized
+        consistency_system_key: "4x4"
+        consistency_atol: 1.0e-12
+        b_consistency_atol: 1.0e-12
+        b_state_tolerance: 1.0e-10
+      ansatz:
+        layers: 8
+      optimization:
+        steps: 10000
+        learning_rate: 0.01
+        print_every: 20
+        optimize_metric: global_CG
+      runtime:
+        interface: jax
+        device: lightning.qubit
+        diff_method: adjoint
+        use_qjit: true
+        fallback_to_jax_jit: true
+        qjit_autograph: false
+        jit_training_step: true
+        warmup_compile: true
+
+  - name: single_agent
+    kind: centralized_qjit
+    script: cen_vqls/single_agent_qjit.py
+    base_config: cen_vqls/config.yaml
+    report_tag: centralized_vqls_ising_residual
+    config_overrides:
+      problem:
+        static_ops_path: problems/static_ops_3net_Ising.py
+        system_key: "4x4"
+        prefer_centralized_problem: true
+        centralized_problem_key: centralized
+        consistency_system_key: "4x4"
+        consistency_atol: 1.0e-12
+        b_consistency_atol: 1.0e-12
+        b_state_tolerance: 1.0e-10
+      ansatz:
+        layers: 8
+        init_sigma: 1.0
+      optimization:
+        steps: 10000
+        learning_rate: 0.01
+        print_every: 20
+        optimize_metric: global_residual_sq
+      runtime:
+        interface: jax
+        device: lightning.qubit
+        diff_method: adjoint
+        use_qjit: true
+        fallback_to_jax_jit: true
+        qjit_autograph: false
+        jit_training_step: true
+        warmup_compile: true

@@ -13,7 +13,7 @@ class MetricPlotSpec:
     y_floor: float
     output_stem: str
     curves: tuple[CurveSpec, ...]
-    max_iteration: int = 9000
+    max_iteration: int = 14000
 
 
 PLOTS = (
@@ -37,7 +37,7 @@ PLOTS = (
         y_floor=1e-5,
         output_stem="consensus_error_vs_iteration_partition_comparison",
         curves=CURVES[1:],
-        max_iteration=1000,
+        max_iteration=14000,
     ),
 )
 

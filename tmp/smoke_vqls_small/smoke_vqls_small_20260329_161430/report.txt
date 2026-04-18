@@ -1,0 +1,14 @@
+[2026-03-29 16:14:31] [problem] source: distributed_system[4x4]
+[2026-03-29 16:14:31] [consistency] formula/block max abs diff: 1.110223e-16
+[2026-03-29 16:14:31] [consistency] formula/block fro diff: 8.985265e-16
+[2026-03-29 16:14:31] [consistency] allclose: True
+[2026-03-29 16:14:31] [matrix] cond(A): 5.108356727657e+00
+[2026-03-29 16:14:31] [reference] system key: 4x4
+[2026-03-29 16:14:31] [reference] A_target vs A_ref max abs diff: 0.000000e+00
+[2026-03-29 16:14:31] [reference] A_target vs A_ref fro diff: 0.000000e+00
+[2026-03-29 16:14:31] [reference] A_target vs A_ref allclose: True
+[2026-03-29 16:14:31] [reference] b_target vs b_ref max abs diff: 0.000000e+00
+[2026-03-29 16:14:31] [reference] b_target vs b_ref l2 diff: 0.000000e+00
+[2026-03-29 16:14:31] [reference] b_target vs b_ref allclose: True
+[2026-03-29 16:14:31] [backend] requested_qjit: False
+[2026-03-29 16:14:31] [backend] active: jax_jit

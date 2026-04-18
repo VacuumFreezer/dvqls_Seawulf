@@ -179,24 +179,38 @@ class ResidualL2Info:
     abs_error_aligned: float
     rel_error_aligned: float
     phase_angle_rad: float
+    residual_ax_minus_b_abs_raw: float
+    residual_ax_minus_b_rel_raw: float
+    residual_ax_minus_b_abs_aligned: float
+    residual_ax_minus_b_rel_aligned: float
 
 
 def compute_l2_error_from_sigma(
     evaluator: QJITHadamardCentralizedVQLS,
     weights: jnp.ndarray,
     sigma: float,
+    a_dense: np.ndarray,
+    b_unnorm: np.ndarray,
+    b_unnorm_norm: float,
     x_true: np.ndarray,
 ) -> ResidualL2Info:
     x_norm = np.array(evaluator.state(weights), dtype=np.complex128)
     x_est_unnorm = float(sigma) * x_norm
+    ax_est_unnorm = a_dense @ x_est_unnorm
+    residual_ax_minus_b_abs_raw = float(np.linalg.norm(ax_est_unnorm - b_unnorm))
+    residual_ax_minus_b_rel_raw = float(residual_ax_minus_b_abs_raw / (b_unnorm_norm + 1.0e-14))
 
     x_true_norm = float(np.linalg.norm(x_true))
     abs_err_raw = float(np.linalg.norm(x_est_unnorm - x_true))
     rel_err_raw = float(abs_err_raw / (x_true_norm + 1.0e-14))
 
-    overlap = np.vdot(x_est_unnorm, x_true)
+    overlap = np.vdot(ax_est_unnorm, b_unnorm)
     phase_angle = float(np.angle(overlap)) if np.abs(overlap) > 1.0e-16 else 0.0
     x_est_aligned = x_est_unnorm * np.exp(-1.0j * phase_angle)
+    residual_ax_minus_b_abs_aligned = float(np.linalg.norm((a_dense @ x_est_aligned) - b_unnorm))
+    residual_ax_minus_b_rel_aligned = float(
+        residual_ax_minus_b_abs_aligned / (b_unnorm_norm + 1.0e-14)
+    )
     abs_err_aligned = float(np.linalg.norm(x_est_aligned - x_true))
     rel_err_aligned = float(abs_err_aligned / (x_true_norm + 1.0e-14))
 
@@ -206,6 +220,10 @@ def compute_l2_error_from_sigma(
         abs_error_aligned=abs_err_aligned,
         rel_error_aligned=rel_err_aligned,
         phase_angle_rad=phase_angle,
+        residual_ax_minus_b_abs_raw=residual_ax_minus_b_abs_raw,
+        residual_ax_minus_b_rel_raw=residual_ax_minus_b_rel_raw,
+        residual_ax_minus_b_abs_aligned=residual_ax_minus_b_abs_aligned,
+        residual_ax_minus_b_rel_aligned=residual_ax_minus_b_rel_aligned,
     )
 
 
@@ -370,7 +388,15 @@ def main() -> None:
         now_iso = datetime.now().isoformat(timespec="milliseconds")
         elapsed_s = float(time.time() - t0)
 
-        l2 = compute_l2_error_from_sigma(evaluator=evaluator, weights=theta, sigma=sigma_f, x_true=x_true)
+        l2 = compute_l2_error_from_sigma(
+            evaluator=evaluator,
+            weights=theta,
+            sigma=sigma_f,
+            a_dense=data.a_block,
+            b_unnorm=data.b_unnorm,
+            b_unnorm_norm=data.b_unnorm_norm,
+            x_true=x_true,
+        )
 
         row = {
             "iteration": it,
@@ -384,6 +410,12 @@ def main() -> None:
             "l2_abs_aligned": l2.abs_error_aligned,
             "l2_rel_aligned": l2.rel_error_aligned,
             "phase_angle_rad": l2.phase_angle_rad,
+            "residual_ax_minus_b_abs_raw": l2.residual_ax_minus_b_abs_raw,
+            "residual_ax_minus_b_rel_raw": l2.residual_ax_minus_b_rel_raw,
+            "residual_ax_minus_b_abs_aligned": l2.residual_ax_minus_b_abs_aligned,
+            "residual_ax_minus_b_rel_aligned": l2.residual_ax_minus_b_rel_aligned,
+            "residual_ax_minus_b_abs": l2.residual_ax_minus_b_abs_aligned,
+            "residual_ax_minus_b_rel": l2.residual_ax_minus_b_rel_aligned,
         }
         history.append(row)
 
@@ -420,7 +452,15 @@ def main() -> None:
     final_sigma = float(np.asarray(sigma))
     final_residual_sq = max(0.0, _to_float(objective_fn(params)))
     final_residual_norm = float(np.sqrt(final_residual_sq))
-    final_l2 = compute_l2_error_from_sigma(evaluator=evaluator, weights=theta, sigma=final_sigma, x_true=x_true)
+    final_l2 = compute_l2_error_from_sigma(
+        evaluator=evaluator,
+        weights=theta,
+        sigma=final_sigma,
+        a_dense=data.a_block,
+        b_unnorm=data.b_unnorm,
+        b_unnorm_norm=data.b_unnorm_norm,
+        x_true=x_true,
+    )
 
     final_metrics: Dict[str, float] = {
         "global_CG": _to_float(final_raw["global_CG"]),
@@ -437,6 +477,12 @@ def main() -> None:
         "l2_abs_aligned": final_l2.abs_error_aligned,
         "l2_rel_aligned": final_l2.rel_error_aligned,
         "phase_angle_rad": final_l2.phase_angle_rad,
+        "residual_ax_minus_b_abs_raw": final_l2.residual_ax_minus_b_abs_raw,
+        "residual_ax_minus_b_rel_raw": final_l2.residual_ax_minus_b_rel_raw,
+        "residual_ax_minus_b_abs_aligned": final_l2.residual_ax_minus_b_abs_aligned,
+        "residual_ax_minus_b_rel_aligned": final_l2.residual_ax_minus_b_rel_aligned,
+        "residual_ax_minus_b_abs": final_l2.residual_ax_minus_b_abs_aligned,
+        "residual_ax_minus_b_rel": final_l2.residual_ax_minus_b_rel_aligned,
     }
 
     theta_final = np.asarray(theta, dtype=np.float64)
